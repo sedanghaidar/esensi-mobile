@@ -17,6 +17,12 @@ class CSizedBox extends StatelessWidget {
     this.width = 0
   });
 
+  const CSizedBox.h10({
+    super.key,
+    this.height = 10,
+    this.width = 0
+  });
+
   const CSizedBox.h5({
     super.key,
     this.height = 5,

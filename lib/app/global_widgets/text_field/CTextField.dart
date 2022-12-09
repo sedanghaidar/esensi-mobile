@@ -23,71 +23,79 @@ class CTextField extends StatefulWidget {
   final validator;
   final autoValidateMode;
   final enabled;
+  final onTap;
+  final suffixIcon;
 
-  CTextField({
-    Key? key,
-    this.type = "CUSTOM",
-    this.controller,
-    this.decoration,
-    this.hintText,
-    this.keyboardType,
-    this.textInputAction = TextInputAction.next,
-    this.style = CText.textStyleBody,
-    this.readOnly = false,
-    this.obscureText = false,
-    this.maxLines,
-    this.minLines,
-    this.maxLength,
-    this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.validator,
-    this.autoValidateMode,
-    this.enabled,
-  }) : assert(decoration != null || hintText != null,
+  CTextField(
+      {Key? key,
+      this.type = "CUSTOM",
+      this.controller,
+      this.decoration,
+      this.hintText,
+      this.keyboardType,
+      this.textInputAction = TextInputAction.next,
+      this.style = CText.textStyleBody,
+      this.readOnly = false,
+      this.obscureText = false,
+      this.maxLines,
+      this.minLines,
+      this.maxLength,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
+      this.validator,
+      this.autoValidateMode,
+      this.enabled,
+      this.onTap,
+      this.suffixIcon})
+      : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
-  CTextField.password({
-    Key? key,
-    this.type = "PASSWORD",
-    this.controller,
-    this.decoration,
-    this.hintText,
-    this.keyboardType,
-    this.textInputAction = TextInputAction.next,
-    this.style = CText.textStyleBody,
-    this.readOnly = false,
-    this.obscureText = true,
-    this.maxLines = 1,
-    this.minLines,
-    this.maxLength,
-    this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.validator,
-    this.autoValidateMode,
-    this.enabled,
-  }) : assert(decoration != null || hintText != null,
+  CTextField.password(
+      {Key? key,
+      this.type = "PASSWORD",
+      this.controller,
+      this.decoration,
+      this.hintText,
+      this.keyboardType,
+      this.textInputAction = TextInputAction.next,
+      this.style = CText.textStyleBody,
+      this.readOnly = false,
+      this.obscureText = true,
+      this.maxLines = 1,
+      this.minLines,
+      this.maxLength,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
+      this.validator,
+      this.autoValidateMode,
+      this.enabled,
+      this.onTap,
+      this.suffixIcon})
+      : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
-  CTextField.noStyle({
-    Key? key,
-    this.type = "NOSTYLE",
-    this.controller,
-    this.decoration,
-    this.hintText,
-    this.keyboardType,
-    this.textInputAction = TextInputAction.next,
-    this.style = CText.textStyleBody,
-    this.readOnly = false,
-    this.obscureText = false,
-    this.maxLines,
-    this.minLines,
-    this.maxLength,
-    this.onEditingComplete,
-    this.onFieldSubmitted,
-    this.validator,
-    this.autoValidateMode,
-    this.enabled,
-  }) : assert(decoration != null || hintText != null,
+  CTextField.noStyle(
+      {Key? key,
+      this.type = "NOSTYLE",
+      this.controller,
+      this.decoration,
+      this.hintText,
+      this.keyboardType,
+      this.textInputAction = TextInputAction.next,
+      this.style = CText.textStyleBody,
+      this.readOnly = false,
+      this.obscureText = false,
+      this.maxLines,
+      this.minLines,
+      this.maxLength,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
+      this.validator,
+      this.autoValidateMode,
+      this.enabled,
+      this.onTap,
+      this.suffixIcon})
+      : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
   @override
@@ -144,6 +152,7 @@ class CTextFieldState extends State<CTextField> {
       focusColor: basicWhite,
       errorBorder: errorBorder,
       focusedBorder: focusBorder,
+      suffixIcon: widget.suffixIcon,
       border: border,
     );
 
@@ -151,17 +160,23 @@ class CTextFieldState extends State<CTextField> {
       defaultDecoration = widget.decoration;
     }
 
-    if (widget.type == "PASSWORD") {
-      defaultDecoration = defaultDecoration.copyWith(
-        suffixIcon: InkWell(
-          onTap: _togglePasswordView,
-          child: icon,
-        ),
-      );
-    } else if (widget.type == "NOSTYLE") {
-      defaultDecoration = defaultDecoration.copyWith(
-        contentPadding: EdgeInsets.only(right: 150, left: 10),
-      );
+    switch (widget.type) {
+      case "PASSWORD":
+        {
+          defaultDecoration = defaultDecoration.copyWith(
+            suffixIcon: InkWell(
+              onTap: _togglePasswordView,
+              child: icon,
+            ),
+          );
+          break;
+        }
+      case "NOSTRYLE" : {
+        defaultDecoration = defaultDecoration.copyWith(
+          contentPadding: EdgeInsets.only(right: 150, left: 10),
+        );
+        break;
+      }
     }
 
     return TextFormField(
@@ -174,11 +189,13 @@ class CTextFieldState extends State<CTextField> {
       obscureText: widget.obscureText,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
+      cursorColor: basicPrimary,
       onEditingComplete: widget.onEditingComplete,
       onFieldSubmitted: widget.onFieldSubmitted,
       validator: widget.validator,
       autovalidateMode: widget.autoValidateMode,
       enabled: widget.enabled,
+      onTap: widget.onTap,
     );
   }
 }

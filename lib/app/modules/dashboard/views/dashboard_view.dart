@@ -7,6 +7,7 @@ import '../../../global_widgets/button/CButtonStyle.dart';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../global_widgets/text_field/CTextField.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/utils.dart';
@@ -91,7 +92,9 @@ class DashboardView extends GetView<DashboardController> {
                     child: SizedBox(
                         width: 150,
                         child: CButton.box(
-                          () {},
+                          () {
+                            Get.toNamed(Routes.CREATE_AGENDA);
+                          },
                           "Buat Agenda",
                         )),
                   ),

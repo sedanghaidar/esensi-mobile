@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/create_agenda/bindings/create_agenda_binding.dart';
+import '../modules/create_agenda/views/create_agenda_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -29,6 +31,11 @@ class AppPages {
       name: _Paths.DASHBOARD,
       page: () => DashboardView(),
       binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.CREATE_AGENDA,
+      page: () => CreateAgendaView(),
+      binding: CreateAgendaBinding(),
     ),
   ];
 }

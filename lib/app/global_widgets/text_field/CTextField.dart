@@ -68,14 +68,45 @@ class CTextField extends StatefulWidget {
   }) : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
+  CTextField.noStyle({
+    Key? key,
+    this.type = "NOSTYLE",
+    this.controller,
+    this.decoration,
+    this.hintText,
+    this.keyboardType,
+    this.textInputAction = TextInputAction.next,
+    this.style = CText.textStyleBody,
+    this.readOnly = false,
+    this.obscureText = false,
+    this.maxLines,
+    this.minLines,
+    this.maxLength,
+    this.onEditingComplete,
+    this.onFieldSubmitted,
+    this.validator,
+    this.autoValidateMode,
+    this.enabled,
+  }) : assert(decoration != null || hintText != null,
+            "Hanya boleh diisi salah satu");
+
   @override
   State<CTextField> createState() => CTextFieldState();
 }
 
 class CTextFieldState extends State<CTextField> {
-  Icon iconEye = Icon(Icons.visibility, color: basicPrimary,);
-  Icon iconEyeOff = Icon(Icons.visibility_off, color: basicPrimary,);
-  Icon icon = Icon(Icons.visibility_off, color: basicPrimary,);
+  Icon iconEye = Icon(
+    Icons.visibility,
+    color: basicPrimary,
+  );
+  Icon iconEyeOff = Icon(
+    Icons.visibility_off,
+    color: basicPrimary,
+  );
+  Icon icon = Icon(
+    Icons.visibility_off,
+    color: basicPrimary,
+  );
 
   void _togglePasswordView() {
     setState(() {
@@ -109,6 +140,8 @@ class CTextFieldState extends State<CTextField> {
       hintStyle: CText.textStyleBody,
       hintText: widget.hintText,
       fillColor: basicWhite,
+      filled: true,
+      focusColor: basicWhite,
       errorBorder: errorBorder,
       focusedBorder: focusBorder,
       border: border,
@@ -124,6 +157,10 @@ class CTextFieldState extends State<CTextField> {
           onTap: _togglePasswordView,
           child: icon,
         ),
+      );
+    } else if (widget.type == "NOSTYLE") {
+      defaultDecoration = defaultDecoration.copyWith(
+        contentPadding: EdgeInsets.only(right: 150, left: 10),
       );
     }
 

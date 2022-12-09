@@ -2,6 +2,8 @@ import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
+import 'CButtonStyle.dart';
+
 class CButton extends StatelessWidget {
   final onPressed;
   final onLongPress;
@@ -11,14 +13,51 @@ class CButton extends StatelessWidget {
   final focusNode;
   final child;
   final text;
+  final type;
+  final icon;
 
   CButton(this.onPressed, this.text,
       {Key? key,
+      this.type = "ROUND",
       this.child,
       this.onLongPress,
       this.onHover,
       this.onFocusChange,
       this.style,
+      this.icon,
+      this.focusNode});
+
+  CButton.box(this.onPressed, this.text,
+      {Key? key,
+      this.type = "BOX",
+      this.child,
+      this.onLongPress,
+      this.onHover,
+      this.onFocusChange,
+      this.style,
+      this.icon,
+      this.focusNode});
+
+  CButton.small(this.onPressed, this.text,
+      {Key? key,
+      this.type = "SMALL",
+      this.child,
+      this.onLongPress,
+      this.onHover,
+      this.onFocusChange,
+      this.style,
+      this.icon,
+      this.focusNode});
+
+  CButton.icon(this.onPressed, this.text,
+      {Key? key,
+      this.type = "ICON",
+      this.child,
+      this.onLongPress,
+      this.onHover,
+      this.onFocusChange,
+      this.style,
+      this.icon,
       this.focusNode});
 
   @override
@@ -28,27 +67,38 @@ class CButton extends StatelessWidget {
       style: CText.textStyleBody.copyWith(color: basicWhite),
     );
 
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: style ?? styleButtonFilled,
-      child: child ?? button,
-    );
+    ButtonStyle defaultStyle = styleButtonFilled;
+    switch (type) {
+      case "BOX":
+        {
+          defaultStyle = styleButtonFilledBox;
+          break;
+        }
+      case "SMALL":
+        {
+          defaultStyle = styleButtonFilledBoxSmall.copyWith();
+          button = CText(
+            text,
+            style: CText.textStyleBody
+                .copyWith(color: basicWhite, fontWeight: FontWeight.w200),
+          );
+          break;
+        }
+    }
+
+    if (type == "ICON") {
+      return ElevatedButton.icon(
+        icon: icon,
+        onPressed: onPressed,
+        style: style ?? defaultStyle,
+        label: child ?? button,
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: onPressed,
+        style: style ?? defaultStyle,
+        child: child ?? button,
+      );
+    }
   }
 }
-
-ButtonStyle styleButtonFilled = ElevatedButton.styleFrom(
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-  minimumSize: Size.fromHeight(40),
-  primary: basicPrimary,
-  onPrimary: basicPrimaryDark,
-  elevation: 0,
-);
-
-ButtonStyle styleButtonOutline = ElevatedButton.styleFrom(
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-        side: BorderSide(color: basicPrimary, width: 2)),
-    minimumSize: Size.fromHeight(40),
-    primary: basicWhite,
-    onPrimary: basicPrimaryDark,
-    elevation: 0);

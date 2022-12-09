@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../../global_widgets/text/CText.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/string.dart';
 import '../controllers/login_controller.dart';
 
@@ -108,6 +109,7 @@ class LoginView extends GetView<LoginController> {
   login(){
     FocusManager.instance.primaryFocus?.unfocus();
     if (!controller.formKey.currentState!.validate()) return;
-    showLoading();
+    // showLoading();
+    Get.toNamed(Routes.DASHBOARD);
   }
 }

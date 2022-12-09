@@ -99,4 +99,12 @@ class CText extends StatelessWidget {
     color: basicBlack,
   );
 
+  static const TextStyle textStyleSubhead = TextStyle(
+    fontSize: 20,
+    letterSpacing: 0.25,
+    // fontFamily: fontRubik,
+    fontWeight: FontWeight.bold,
+    color: basicBlack,
+  );
+
 }

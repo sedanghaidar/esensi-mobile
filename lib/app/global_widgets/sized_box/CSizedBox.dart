@@ -23,6 +23,18 @@ class CSizedBox extends StatelessWidget {
     this.width = 0
   });
 
+  const CSizedBox.w10({
+    super.key,
+    this.height = 0,
+    this.width = 10
+  });
+
+  const CSizedBox.w5({
+    super.key,
+    this.height = 0,
+    this.width = 5
+  });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(height: height, width: width,);

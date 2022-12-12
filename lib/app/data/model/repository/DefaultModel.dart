@@ -10,13 +10,13 @@ class DefaultModel {
     success = json['success'];
     message = json['message'];
     error = json['error'];
-    data = json['data'];
+    data = json['result'];
   }
 
   Map<String, dynamic> toJson(DefaultModel model) => <String, dynamic>{
         'success': model.success,
         'message': model.message,
         'error': model.error,
-        'data': model.data
+        'result': model.data
       };
 }

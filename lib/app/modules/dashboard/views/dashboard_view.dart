@@ -32,6 +32,11 @@ class DashboardView extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
+
+    ///COBA CEK HIVE
+    bool isLoggedIn = controller.repository.hive.isLoggedIn();
+    debugPrint("${isLoggedIn}");
+
     Widget menu = const SizedBox();
     double paddingHorizontal = 20;
 

@@ -1,5 +1,5 @@
+import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
-import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
 import 'package:absensi_kegiatan/app/utils/constant.dart';
@@ -106,10 +106,9 @@ class LoginView extends GetView<LoginController> {
     );
   }
 
-  login(){
+  login() {
     FocusManager.instance.primaryFocus?.unfocus();
     if (!controller.formKey.currentState!.validate()) return;
-    // showLoading();
-    Get.toNamed(Routes.DASHBOARD);
+    controller.login();
   }
 }

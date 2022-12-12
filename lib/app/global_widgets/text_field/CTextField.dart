@@ -1,6 +1,4 @@
-import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../utils/colors.dart';
 import '../text/CText.dart';
@@ -25,6 +23,7 @@ class CTextField extends StatefulWidget {
   final enabled;
   final onTap;
   final suffixIcon;
+  final focusNode;
 
   CTextField(
       {Key? key,
@@ -46,6 +45,7 @@ class CTextField extends StatefulWidget {
       this.autoValidateMode,
       this.enabled,
       this.onTap,
+      this.focusNode,
       this.suffixIcon})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -70,6 +70,7 @@ class CTextField extends StatefulWidget {
       this.autoValidateMode,
       this.enabled,
       this.onTap,
+      this.focusNode,
       this.suffixIcon})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -94,6 +95,7 @@ class CTextField extends StatefulWidget {
       this.autoValidateMode,
       this.enabled,
       this.onTap,
+      this.focusNode,
       this.suffixIcon})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -171,12 +173,13 @@ class CTextFieldState extends State<CTextField> {
           );
           break;
         }
-      case "NOSTRYLE" : {
-        defaultDecoration = defaultDecoration.copyWith(
-          contentPadding: EdgeInsets.only(right: 150, left: 10),
-        );
-        break;
-      }
+      case "NOSTRYLE":
+        {
+          defaultDecoration = defaultDecoration.copyWith(
+            contentPadding: EdgeInsets.only(right: 150, left: 10),
+          );
+          break;
+        }
     }
 
     return TextFormField(
@@ -195,6 +198,7 @@ class CTextFieldState extends State<CTextField> {
       validator: widget.validator,
       autovalidateMode: widget.autoValidateMode,
       enabled: widget.enabled,
+      focusNode: widget.focusNode,
       onTap: widget.onTap,
     );
   }

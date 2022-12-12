@@ -1,10 +1,17 @@
+import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Center loading() {
-  return const Center(
-    child: CircularProgressIndicator(),
+Widget loading(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(color: basicPrimary,),
+        CText("Mohon tunggu sebentar ...")
+      ],
+    ),
   );
 }
 

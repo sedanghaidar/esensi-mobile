@@ -12,6 +12,7 @@ import '../../../utils/colors.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/utils.dart';
 import '../controllers/dashboard_controller.dart';
+import 'dart:html' as html;
 
 class DashboardView extends GetView<DashboardController> {
   Widget iconProfil = ClipRRect(
@@ -92,7 +93,7 @@ class DashboardView extends GetView<DashboardController> {
                     child: SizedBox(
                         width: 150,
                         child: CButton.box(
-                          () {
+                              () {
                             Get.toNamed(Routes.CREATE_AGENDA);
                           },
                           "Buat Agenda",
@@ -177,7 +178,12 @@ class DashboardView extends GetView<DashboardController> {
                                         .copyWith(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    // if (orientation == WEB_LANDSCAPE || orientation == WEB_PORTRAIT) {
+                                    //   html.window.open("http://localhost:56884/#/form/12", "_blank");
+                                    // }
+                                    Get.toNamed(Routes.FORM+"/12");
+                                  },
                                 ),
                               ),
                               const CSizedBox.w10(),
@@ -186,9 +192,9 @@ class DashboardView extends GetView<DashboardController> {
                                 child: InkWell(
                                   onTap: () async {
                                     await Clipboard.setData(
-                                            ClipboardData(text: "COPY DATA"))
+                                        ClipboardData(text: "COPY DATA"))
                                         .whenComplete(() =>
-                                            debugPrint("Berhasil menyalinurl"));
+                                        debugPrint("Berhasil menyalinurl"));
                                   },
                                   child: Container(
                                     color: basicGrey4,
@@ -209,16 +215,17 @@ class DashboardView extends GetView<DashboardController> {
                             text: TextSpan(children: [
                               WidgetSpan(
                                   child: Icon(
-                                Icons.access_time_filled_rounded,
-                                size: 16,
-                              )),
+                                    Icons.access_time_filled_rounded,
+                                    size: 16,
+                                  )),
                               WidgetSpan(child: CSizedBox.w5()),
                               WidgetSpan(
                                   child: CText(
-                                "12 Des 2022 09:00",
-                                style: CText.textStyleBody.copyWith(
-                                    fontSize: 12, fontWeight: FontWeight.w400),
-                              ))
+                                    "12 Des 2022 09:00",
+                                    style: CText.textStyleBody.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ))
                             ]),
                           )
                         ],

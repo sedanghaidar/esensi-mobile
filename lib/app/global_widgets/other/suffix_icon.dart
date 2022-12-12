@@ -7,7 +7,7 @@ Widget suffixIconClear(Function() onTap) {
     onTap: onTap,
     child: Icon(
       Icons.close,
-      color: basicPrimary,
+      // color: basicPrimary,
     ),
   );
 }

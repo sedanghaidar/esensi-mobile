@@ -65,7 +65,7 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                       return null;
                     },
                     suffixIcon: suffixIconClear(() {
-                      controller.controllerTime.clear();
+                      controller.controllerName.clear();
                     }),
                   ),
                   CSizedBox.h10(),

@@ -25,6 +25,13 @@ ButtonStyle styleButtonFilledBoxSmall = ElevatedButton.styleFrom(
   elevation: 0,
 );
 
+ButtonStyle styleButtonFilledBoxSmall2 = ElevatedButton.styleFrom(
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+  primary: basicPrimary2,
+  onPrimary: basicPrimary2Dark,
+  elevation: 0,
+);
+
 ButtonStyle styleButtonOutline = ElevatedButton.styleFrom(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),

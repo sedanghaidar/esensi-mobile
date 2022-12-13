@@ -17,6 +17,10 @@ FailureModel failure(int? code, DefaultModel model) {
   return FailureModel(code, message, message);
 }
 
+FailureModel failure2(dynamic e){
+  return FailureModel(400, "Terjadi Kesalahan. $e", "$e");
+}
+
 DefaultModel toDefaultModel(dynamic response) {
   if (response == null) {
     return DefaultModel(

@@ -90,4 +90,9 @@ class UserModel {
         "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
         "token": token == null ? null : token,
       };
+
+  @override
+  String toString() {
+    return "id=${id}, name:${name}, username:${username}, email:${email}, token:${token}";
+  }
 }

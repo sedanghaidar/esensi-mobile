@@ -11,7 +11,7 @@ import 'app/routes/app_pages.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<UserModel>(HiveUserAdapter());
-  await Hive.openBox(HiveHelper.HIVE_APPNAME);
+  await Hive.openBox<dynamic>(HiveHelper.HIVE_APPNAME);
 
   runApp(
     GetMaterialApp(

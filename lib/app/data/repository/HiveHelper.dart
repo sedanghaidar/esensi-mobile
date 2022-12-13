@@ -1,11 +1,13 @@
+import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:hive/hive.dart';
 
-class HiveHelper {
+class HiveHelper{
+
   static const HIVE_APPNAME = "absensi_kegiatan";
   static const HIVE_OBJ_USER = "user";
   static const HIVE_IS_LOGGED_IN = "isLoggedIn";
 
-  static final _hive = Hive.box(HIVE_APPNAME);
+  static final _hive = Hive.box<dynamic>(HIVE_APPNAME);
 
   static getData(String key, {dynamic defaultvalue}) {
     return _hive.get(key, defaultValue: defaultvalue);
@@ -23,4 +25,5 @@ class HiveHelper {
     bool check = _hive.containsKey(key);
     return check;
   }
+
 }

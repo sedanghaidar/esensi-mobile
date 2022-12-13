@@ -36,10 +36,9 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    bool isLoggedIn = repository.hive.isLoggedIn();
-    if(isLoggedIn){
-      Get.offAllNamed(Routes.DASHBOARD);
-    }
+    // if(repository.hive.isLoggedIn()){
+    //   Get.offAllNamed(Routes.DASHBOARD);
+    // }
     super.onInit();
   }
 }

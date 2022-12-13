@@ -1,3 +1,8 @@
+import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
+import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
+import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -12,7 +17,6 @@ import '../../../utils/colors.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/utils.dart';
 import '../controllers/dashboard_controller.dart';
-import 'dart:html' as html;
 
 class DashboardView extends GetView<DashboardController> {
   Widget iconProfil = ClipRRect(
@@ -32,11 +36,6 @@ class DashboardView extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
-
-    ///COBA CEK HIVE
-    bool isLoggedIn = controller.repository.hive.isLoggedIn();
-    debugPrint("${isLoggedIn}");
-
     Widget menu = const SizedBox();
     double paddingHorizontal = 20;
 
@@ -59,6 +58,10 @@ class DashboardView extends GetView<DashboardController> {
     } else {
       menu = iconProfil;
     }
+
+    debugPrint(
+        "TOKENNNN2 ${controller.repository.hive.getUserModel().toString()}");
+    controller.getKegiatan();
 
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +101,7 @@ class DashboardView extends GetView<DashboardController> {
                     child: SizedBox(
                         width: 150,
                         child: CButton.box(
-                              () {
+                          () {
                             Get.toNamed(Routes.CREATE_AGENDA);
                           },
                           "Buat Agenda",
@@ -117,126 +120,171 @@ class DashboardView extends GetView<DashboardController> {
                 ],
               ),
               const CSizedBox.h20(),
-              ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: basicWhite,
-                          border: Border.all(color: basicGrey2),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: CText(
-                                  "Pembahasan Rencana Induk Smart Province",
-                                  style: CText.textStyleBodyBold.copyWith(
-                                      fontSize: 24,
-                                      letterSpacing: 0.75,
-                                      fontWeight: FontWeight.w600),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Expanded(
-                                  flex: 0,
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                          width: 80,
-                                          child: CButton.icon(() {}, "Edit",
-                                              style: styleButtonFilledBoxSmall,
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                size: 16,
-                                                color: basicWhite,
-                                              ))),
-                                      CSizedBox.w5(),
-                                      SizedBox(
-                                          width: 100,
-                                          child: CButton.icon(() {}, "Detail",
-                                              style: styleButtonFilledBoxSmall,
-                                              icon: const Icon(
-                                                Icons.view_agenda_rounded,
-                                                size: 16,
-                                                color: basicWhite,
-                                              )))
-                                    ],
-                                  ))
-                            ],
-                          ),
-                          const CSizedBox.h5(),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: InkWell(
-                                  child: CText(
-                                    "https://absensi-kegiatan-panjangbanget pokoknya.jatengprov.go.id/form/198",
-                                    style: CText.textStyleBody
-                                        .copyWith(fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  onTap: () {
-                                    // if (orientation == WEB_LANDSCAPE || orientation == WEB_PORTRAIT) {
-                                    //   html.window.open("http://localhost:56884/#/form/12", "_blank");
-                                    // }
-                                    Get.toNamed(Routes.FORM+"/12");
-                                  },
-                                ),
-                              ),
-                              const CSizedBox.w10(),
-                              Expanded(
-                                flex: 0,
-                                child: InkWell(
-                                  onTap: () async {
-                                    await Clipboard.setData(
-                                        ClipboardData(text: "COPY DATA"))
-                                        .whenComplete(() =>
-                                        debugPrint("Berhasil menyalinurl"));
-                                  },
-                                  child: Container(
-                                    color: basicGrey4,
-                                    padding: const EdgeInsets.all(8),
-                                    child: const Icon(
-                                      Icons.copy,
-                                      size: 18,
+              Obx(() {
+                switch (controller.kegiatan.value.statusRequest) {
+                  case StatusRequest.LOADING:
+                    return loading(context);
+                  case StatusRequest.EMPTY:
+                    return error(context, "Daftar Kegiatan Kosong",
+                        () => controller.getKegiatan());
+                  case StatusRequest.SUCCESS:
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: controller.kegiatan.value.data?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: basicWhite,
+                                border: Border.all(color: basicGrey2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: CText(
+                                        "${controller.kegiatan.value.data?[index].name}",
+                                        style: CText.textStyleBodyBold.copyWith(
+                                            fontSize: 24,
+                                            letterSpacing: 0.75,
+                                            fontWeight: FontWeight.w600),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
+                                    Expanded(
+                                        flex: 0,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                                width: 80,
+                                                child: CButton.icon(
+                                                    () {}, "Edit",
+                                                    style:
+                                                        styleButtonFilledBoxSmall,
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      size: 16,
+                                                      color: basicWhite,
+                                                    ))),
+                                            CSizedBox.w5(),
+                                            SizedBox(
+                                                width: 95,
+                                                child: CButton.icon(() {
+                                                  Get.defaultDialog(
+                                                      title: "Perhatian",
+                                                      middleText:
+                                                          "Apakah anda yakin ingin menghapus?",
+                                                      textConfirm: "Ya",
+                                                      onConfirm: () {
+                                                        controller.deleteKegiatan(
+                                                            "${controller.kegiatan.value.data?[index].id}");
+                                                      },
+                                                      contentPadding:
+                                                          EdgeInsets.all(10),
+                                                      confirmTextColor:
+                                                          basicWhite,
+                                                      buttonColor: basicPrimary,
+                                                      cancelTextColor:
+                                                          basicPrimary,
+                                                      textCancel: "Batal");
+                                                }, "Hapus",
+                                                    style:
+                                                        styleButtonFilledBoxSmall,
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      size: 16,
+                                                      color: basicWhite,
+                                                    )))
+                                          ],
+                                        ))
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const CSizedBox.h5(),
-                          Divider(height: 2),
-                          const CSizedBox.h5(),
-                          RichText(
-                            text: TextSpan(children: [
-                              WidgetSpan(
-                                  child: Icon(
-                                    Icons.access_time_filled_rounded,
-                                    size: 16,
-                                  )),
-                              WidgetSpan(child: CSizedBox.w5()),
-                              WidgetSpan(
-                                  child: CText(
-                                    "12 Des 2022 09:00",
-                                    style: CText.textStyleBody.copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ))
-                            ]),
-                          )
-                        ],
-                      ),
-                    );
-                  })
+                                const CSizedBox.h5(),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        child: InkWell(
+                                          child: CText(
+                                            "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
+                                            style: CText.textStyleBody
+                                                .copyWith(fontSize: 16),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          onTap: () {
+                                            // if (orientation == WEB_LANDSCAPE || orientation == WEB_PORTRAIT) {
+                                            //   html.window.open("http://localhost:56884/#/form/12", "_blank");
+                                            // }
+                                            Get.toNamed(Routes.FORM +
+                                                "/${controller.kegiatan.value.data?[index].codeUrl}");
+                                          },
+                                        ),
+                                        constraints: BoxConstraints(
+                                            maxWidth: context.width / 1.75),
+                                      ),
+                                    ),
+                                    const CSizedBox.w10(),
+                                    Expanded(
+                                      flex: 0,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await Clipboard.setData(ClipboardData(
+                                                  text: "COPY DATA"))
+                                              .whenComplete(() => debugPrint(
+                                                  "Berhasil menyalinurl"));
+                                        },
+                                        child: Container(
+                                          color: basicGrey4,
+                                          padding: const EdgeInsets.all(8),
+                                          child: const Icon(
+                                            Icons.copy,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const CSizedBox.h5(),
+                                Divider(height: 2),
+                                const CSizedBox.h5(),
+                                RichText(
+                                  text: TextSpan(children: [
+                                    WidgetSpan(
+                                        child: Icon(
+                                      Icons.access_time_filled_rounded,
+                                      size: 16,
+                                    )),
+                                    WidgetSpan(child: CSizedBox.w5()),
+                                    WidgetSpan(
+                                        child: CText(
+                                      "${dateToString(controller.kegiatan.value.data?[index].createdAt)}",
+                                      style: CText.textStyleBody.copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400),
+                                    ))
+                                  ]),
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  case StatusRequest.ERROR:
+                    return error(
+                        context,
+                        "${controller.kegiatan.value.failure?.msgShow}",
+                        () => controller.getKegiatan(),
+                        height: 200);
+                  default:
+                    return SizedBox();
+                }
+              }),
             ],
           ),
         ),

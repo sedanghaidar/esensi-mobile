@@ -1,8 +1,9 @@
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
+import 'package:hive/hive.dart';
 
 class HiveProvider {
-  void saveUser(UserModel user) {
+  saveUser(UserModel user){
     HiveHelper.putData(HiveHelper.HIVE_OBJ_USER, user);
   }
 
@@ -12,10 +13,10 @@ class HiveProvider {
   }
 
   bool isLoggedIn(){
-    return  HiveHelper.getData(HiveHelper.HIVE_IS_LOGGED_IN, defaultvalue: false);
+    return HiveHelper.getData(HiveHelper.HIVE_IS_LOGGED_IN, defaultvalue: false);
   }
 
   UserModel? getUserModel(){
-    return  HiveHelper.getData(HiveHelper.HIVE_OBJ_USER, defaultvalue: null);
+    return HiveHelper.getData(HiveHelper.HIVE_OBJ_USER, defaultvalue: null);
   }
 }

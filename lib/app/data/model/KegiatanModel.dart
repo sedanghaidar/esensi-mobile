@@ -13,6 +13,7 @@ class KegiatanModel {
     this.location,
     this.dateEnd,
     this.isLimitParticipant,
+    this.codeUrl,
     this.createdBy,
     this.createdAt,
     this.updatedAt,
@@ -27,6 +28,7 @@ class KegiatanModel {
   DateTime? dateEnd;
   bool? isLimitParticipant = false;
   int? createdBy;
+  String? codeUrl;
   DateTime? createdAt;
   DateTime? updatedAt;
   DateTime? deletedAt;
@@ -39,6 +41,7 @@ class KegiatanModel {
     String? location,
     DateTime? dateEnd,
     bool? isLimitParticipant,
+    String? codeUrl,
     int? createdBy,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -52,6 +55,7 @@ class KegiatanModel {
         location: location ?? this.location,
         dateEnd: dateEnd ?? this.dateEnd,
         isLimitParticipant: isLimitParticipant ?? this.isLimitParticipant,
+        codeUrl: codeUrl ?? this.codeUrl,
         createdBy: createdBy ?? this.createdBy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -70,10 +74,12 @@ class KegiatanModel {
         time: json["time"] == null ? null : json["time"],
         location: json["location"] == null ? null : json["location"],
         dateEnd:
-            json["date_end"] == null ? null : DateTime.parse(json["date_end"]),
-        isLimitParticipant: json["limit_participant"] == null
-            ? null
-            : json["limit_participant"],
+            json["max_date"] == null ? null : DateTime.parse(json["max_date"]),
+        isLimitParticipant:
+            json["limit_participant"] == null || json["limit_participant"] == 0
+                ? false
+                : true,
+        codeUrl: json["code_url"] == null ? null : json["code_url"],
         createdBy: json["created_by"] == null ? null : json["created_by"],
         createdAt: json["created_at"] == null
             ? null
@@ -81,7 +87,9 @@ class KegiatanModel {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        deletedAt: json["deleted_at"],
+        deletedAt: json["deleted_at"] == null
+            ? null
+            : DateTime.parse(json["deleted_at"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,12 +100,13 @@ class KegiatanModel {
             : "${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}",
         "time": time == null ? null : time,
         "location": location == null ? null : location,
-        "date_end": dateEnd == null ? null : dateEnd?.toIso8601String(),
+        "max_date": dateEnd == null ? null : dateEnd?.toIso8601String(),
         "limit_participant":
             isLimitParticipant == null ? false : isLimitParticipant,
+        "code_url": codeUrl == null ? null : codeUrl,
         "created_by": createdBy == null ? null : createdBy,
         "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
         "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
-        "deleted_at": deletedAt,
+        "deleted_at": deletedAt == null ? null : updatedAt?.toIso8601String(),
       };
 }

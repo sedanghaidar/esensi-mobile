@@ -41,7 +41,7 @@ Widget error(BuildContext context, String? message, Function() reload,
     child: Container(
       padding: EdgeInsets.all(10),
       constraints:
-          BoxConstraints(maxHeight: height == null ? 250 : height + 50),
+          BoxConstraints(maxHeight: height == null ? 250 : height + 300),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: background ?? Colors.transparent,

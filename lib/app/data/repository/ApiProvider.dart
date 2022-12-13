@@ -1,3 +1,4 @@
+import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
@@ -16,8 +17,9 @@ class ApiProvider extends GetConnect {
     httpClient.baseUrl = BASE_URL;
 
     httpClient.addRequestModifier<dynamic>((request2) {
-      ///TODO GET TOKEN FROM HIVE
-      var token = "";
+      String? token = "${hive.getUserModel()?.token}";
+      bool isLoggedIn = hive.isLoggedIn();
+      debugPrint("TOKENNNN $token $isLoggedIn");
       request2.headers['Authorization'] = "Bearer $token";
       return request2;
     });
@@ -49,6 +51,27 @@ class ApiProvider extends GetConnect {
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(UserModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<List<KegiatanModel>>> getKegiatan() async {
+    final response = await get("/api/kegiatan");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(List<KegiatanModel>.from(
+          (model.data).map((u) => KegiatanModel.fromJson(u))));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<KegiatanModel>> deleteKegiatan(String? id) async {
+    final response = await post("/api/kegiatan/delete/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }

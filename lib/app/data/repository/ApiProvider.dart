@@ -18,8 +18,6 @@ class ApiProvider extends GetConnect {
 
     httpClient.addRequestModifier<dynamic>((request2) {
       String? token = "${hive.getUserModel()?.token}";
-      bool isLoggedIn = hive.isLoggedIn();
-      debugPrint("TOKENNNN $token $isLoggedIn");
       request2.headers['Authorization'] = "Bearer $token";
       return request2;
     });
@@ -69,6 +67,16 @@ class ApiProvider extends GetConnect {
 
   Future<StatusRequestModel<KegiatanModel>> deleteKegiatan(String? id) async {
     final response = await post("/api/kegiatan/delete/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<KegiatanModel>> getKegiatanByCode(String? code) async {
+    final response = await get("/api/kegiatan/kode/$code");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));

@@ -11,9 +11,9 @@ String to24(TimeOfDay? time) {
   return "00:00:00";
 }
 
-String dateToString(DateTime? date) {
+String dateToString(DateTime? date, {String? format}) {
   initializeDateFormatting();
-  return DateFormat("EEEE, dd MMMM yyyy", "id").format(date ?? DateTime.now());
+  return DateFormat(format ?? "EEEE, dd MMMM yyyy", "id").format(date ?? DateTime.now());
 }
 
 bool checkOutDate(DateTime dateActivity, DateTime? dateEnd) {

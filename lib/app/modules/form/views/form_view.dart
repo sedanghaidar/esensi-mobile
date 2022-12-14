@@ -1,6 +1,7 @@
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
+import 'package:absensi_kegiatan/app/global_widgets/dialog/CQrCode.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text_field/CAutoCompleteString.dart';
@@ -10,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../global_widgets/button/CButton.dart';
-import '../../../global_widgets/other/suffix_icon.dart';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../global_widgets/text_field/CTextField.dart';
@@ -246,7 +246,8 @@ class FormView extends GetView<FormController> {
                 CButton(() {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.formKey.currentState!.validate()) return;
-                  if (GetUtils.isBlank(controller.controllerInstansi.text) == true) {
+                  if (GetUtils.isBlank(controller.controllerInstansi.text) ==
+                      true) {
                     showToast("Anda harus memilih instansi terlebih dahulu");
                     return;
                   }
@@ -254,6 +255,7 @@ class FormView extends GetView<FormController> {
                     showToast("Tanda tangan terlebih dahulu");
                     return;
                   }
+                  CQrCode(context, "asdfasdf", "Judul Acara", "Hanif Abdullah");
                 }, "SIMPAN")
               ],
             ),

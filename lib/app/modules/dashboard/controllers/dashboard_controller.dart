@@ -5,6 +5,7 @@ import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DashboardController extends GetxController {
@@ -13,6 +14,7 @@ class DashboardController extends GetxController {
   final kegiatan = StatusRequestModel<List<KegiatanModel>>().obs;
 
   getKegiatan() {
+    debugPrint("GET KEGIATAN");
     kegiatan.value = StatusRequestModel.loading();
     repository.getKegiatan().then((value) {
       if (value.statusRequest == StatusRequest.SUCCESS) {

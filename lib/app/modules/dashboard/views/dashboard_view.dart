@@ -1,7 +1,10 @@
+import 'dart:html' as html;
+
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,7 +51,7 @@ class DashboardView extends GetView<DashboardController> {
                 fontWeight: FontWeight.w200,
                 color: basicWhite,
               )),
-          CSizedBox.w10(),
+          const CSizedBox.w10(),
           iconProfil
         ],
       );
@@ -172,7 +175,7 @@ class DashboardView extends GetView<DashboardController> {
                                                       size: 16,
                                                       color: basicWhite,
                                                     ))),
-                                            CSizedBox.w5(),
+                                            const CSizedBox.w5(),
                                             SizedBox(
                                                 width: 95,
                                                 child: CButton.icon(() {
@@ -186,7 +189,8 @@ class DashboardView extends GetView<DashboardController> {
                                                             "${controller.kegiatan.value.data?[index].id}");
                                                       },
                                                       contentPadding:
-                                                          EdgeInsets.all(10),
+                                                          const EdgeInsets.all(
+                                                              10),
                                                       confirmTextColor:
                                                           basicWhite,
                                                       buttonColor: basicPrimary,
@@ -210,6 +214,8 @@ class DashboardView extends GetView<DashboardController> {
                                   children: [
                                     Flexible(
                                       child: Container(
+                                        constraints: BoxConstraints(
+                                            maxWidth: context.width / 1.75),
                                         child: InkWell(
                                           child: CText(
                                             "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
@@ -218,15 +224,19 @@ class DashboardView extends GetView<DashboardController> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           onTap: () {
-                                            // if (orientation == WEB_LANDSCAPE || orientation == WEB_PORTRAIT) {
-                                            //   html.window.open("http://localhost:56884/#/form/12", "_blank");
+                                            // if (orientation == WEB_LANDSCAPE ||
+                                            //     orientation == WEB_PORTRAIT) {
+                                            //   html.window.open(
+                                            //       "http://localhost:56884/#/form/12",
+                                            //       "_blank");
                                             // }
-                                            Get.toNamed(Routes.FORM +
-                                                "/${controller.kegiatan.value.data?[index].codeUrl}");
+                                            Get.toNamed(
+                                                    "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
+                                                ?.then((value) {
+                                              controller.getKegiatan();
+                                            });
                                           },
                                         ),
-                                        constraints: BoxConstraints(
-                                            maxWidth: context.width / 1.75),
                                       ),
                                     ),
                                     const CSizedBox.w10(),
@@ -235,9 +245,11 @@ class DashboardView extends GetView<DashboardController> {
                                       child: InkWell(
                                         onTap: () async {
                                           await Clipboard.setData(ClipboardData(
-                                                  text: "COPY DATA"))
-                                              .whenComplete(() => debugPrint(
-                                                  "Berhasil menyalinurl"));
+                                                  text:
+                                                      "${controller.kegiatan.value.data?[index].codeUrl}"))
+                                              .whenComplete(() {
+                                            showToast("Berhasil menyalin kode");
+                                          });
                                         },
                                         child: Container(
                                           color: basicGrey4,
@@ -252,19 +264,20 @@ class DashboardView extends GetView<DashboardController> {
                                   ],
                                 ),
                                 const CSizedBox.h5(),
-                                Divider(height: 2),
+                                const Divider(height: 2),
                                 const CSizedBox.h5(),
                                 RichText(
                                   text: TextSpan(children: [
-                                    WidgetSpan(
+                                    const WidgetSpan(
                                         child: Icon(
                                       Icons.access_time_filled_rounded,
                                       size: 16,
                                     )),
-                                    WidgetSpan(child: CSizedBox.w5()),
+                                    const WidgetSpan(child: CSizedBox.w5()),
                                     WidgetSpan(
                                         child: CText(
-                                      "${dateToString(controller.kegiatan.value.data?[index].createdAt)}",
+                                      dateToString(controller.kegiatan.value
+                                          .data?[index].createdAt, format: "EEEE, dd MMMM yyyy, HH:mm:ss"),
                                       style: CText.textStyleBody.copyWith(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400),
@@ -282,7 +295,7 @@ class DashboardView extends GetView<DashboardController> {
                         () => controller.getKegiatan(),
                         height: 200);
                   default:
-                    return SizedBox();
+                    return const SizedBox();
                 }
               }),
             ],

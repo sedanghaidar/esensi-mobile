@@ -4,13 +4,8 @@ Multiplatform Apps for Absensi Kegiatan
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To Run or Build Project
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+flutter [build or run] web --web-renderer canvaskit --dart-define=BROWSER_IMAGE_DECODINDG_ENABLED=false
+* canvaskit : diperlukan agar dapat menggunakan RepaintBoundary di web (capture widget to image)
+* --dart-define=BROWSER_IMAGE_DECODINDG_ENABLED=false : diperlukan agar dapat mendownload widget image

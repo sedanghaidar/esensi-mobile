@@ -15,6 +15,7 @@ class FormController extends GetxController {
   TextEditingController controllerInstansi = TextEditingController();
   final TextEditingController controllerJabatan = TextEditingController();
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
+  final GlobalKey qrKey = GlobalKey();
 
   final focusNodeName = FocusNode();
   final focusNodePhone = FocusNode();

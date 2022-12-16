@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
@@ -12,7 +10,7 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  static const String BASE_URL = "http://172.100.31.106:8000";
+  static const String BASE_URL = "http://172.100.31.40:5000";
 
   HiveProvider hive = HiveProvider();
 
@@ -132,8 +130,7 @@ class ApiProvider extends GetConnect {
   }
 
   /// Mendapatkan data detail peserta berdasarkan [id]
-  Future<StatusRequestModel<PesertaModel>> getDetailPeserta(
-      String? id) async {
+  Future<StatusRequestModel<PesertaModel>> getDetailPeserta(String? id) async {
     final response = await get("/api/peserta/$id");
     final model = toDefaultModel(response.body);
     if (response.isOk) {

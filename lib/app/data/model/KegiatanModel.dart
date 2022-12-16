@@ -14,6 +14,7 @@ class KegiatanModel {
     this.dateEnd,
     this.isLimitParticipant,
     this.codeUrl,
+    this.type,
     this.createdBy,
     this.createdAt,
     this.updatedAt,
@@ -29,6 +30,7 @@ class KegiatanModel {
   bool? isLimitParticipant = false;
   int? createdBy;
   String? codeUrl;
+  int? type;
   DateTime? createdAt;
   DateTime? updatedAt;
   DateTime? deletedAt;
@@ -42,6 +44,7 @@ class KegiatanModel {
     DateTime? dateEnd,
     bool? isLimitParticipant,
     String? codeUrl,
+    int? type,
     int? createdBy,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -56,6 +59,7 @@ class KegiatanModel {
         dateEnd: dateEnd ?? this.dateEnd,
         isLimitParticipant: isLimitParticipant ?? this.isLimitParticipant,
         codeUrl: codeUrl ?? this.codeUrl,
+        type: type ?? this.type,
         createdBy: createdBy ?? this.createdBy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -80,6 +84,7 @@ class KegiatanModel {
                 ? false
                 : true,
         codeUrl: json["code_url"] == null ? null : json["code_url"],
+        type: json["type"] == null ? null : json["type"],
         createdBy: json["created_by"] == null ? null : json["created_by"],
         createdAt: json["created_at"] == null
             ? null

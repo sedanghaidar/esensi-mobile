@@ -7,6 +7,7 @@ import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -109,23 +110,6 @@ class FormController extends GetxController {
   }
 
   insertPeserta() async {
-    // late Uint8List img;
-    // if (kIsWeb) {
-    //   final RenderSignaturePad renderSignaturePad =
-    //   signaturePadKey.currentState!.context.findRenderObject()!
-    //   as RenderSignaturePad;
-    //   img =
-    //       await ImageConverter.toImage(renderSignaturePad: renderSignaturePad);
-    // } else {
-    //   final ui.Image imageData =
-    //       await signaturePadKey.currentState!.toImage(pixelRatio: 3.0);
-    //   final ByteData? bytes =
-    //       await imageData.toByteData(format: ui.ImageByteFormat.png);
-    //   if (bytes != null) {
-    //     img = bytes.buffer.asUint8List();
-    //   }
-    // }
-
     convertImage().then((value) {
       String i = controllerInstansi.text;
       if (i == "LAINNYA") {
@@ -145,8 +129,27 @@ class FormController extends GetxController {
       repository.insertPeserta(data).then((result) {
         hideLoading();
         if (result.statusRequest == StatusRequest.SUCCESS) {
-          debugPrint("SUKSES LHO");
-          Get.offAllNamed("${Routes.DETAIL_PESERTA}/${result.data?.id}");
+          if (kegiatan.value.data?.type == 1) {
+            Get.defaultDialog(
+                title: "Berhasil",
+                middleText: "Data anda berhasil tersimpan. Terimakasih.",
+                barrierDismissible: false,
+                onConfirm: () {
+                  controllerName.clear();
+                  controllerInstansi.clear();
+                  controllerInstansiManual.clear();
+                  controllerPhone.clear();
+                  controllerJabatan.clear();
+                  isSigned.value = false;
+                  signaturePadKey.currentState?.clear();
+                  Get.back();
+                },
+                confirmTextColor: basicWhite,
+                buttonColor: basicPrimary,
+                textConfirm: "Oke");
+          } else {
+            Get.offAllNamed("${Routes.DETAIL_PESERTA}/${result.data?.id}");
+          }
         } else {
           debugPrint("${result.failure?.msgShow}");
           dialogError(

@@ -59,6 +59,7 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                   CText("Nama Agenda"),
                   CSizedBox.h5(),
                   CTextField(
+                    controller: controller.controllerName,
                     hintText: "Masukkan Nama Agenda",
                     validator: (value) {
                       if (GetUtils.isBlank(value) == true) return msgBlank;
@@ -205,6 +206,7 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                   CButton(() {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (!controller.formKey.currentState!.validate()) return;
+                    controller.addKegiatan();
                   }, "SIMPAN")
                 ],
               ),

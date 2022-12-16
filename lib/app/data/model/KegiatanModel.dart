@@ -106,8 +106,7 @@ class KegiatanModel {
         "time": time == null ? null : time,
         "location": location == null ? null : location,
         "max_date": dateEnd == null ? null : dateEnd?.toIso8601String(),
-        "limit_participant":
-            isLimitParticipant == null ? false : isLimitParticipant,
+        "limit_participant": isLimitParticipant == null ? false : isLimitParticipant,
         "code_url": codeUrl == null ? null : codeUrl,
         "created_by": createdBy == null ? null : createdBy,
         "created_at": createdAt == null ? null : createdAt?.toIso8601String(),

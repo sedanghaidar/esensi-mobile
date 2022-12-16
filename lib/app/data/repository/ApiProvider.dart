@@ -31,7 +31,7 @@ class ApiProvider extends GetConnect {
         '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
         '╟ url: ${request.url}\n'
         '╟ Headers: ${request.headers}\n'
-        // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+        '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
         '╟ Status Code: ${response.statusCode}\n'
         '╟ Data: ${response.bodyString?.toString() ?? ''}'
         '\n╚══════════════════════════ Response ══════════════════════════\n',
@@ -136,6 +136,17 @@ class ApiProvider extends GetConnect {
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Menambah data kegiatan
+  Future<StatusRequestModel<KegiatanModel>> addNewKegiatan(Map<String, dynamic> kegiatan) async {
+    final response = await post("/api/kegiatan", kegiatan);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }

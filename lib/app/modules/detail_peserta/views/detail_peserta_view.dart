@@ -26,7 +26,7 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: Text('Buat Agenda Baru'),
+        title: Text('Tiket Kegiatan'.toUpperCase()),
         centerTitle: true,
       ),
       body: Obx(() {

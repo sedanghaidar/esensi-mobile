@@ -10,7 +10,8 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  static const String BASE_URL = "http://172.100.31.40:5000";
+  // static const String BASE_URL = "http://172.100.31.40:5000";
+  static const String BASE_URL = "http://10.99.1.171:8000";
 
   HiveProvider hive = HiveProvider();
 

@@ -41,7 +41,7 @@ Widget error(BuildContext context, String? message, Function() reload,
     child: Container(
       padding: EdgeInsets.all(10),
       constraints:
-          BoxConstraints(maxHeight: height == null ? 250 : height + 300),
+          BoxConstraints(maxHeight: height == null ? 300 : height + 350),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: background ?? Colors.transparent,
@@ -55,7 +55,7 @@ Widget error(BuildContext context, String? message, Function() reload,
             height: height ?? 200,
           ),
           CSizedBox.h5(),
-          CText(message ?? "Terjadi Kesalahan"),
+          CText(message ?? "Terjadi Kesalahan", maxLines: 1,),
           CSizedBox.h5(),
           CButton.small(
             reload,
@@ -70,5 +70,10 @@ Widget error(BuildContext context, String? message, Function() reload,
 
 dialogWarning(BuildContext context, String message) {
   Get.dialog(warning(context, message, background: basicWhite),
+      barrierDismissible: true);
+}
+
+dialogError(BuildContext context, String message, Function() reload) {
+  Get.dialog(error(context, message, reload, background: basicWhite),
       barrierDismissible: true);
 }

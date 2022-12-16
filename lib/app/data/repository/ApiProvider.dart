@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
@@ -42,6 +46,7 @@ class ApiProvider extends GetConnect {
     super.onInit();
   }
 
+  /// Api login ke dalam aplikasi
   Future<StatusRequestModel<UserModel>> login(
       String email, String password) async {
     final response =
@@ -54,6 +59,7 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Mendapatkan daftar kegiatan yang sudah dibuat
   Future<StatusRequestModel<List<KegiatanModel>>> getKegiatan() async {
     final response = await get("/api/kegiatan");
     final model = toDefaultModel(response.body);
@@ -65,6 +71,7 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Menghapus data kegiatan berdasarkan [id]
   Future<StatusRequestModel<KegiatanModel>> deleteKegiatan(String? id) async {
     final response = await post("/api/kegiatan/delete/$id", {});
     final model = toDefaultModel(response.body);
@@ -75,11 +82,62 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<StatusRequestModel<KegiatanModel>> getKegiatanByCode(String? code) async {
+  /// Mendapatkan data kegiatan berdasarkan [code]
+  Future<StatusRequestModel<KegiatanModel>> getKegiatanByCode(
+      String? code) async {
     final response = await get("/api/kegiatan/kode/$code");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data daftar semua instansi
+  Future<StatusRequestModel<List<InstansiModel>>> getInstansiSemua() async {
+    final response = await get("/api/organisasi");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(List<InstansiModel>.from(
+          (model.data).map((u) => InstansiModel.fromJson(u))));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data daftar semua instansi berdasarkan [id] kegiatan
+  Future<StatusRequestModel<List<InstansiModel>>> getInstansi(
+      String? id) async {
+    final response = await get("/api/organisasi/kegiatan/$id");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(List<InstansiModel>.from(
+          (model.data).map((u) => InstansiModel.fromJson(u))));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Input absen peserta dengan [peserta] adalah data peserta yang ditulis
+  Future<StatusRequestModel<PesertaModel>> insertPeserta(
+      Map<String, dynamic> peserta) async {
+    final response = await post("/api/peserta/daftar", FormData(peserta));
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(PesertaModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data detail peserta berdasarkan [id]
+  Future<StatusRequestModel<PesertaModel>> getDetailPeserta(
+      String? id) async {
+    final response = await get("/api/peserta/$id");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }

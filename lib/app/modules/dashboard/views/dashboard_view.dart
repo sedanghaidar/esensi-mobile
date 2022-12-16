@@ -211,17 +211,20 @@ class DashboardView extends GetView<DashboardController> {
                                 ),
                                 const CSizedBox.h5(),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Flexible(
                                       child: Container(
                                         constraints: BoxConstraints(
-                                            maxWidth: context.width / 1.75),
+                                          maxWidth: context.width/2
+                                        ),
                                         child: InkWell(
                                           child: CText(
                                             "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
                                             style: CText.textStyleBody
                                                 .copyWith(fontSize: 16),
-                                            overflow: TextOverflow.ellipsis,
+                                            // overflow: TextOverflow.ellipsis,
+                                            softWrap: false,
                                           ),
                                           onTap: () {
                                             // if (orientation == WEB_LANDSCAPE ||

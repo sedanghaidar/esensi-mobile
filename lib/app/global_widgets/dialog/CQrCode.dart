@@ -50,7 +50,7 @@ CQrCode(BuildContext context, String code, String title, String name) async {
                   size: 400,
                   errorCorrectLevel: QrErrorCorrectLevel.M,
                   roundEdges: true,
-                  typeNumber: 3,
+                  // typeNumber: 100,
                 ),
                 CSizedBox.h10(),
                 CText(

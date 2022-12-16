@@ -147,16 +147,15 @@ class CTextFieldState extends State<CTextField> {
   @override
   Widget build(BuildContext context) {
     InputDecoration defaultDecoration = InputDecoration(
-      hintStyle: CText.textStyleBody,
-      hintText: widget.hintText,
-      fillColor: basicWhite,
-      filled: true,
-      focusColor: basicWhite,
-      errorBorder: errorBorder,
-      focusedBorder: focusBorder,
-      suffixIcon: widget.suffixIcon,
-      border: border,
-    );
+        hintStyle: CText.textStyleBody,
+        hintText: widget.hintText,
+        fillColor: basicWhite,
+        filled: true,
+        focusColor: basicWhite,
+        errorBorder: errorBorder,
+        focusedBorder: focusBorder,
+        suffixIcon: widget.suffixIcon,
+        border: border);
 
     if (widget.decoration != null) {
       defaultDecoration = widget.decoration;

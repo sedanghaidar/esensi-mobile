@@ -1,33 +1,40 @@
-import 'dart:async';
-
-import 'package:absensi_kegiatan/app/global_widgets/other/suffix_icon.dart';
+import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:flutter/material.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 import 'CTextField.dart';
 
-class CAutoCompleteString extends StatelessWidget {
+class CAutoCompleteInstansi extends StatelessWidget {
   TextEditingController controller;
   final optionsBuilder;
   final itemCount;
   final widthOPtions;
   final heightOptions;
   final validator;
+  final hintText;
+  final isAutoValidateMode;
+  final Function(String)? onSelected;
 
-  CAutoCompleteString(this.controller, this.optionsBuilder, this.itemCount,
-      {this.widthOPtions, this.heightOptions, this.validator});
+  CAutoCompleteInstansi(this.controller, this.optionsBuilder, this.itemCount,
+      {this.widthOPtions,
+      this.heightOptions,
+      this.validator,
+      this.hintText,
+      this.isAutoValidateMode, this.onSelected});
 
   @override
   Widget build(BuildContext context) {
-    return Autocomplete<String>(
+    return Autocomplete<InstansiModel>(
       onSelected: (data) {
-        controller.text = data;
-        controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: controller.text.length));
+        controller.text = data.name ?? "";
+        controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length));
+        if(onSelected!=null){
+          onSelected!(data.name??"");
+        }
       },
       optionsBuilder: optionsBuilder,
       displayStringForOption: (value) {
-        return value;
+        return value.name ?? "";
       },
       optionsViewBuilder: (context, onSelected, options) {
         return Align(
@@ -43,7 +50,7 @@ class CAutoCompleteString extends StatelessWidget {
                       final data = options.elementAt(index);
                       return ListTile(
                         title: SubstringHighlight(
-                          text: data,
+                          text: data.name ?? "",
                           term: controller.text,
                           textStyleHighlight:
                               TextStyle(fontWeight: FontWeight.w700),
@@ -57,7 +64,7 @@ class CAutoCompleteString extends StatelessWidget {
                     }
                   },
                   separatorBuilder: (context, index) => Divider(),
-                  itemCount: itemCount),
+                  itemCount: options.length),
             ),
           ),
         );
@@ -67,9 +74,10 @@ class CAutoCompleteString extends StatelessWidget {
         return CTextField(
           controller: controller,
           focusNode: focusNode,
-          hintText: "Pilih salah satu",
+          hintText: hintText ?? "Pilih salah satu",
           onEditingComplete: onEditingComplete,
           validator: validator,
+          autoValidateMode: isAutoValidateMode ?? AutovalidateMode.disabled,
         );
       },
     );

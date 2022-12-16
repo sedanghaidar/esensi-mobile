@@ -8,8 +8,10 @@ import 'package:absensi_kegiatan/app/global_widgets/text_field/CAutoCompleteStri
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
+import '../../../data/model/InstansiModel.dart';
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
@@ -33,14 +35,13 @@ class FormView extends GetView<FormController> {
       width = context.width;
     }
 
-    debugPrint("BUILD!");
-    String id = Get.parameters['id'].toString();
-    controller.getKegiatan(id);
+    String code = Get.parameters['code'].toString();
+    controller.getKegiatan(code);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: Text('Formulir'),
+        title: const Text('Formulir'),
         centerTitle: true,
       ),
       backgroundColor: basicGrey4,
@@ -59,7 +60,7 @@ class FormView extends GetView<FormController> {
               return successBody(context);
             }
           default:
-            return SizedBox();
+            return const SizedBox();
         }
       }),
     );
@@ -68,7 +69,7 @@ class FormView extends GetView<FormController> {
   successBody(BuildContext context) {
     return Center(
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         alignment: Alignment.topLeft,
         color: basicWhite,
         width: width,
@@ -80,36 +81,36 @@ class FormView extends GetView<FormController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CText.header("${controller.kegiatan.value.data?.name}"),
-                CSizedBox.h5(),
-                CText("Kegiatan akan dilaksanakan pada :"),
+                const CSizedBox.h5(),
+                const CText("Kegiatan akan dilaksanakan pada :"),
                 Container(
-                  margin: EdgeInsets.only(left: 10, top: 5),
+                  margin: const EdgeInsets.only(left: 10, top: 5),
                   child: RichText(
                       text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.calendar_month)),
-                    WidgetSpan(child: CSizedBox.w5()),
+                    const WidgetSpan(child: Icon(Icons.calendar_month)),
+                    const WidgetSpan(child: CSizedBox.w5()),
                     WidgetSpan(
                         child: CText(
-                            "${dateToString(controller.kegiatan.value.data?.date)}"))
+                            dateToString(controller.kegiatan.value.data?.date)))
                   ])),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 10, top: 5),
+                  margin: const EdgeInsets.only(left: 10, top: 5),
                   child: RichText(
                       text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.access_time_rounded)),
-                    WidgetSpan(child: CSizedBox.w5()),
+                    const WidgetSpan(child: Icon(Icons.access_time_rounded)),
+                    const WidgetSpan(child: CSizedBox.w5()),
                     WidgetSpan(
                         child: CText(
                             "${controller.kegiatan.value.data?.time} - selesai"))
                   ])),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 10, top: 5),
+                  margin: const EdgeInsets.only(left: 10, top: 5),
                   child: RichText(
                       text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.location_on_outlined)),
-                    WidgetSpan(child: CSizedBox.w5()),
+                    const WidgetSpan(child: Icon(Icons.location_on_outlined)),
+                    const WidgetSpan(child: CSizedBox.w5()),
                     WidgetSpan(
                         child: CText(
                             "${controller.kegiatan.value.data?.location}"))
@@ -120,16 +121,16 @@ class FormView extends GetView<FormController> {
                       ? false
                       : true,
                   child: Container(
-                    margin: EdgeInsets.only(left: 10, top: 5),
+                    margin: const EdgeInsets.only(left: 10, top: 5),
                     child: CText(
                       "Formulir akan ditutup pada ${dateToString(controller.kegiatan.value.data?.dateEnd)}",
                       style: CText.textStyleBody.copyWith(color: basicRed1),
                     ),
                   ),
                 ),
-                CSizedBox.h20(),
-                CText("Nama"),
-                CSizedBox.h5(),
+                const CSizedBox.h20(),
+                const CText("Nama"),
+                const CSizedBox.h5(),
                 CTextField(
                   controller: controller.controllerName,
                   hintText: "Masukkan Nama",
@@ -140,49 +141,110 @@ class FormView extends GetView<FormController> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                 ),
-                CSizedBox.h10(),
-                CText("No. Telp"),
-                CSizedBox.h5(),
+                const CSizedBox.h10(),
+                const CText("No. Telp"),
+                const CSizedBox.h5(),
                 CTextField(
                   controller: controller.controllerPhone,
                   hintText: "Masukkan No. Telp",
                   validator: (value) {
                     if (GetUtils.isBlank(value) == true) return msgBlank;
-                    if (GetUtils.isPhoneNumber(value) == false)
+                    if (GetUtils.isPhoneNumber(value) == false) {
                       return msgPhoneNotValid;
+                    }
                     return null;
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.phone,
                 ),
-                CSizedBox.h10(),
-                CText("Instansi"),
-                CSizedBox.h5(),
+                const CSizedBox.h10(),
+                const CText("Instansi"),
+                const CSizedBox.h5(),
                 Obx(() {
                   switch (controller.instansi.value.statusRequest) {
                     case StatusRequest.LOADING:
                       return loading(context);
                     case StatusRequest.SUCCESS:
-                      List<String> result =
-                          controller.instansi.value.data ?? List.empty();
-                      return CAutoCompleteString(
-                        controller.controllerInstansi,
-                        (text) {
+                      List<InstansiModel> result = controller.instansi.value.data ?? List.empty();
+                      return Autocomplete<InstansiModel>(
+                        onSelected: (data) {
+                          controller.controllerInstansi.text = data.name ?? "";
+                          controller.controllerInstansi.selection =
+                              TextSelection.fromPosition(TextPosition(
+                                  offset: controller
+                                      .controllerInstansi.text.length));
+                          if (data.name == "LAINNYA") {
+                            controller.setIsOpenInstansi(true);
+                          } else {
+                            controller.setIsOpenInstansi(false);
+                          }
+                        },
+                        optionsBuilder: (text) {
                           if (text.text.isEmpty) {
                             return result;
                           } else {
-                            return (result).where((element) => (element)
-                                .toLowerCase()
-                                .contains(text.text.toLowerCase()));
+                            return (result).where((element) =>
+                                (element.name ?? "")
+                                    .toLowerCase()
+                                    .contains(text.text.toLowerCase()));
                           }
                         },
-                        result.length,
-                        widthOPtions: width - 40,
-                        validator: (value) {
-                          if (GetUtils.isBlank(value) == true) return msgBlank;
-                          if (result.contains(value) == false)
-                            return "Silahkan pilih salah satu dari pilihan yang ada";
-                          return null;
+                        displayStringForOption: (value) {
+                          return value.name ?? "";
+                        },
+                        optionsViewBuilder: (context, onSelected, options) {
+                          return Align(
+                            alignment: Alignment.topLeft,
+                            child: Material(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    maxHeight: 200, maxWidth: width - 40),
+                                child: ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      try {
+                                        final data = options.elementAt(index);
+                                        return ListTile(
+                                          title: SubstringHighlight(
+                                            text: data.name ?? "",
+                                            term: controller
+                                                .controllerInstansi.text,
+                                            textStyleHighlight: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          onTap: () {
+                                            onSelected(data);
+                                          },
+                                        );
+                                      } catch (e) {
+                                        return SizedBox();
+                                      }
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        Divider(),
+                                    itemCount: options.length),
+                              ),
+                            ),
+                          );
+                        },
+                        fieldViewBuilder: (context, controller, focusNode,
+                            onEditingComplete) {
+                          this.controller.controllerInstansi = controller;
+                          return CTextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            hintText: "Pilih salah satu dari pilihan yang ada",
+                            onEditingComplete: onEditingComplete,
+                            validator: (value) {
+                              if (GetUtils.isBlank(value) == true) {
+                                return msgBlank;
+                              }
+                              Iterable<InstansiModel> data = result.where((element) => element.name == value);
+                              if(data.isEmpty){
+                                return "Silahkan pilih salah satu dari pilihan yang ada";
+                              }
+                              return null;
+                            },
+                          );
                         },
                       );
                     case StatusRequest.ERROR:
@@ -191,21 +253,29 @@ class FormView extends GetView<FormController> {
                           controller.instansi.value.failure?.msgShow,
                           () => controller.getInstansi());
                     default:
-                      return CTextField(
-                        controller: controller.controllerInstansi,
-                        hintText: "Masukkan Instansi",
-                        validator: (value) {
-                          if (GetUtils.isBlank(value) == true) return msgBlank;
-                          return null;
-                        },
-                        textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.text,
-                      );
+                      return SizedBox();
                   }
                 }),
-                CSizedBox.h10(),
-                CText("Jabatan"),
-                CSizedBox.h5(),
+                Obx(() {
+                  return Visibility(
+                    visible: controller.isOpenInstansi.value,
+                    child: CTextField(
+                        hintText: "Masukkan nama instansi anda",
+                        controller: controller.controllerInstansiManual,
+                      validator: (value){
+                          if(controller.controllerInstansi.text=="LAINNYA"){
+                            if(GetUtils.isBlank(value)==true){
+                              return "Nama Instansi Tidak Boleh Kosong";
+                            }
+                          }
+                          return null;
+                      },
+                    ),
+                  );
+                }),
+                const CSizedBox.h10(),
+                const CText("Jabatan"),
+                const CSizedBox.h5(),
                 CTextField(
                   controller: controller.controllerJabatan,
                   hintText: "Masukkan Jabatan",
@@ -216,9 +286,9 @@ class FormView extends GetView<FormController> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                 ),
-                CSizedBox.h10(),
-                CText("Tanda Tangan"),
-                CSizedBox.h5(),
+                const CSizedBox.h10(),
+                const CText("Tanda Tangan"),
+                const CSizedBox.h5(),
                 Container(
                   decoration:
                       BoxDecoration(border: Border.all(color: basicBlack)),
@@ -246,16 +316,11 @@ class FormView extends GetView<FormController> {
                 CButton(() {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.formKey.currentState!.validate()) return;
-                  if (GetUtils.isBlank(controller.controllerInstansi.text) ==
-                      true) {
-                    showToast("Anda harus memilih instansi terlebih dahulu");
-                    return;
-                  }
                   if (!controller.isSigned.value) {
                     showToast("Tanda tangan terlebih dahulu");
                     return;
                   }
-                  CQrCode(context, "asdfasdf", "Judul Acara", "Hanif Abdullah");
+                  controller.insertPeserta();
                 }, "SIMPAN")
               ],
             ),

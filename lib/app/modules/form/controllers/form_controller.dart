@@ -15,7 +15,6 @@ import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../data/model/repository/StatusRequestModel.dart';
 import '../../../global_widgets/dialog/CLoading.dart';
-import '../../../global_widgets/dialog/CQrCode.dart';
 import '../../../global_widgets/sign/mobile_image_converter.dart'
     if (dart.library.html) '../../../global_widgets/sign/web_image_converter.dart';
 import '../../../routes/app_pages.dart';

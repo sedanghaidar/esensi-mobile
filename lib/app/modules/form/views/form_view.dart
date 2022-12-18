@@ -45,24 +45,23 @@ class FormView extends GetView<FormController> {
         centerTitle: true,
       ),
       backgroundColor: basicGrey4,
-      body: Obx(() {
-        switch (controller.kegiatan.value.statusRequest) {
-          case StatusRequest.LOADING:
-            return loading(context);
-          case StatusRequest.SUCCESS:
-            {
-              if (checkOutDate(
-                  controller.kegiatan.value.data?.date ?? DateTime.now(),
-                  controller.kegiatan.value.data?.dateEnd)) {
-                return warning(context,
-                    "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+      body: Container(
+        child: Obx(() {
+          switch (controller.kegiatan.value.statusRequest) {
+            case StatusRequest.LOADING:
+              return loading(context);
+            case StatusRequest.SUCCESS:
+              {
+                if (checkOutDate(controller.kegiatan.value.data?.date ?? DateTime.now(), controller.kegiatan.value.data?.dateEnd)) {
+                  return warning(context, "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+                }
+                return successBody(context);
               }
-              return successBody(context);
-            }
-          default:
-            return const SizedBox();
-        }
-      }),
+            default:
+              return const SizedBox();
+          }
+        }),
+      ),
     );
   }
 

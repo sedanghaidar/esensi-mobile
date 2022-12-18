@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
+import '../../../global_widgets/Html.dart'
+if (dart.library.html) 'dart:html';
+// import 'dart:html';
 
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';

@@ -13,32 +13,32 @@ class CSizedBox extends StatelessWidget {
 
   const CSizedBox.h20({
     super.key,
-    this.height = 20,
-    this.width = 0
+    this.height = 20.0,
+    this.width = 0.0
   });
 
   const CSizedBox.h10({
     super.key,
-    this.height = 10,
-    this.width = 0
+    this.height = 10.0,
+    this.width = 0.0
   });
 
   const CSizedBox.h5({
     super.key,
-    this.height = 5,
-    this.width = 0
+    this.height = 5.0,
+    this.width = 0.0
   });
 
   const CSizedBox.w10({
     super.key,
-    this.height = 0,
-    this.width = 10
+    this.height = 0.0,
+    this.width = 10.0
   });
 
   const CSizedBox.w5({
     super.key,
-    this.height = 0,
-    this.width = 5
+    this.height = 0.0,
+    this.width = 5.0
   });
 
   @override

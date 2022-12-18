@@ -7,7 +7,6 @@ import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
-import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +17,7 @@ import '../../../global_widgets/dialog/CLoading.dart';
 import '../../../global_widgets/sign/mobile_image_converter.dart'
     if (dart.library.html) '../../../global_widgets/sign/web_image_converter.dart';
 import '../../../routes/app_pages.dart';
+import '../../../utils/colors.dart';
 
 class FormController extends GetxController {
   ApiProvider repository = Get.find();
@@ -44,7 +44,6 @@ class FormController extends GetxController {
 
   setIsOpenInstansi(bool value) {
     isOpenInstansi.value = value;
-    debugPrint("IS OPEN INSTANSI ${isOpenInstansi.value}");
   }
 
   getKegiatan(String code) {

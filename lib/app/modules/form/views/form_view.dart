@@ -1,10 +1,7 @@
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
-import 'package:absensi_kegiatan/app/global_widgets/dialog/CQrCode.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
-import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
-import 'package:absensi_kegiatan/app/global_widgets/text_field/CAutoCompleteString.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +10,7 @@ import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../data/model/InstansiModel.dart';
 import '../../../global_widgets/button/CButton.dart';
+import '../../../global_widgets/other/toast.dart';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../global_widgets/text_field/CTextField.dart';
@@ -35,9 +33,6 @@ class FormView extends GetView<FormController> {
       width = context.width;
     }
 
-    String code = Get.parameters['code'].toString();
-    controller.getKegiatan(code);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
@@ -45,24 +40,26 @@ class FormView extends GetView<FormController> {
         centerTitle: true,
       ),
       backgroundColor: basicGrey4,
-      body: Obx(() {
-        switch (controller.kegiatan.value.statusRequest) {
-          case StatusRequest.LOADING:
-            return loading(context);
-          case StatusRequest.SUCCESS:
-            {
-              if (checkOutDate(
-                  controller.kegiatan.value.data?.date ?? DateTime.now(),
-                  controller.kegiatan.value.data?.dateEnd)) {
-                return warning(context,
-                    "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+      body: Container(
+        child: Obx(() {
+          switch (controller.kegiatan.value.statusRequest) {
+            case StatusRequest.LOADING:
+              return loading(context);
+            case StatusRequest.SUCCESS:
+              {
+                if (checkOutDate(
+                    controller.kegiatan.value.data?.date ?? DateTime.now(),
+                    controller.kegiatan.value.data?.dateEnd)) {
+                  return warning(context,
+                      "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+                }
+                return successBody(context);
               }
-              return successBody(context);
-            }
-          default:
-            return const SizedBox();
-        }
-      }),
+            default:
+              return const SizedBox();
+          }
+        }),
+      ),
     );
   }
 
@@ -133,6 +130,7 @@ class FormView extends GetView<FormController> {
                 const CSizedBox.h5(),
                 CTextField(
                   controller: controller.controllerName,
+                  focusNode: controller.name,
                   hintText: "Masukkan Nama",
                   validator: (value) {
                     if (GetUtils.isBlank(value) == true) return msgBlank;
@@ -165,7 +163,8 @@ class FormView extends GetView<FormController> {
                     case StatusRequest.LOADING:
                       return loading(context);
                     case StatusRequest.SUCCESS:
-                      List<InstansiModel> result = controller.instansi.value.data ?? List.empty();
+                      List<InstansiModel> result =
+                          controller.instansi.value.data ?? List.empty();
                       return Autocomplete<InstansiModel>(
                         onSelected: (data) {
                           controller.controllerInstansi.text = data.name ?? "";
@@ -238,8 +237,9 @@ class FormView extends GetView<FormController> {
                               if (GetUtils.isBlank(value) == true) {
                                 return msgBlank;
                               }
-                              Iterable<InstansiModel> data = result.where((element) => element.name == value);
-                              if(data.isEmpty){
+                              Iterable<InstansiModel> data = result
+                                  .where((element) => element.name == value);
+                              if (data.isEmpty) {
                                 return "Silahkan pilih salah satu dari pilihan yang ada";
                               }
                               return null;
@@ -260,15 +260,15 @@ class FormView extends GetView<FormController> {
                   return Visibility(
                     visible: controller.isOpenInstansi.value,
                     child: CTextField(
-                        hintText: "Masukkan nama instansi anda",
-                        controller: controller.controllerInstansiManual,
-                      validator: (value){
-                          if(controller.controllerInstansi.text=="LAINNYA"){
-                            if(GetUtils.isBlank(value)==true){
-                              return "Nama Instansi Tidak Boleh Kosong";
-                            }
+                      hintText: "Masukkan nama instansi anda",
+                      controller: controller.controllerInstansiManual,
+                      validator: (value) {
+                        if (controller.controllerInstansi.text == "LAINNYA") {
+                          if (GetUtils.isBlank(value) == true) {
+                            return "Nama Instansi Tidak Boleh Kosong";
                           }
-                          return null;
+                        }
+                        return null;
                       },
                     ),
                   );

@@ -4,7 +4,7 @@ import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
-import 'package:flutter/material.dart';
+
 import 'package:get/get_connect/connect.dart';
 
 import '../model/repository/StatusRequestModel.dart';
@@ -26,17 +26,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      debugPrint(
-        '\n╔══════════════════════════ Response ══════════════════════════\n'
-        '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-        '╟ url: ${request.url}\n'
-        '╟ Headers: ${request.headers}\n'
-        '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-        '╟ Status Code: ${response.statusCode}\n'
-        '╟ Data: ${response.bodyString?.toString() ?? ''}'
-        '\n╚══════════════════════════ Response ══════════════════════════\n',
-        wrapWidth: 1024,
-      );
+      // debugPrint(
+      //   '\n╔══════════════════════════ Response ══════════════════════════\n'
+      //   '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+      //   '╟ url: ${request.url}\n'
+      //   '╟ Headers: ${request.headers}\n'
+      //   '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+      //   '╟ Status Code: ${response.statusCode}\n'
+      //   '╟ Data: ${response.bodyString?.toString() ?? ''}'
+      //   '\n╚══════════════════════════ Response ══════════════════════════\n',
+      //   wrapWidth: 1024,
+      // );
 
       httpClient.timeout = const Duration(minutes: 1);
 

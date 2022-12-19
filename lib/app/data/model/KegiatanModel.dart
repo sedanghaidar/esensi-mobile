@@ -84,7 +84,7 @@ class KegiatanModel {
                 ? false
                 : true,
         codeUrl: json["code_url"] == null ? null : json["code_url"],
-        type: json["type"] == null ? null : json["type"],
+        type: json["type"] == null ? null : int.parse(json["type"].toString()),
         createdBy: json["created_by"] == null ? null : json["created_by"],
         createdAt: json["created_at"] == null
             ? null

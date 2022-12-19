@@ -1,5 +1,3 @@
-import 'dart:html' as html;
-
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
@@ -85,45 +83,46 @@ class DashboardView extends GetView<DashboardController> {
         ],
       ),
       backgroundColor: basicGrey4,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(
-              top: 20, bottom: 20, left: 20, right: paddingHorizontal),
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  CTextField.noStyle(
-                    hintText: "Masukkan nama agenda",
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: SizedBox(
-                        width: 150,
-                        child: CButton.box(
-                          () {
-                            Get.toNamed(Routes.CREATE_AGENDA);
-                          },
-                          "Buat Agenda",
-                        )),
-                  ),
-                ],
-              ),
-              const CSizedBox.h20(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CText.header(
-                    "Daftar Agenda",
-                    style: CText.textStyleSubhead,
-                  ),
-                ],
-              ),
-              const CSizedBox.h20(),
-              Obx(() {
+      body: Padding(
+        padding: EdgeInsets.only(
+            top: 20, bottom: 20, left: 20, right: paddingHorizontal),
+        child: Column(
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                CTextField.noStyle(
+                  hintText: "Masukkan nama agenda",
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                      width: 150,
+                      child: CButton.box(
+                        () {
+                          Get.toNamed(Routes.CREATE_AGENDA);
+                        },
+                        "Buat Agenda",
+                      )),
+                ),
+              ],
+            ),
+            const CSizedBox.h20(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                CText.header(
+                  "Daftar Agenda",
+                  style: CText.textStyleSubhead,
+                ),
+              ],
+            ),
+            const CSizedBox.h20(),
+            Expanded(
+              flex: 1,
+              child: Obx(() {
                 switch (controller.kegiatan.value.statusRequest) {
                   case StatusRequest.LOADING:
                     return loading(context);
@@ -216,8 +215,7 @@ class DashboardView extends GetView<DashboardController> {
                                     Flexible(
                                       child: Container(
                                         constraints: BoxConstraints(
-                                          maxWidth: context.width/2
-                                        ),
+                                            maxWidth: context.width / 2),
                                         child: InkWell(
                                           child: CText(
                                             "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
@@ -227,12 +225,6 @@ class DashboardView extends GetView<DashboardController> {
                                             softWrap: false,
                                           ),
                                           onTap: () {
-                                            // if (orientation == WEB_LANDSCAPE ||
-                                            //     orientation == WEB_PORTRAIT) {
-                                            //   html.window.open(
-                                            //       "http://localhost:56884/#/form/12",
-                                            //       "_blank");
-                                            // }
                                             Get.toNamed(
                                                     "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
                                                 ?.then((value) {
@@ -279,8 +271,11 @@ class DashboardView extends GetView<DashboardController> {
                                     const WidgetSpan(child: CSizedBox.w5()),
                                     WidgetSpan(
                                         child: CText(
-                                      dateToString(controller.kegiatan.value
-                                          .data?[index].createdAt, format: "EEEE, dd MMMM yyyy, HH:mm:ss"),
+                                      dateToString(
+                                          controller.kegiatan.value.data?[index]
+                                              .createdAt,
+                                          format:
+                                              "EEEE, dd MMMM yyyy, HH:mm:ss"),
                                       style: CText.textStyleBody.copyWith(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400),
@@ -301,8 +296,8 @@ class DashboardView extends GetView<DashboardController> {
                     return const SizedBox();
                 }
               }),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

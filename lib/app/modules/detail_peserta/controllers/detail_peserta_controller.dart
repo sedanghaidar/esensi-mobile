@@ -15,7 +15,6 @@ class DetailPesertaController extends GetxController {
   getPesertaById(String? id) {
     peserta.value = StatusRequestModel.loading();
     repository.getDetailPeserta(id).then((value) {
-      debugPrint("SUKSESSS");
       peserta.value = value;
     }, onError: (e) {
       debugPrint("${e}");

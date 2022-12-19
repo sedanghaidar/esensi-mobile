@@ -4,6 +4,8 @@ import '../modules/create_agenda/bindings/create_agenda_binding.dart';
 import '../modules/create_agenda/views/create_agenda_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
+import '../modules/detail_agenda/bindings/detail_agenda_binding.dart';
+import '../modules/detail_agenda/views/detail_agenda_view.dart';
 import '../modules/detail_peserta/bindings/detail_peserta_binding.dart';
 import '../modules/detail_peserta/views/detail_peserta_view.dart';
 import '../modules/form/bindings/form_binding.dart';
@@ -47,9 +49,14 @@ class AppPages {
       binding: FormBinding(),
     ),
     GetPage(
-      name: _Paths.DETAIL_PESERTA+"/:id",
+      name: _Paths.DETAIL_PESERTA + "/:id",
       page: () => DetailPesertaView(),
       binding: DetailPesertaBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_AGENDA + "/:id",
+      page: () => DetailAgendaView(),
+      binding: DetailAgendaBinding(),
     ),
   ];
 }

@@ -135,154 +135,163 @@ class DashboardView extends GetView<DashboardController> {
                         scrollDirection: Axis.vertical,
                         itemCount: controller.kegiatan.value.data?.length ?? 0,
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: basicWhite,
-                                border: Border.all(color: basicGrey2),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: CText(
-                                        "${controller.kegiatan.value.data?[index].name}",
-                                        style: CText.textStyleBodyBold.copyWith(
-                                            fontSize: 24,
-                                            letterSpacing: 0.75,
-                                            fontWeight: FontWeight.w600),
-                                        overflow: TextOverflow.ellipsis,
+                          return InkWell(
+                            onTap: () {
+                              Get.toNamed(
+                                  "${Routes.DETAIL_AGENDA}/${controller.kegiatan.value.data?[index].id}");
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: basicWhite,
+                                  border: Border.all(color: basicGrey2),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: CText(
+                                          "${controller.kegiatan.value.data?[index].name}",
+                                          style: CText.textStyleBodyBold
+                                              .copyWith(
+                                                  fontSize: 24,
+                                                  letterSpacing: 0.75,
+                                                  fontWeight: FontWeight.w600),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                        flex: 0,
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                                width: 80,
-                                                child: CButton.icon(
-                                                    () {}, "Edit",
-                                                    style:
-                                                        styleButtonFilledBoxSmall,
-                                                    icon: const Icon(
-                                                      Icons.edit,
-                                                      size: 16,
-                                                      color: basicWhite,
-                                                    ))),
-                                            const CSizedBox.w5(),
-                                            SizedBox(
-                                                width: 95,
-                                                child: CButton.icon(() {
-                                                  Get.defaultDialog(
-                                                      title: "Perhatian",
-                                                      middleText:
-                                                          "Apakah anda yakin ingin menghapus?",
-                                                      textConfirm: "Ya",
-                                                      onConfirm: () {
-                                                        controller.deleteKegiatan(
-                                                            "${controller.kegiatan.value.data?[index].id}");
-                                                      },
-                                                      contentPadding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      confirmTextColor:
-                                                          basicWhite,
-                                                      buttonColor: basicPrimary,
-                                                      cancelTextColor:
-                                                          basicPrimary,
-                                                      textCancel: "Batal");
-                                                }, "Hapus",
-                                                    style:
-                                                        styleButtonFilledBoxSmall,
-                                                    icon: const Icon(
-                                                      Icons.delete,
-                                                      size: 16,
-                                                      color: basicWhite,
-                                                    )))
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                const CSizedBox.h5(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth: context.width / 2),
-                                        child: InkWell(
-                                          child: CText(
-                                            "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
-                                            style: CText.textStyleBody
-                                                .copyWith(fontSize: 16),
-                                            // overflow: TextOverflow.ellipsis,
-                                            softWrap: false,
+                                      Expanded(
+                                          flex: 0,
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                  width: 80,
+                                                  child: CButton.icon(
+                                                      () {}, "Edit",
+                                                      style:
+                                                          styleButtonFilledBoxSmall,
+                                                      icon: const Icon(
+                                                        Icons.edit,
+                                                        size: 16,
+                                                        color: basicWhite,
+                                                      ))),
+                                              const CSizedBox.w5(),
+                                              SizedBox(
+                                                  width: 95,
+                                                  child: CButton.icon(() {
+                                                    Get.defaultDialog(
+                                                        title: "Perhatian",
+                                                        middleText:
+                                                            "Apakah anda yakin ingin menghapus?",
+                                                        textConfirm: "Ya",
+                                                        onConfirm: () {
+                                                          controller.deleteKegiatan(
+                                                              "${controller.kegiatan.value.data?[index].id}");
+                                                        },
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        confirmTextColor:
+                                                            basicWhite,
+                                                        buttonColor:
+                                                            basicPrimary,
+                                                        cancelTextColor:
+                                                            basicPrimary,
+                                                        textCancel: "Batal");
+                                                  }, "Hapus",
+                                                      style:
+                                                          styleButtonFilledBoxSmall,
+                                                      icon: const Icon(
+                                                        Icons.delete,
+                                                        size: 16,
+                                                        color: basicWhite,
+                                                      )))
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                  const CSizedBox.h5(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Flexible(
+                                        child: Container(
+                                          constraints: BoxConstraints(
+                                              maxWidth: context.width / 2),
+                                          child: InkWell(
+                                            child: CText(
+                                              "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}",
+                                              style: CText.textStyleBody
+                                                  .copyWith(fontSize: 16),
+                                              // overflow: TextOverflow.ellipsis,
+                                              softWrap: false,
+                                            ),
+                                            onTap: () {
+                                              Get.toNamed(
+                                                      "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
+                                                  ?.then((value) {
+                                                controller.getKegiatan();
+                                              });
+                                            },
                                           ),
-                                          onTap: () {
-                                            Get.toNamed(
-                                                    "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
-                                                ?.then((value) {
-                                              controller.getKegiatan();
+                                        ),
+                                      ),
+                                      const CSizedBox.w10(),
+                                      Expanded(
+                                        flex: 0,
+                                        child: InkWell(
+                                          onTap: () async {
+                                            await Clipboard.setData(ClipboardData(
+                                                    text:
+                                                        "${controller.kegiatan.value.data?[index].codeUrl}"))
+                                                .whenComplete(() {
+                                              showToast(
+                                                  "Berhasil menyalin kode");
                                             });
                                           },
-                                        ),
-                                      ),
-                                    ),
-                                    const CSizedBox.w10(),
-                                    Expanded(
-                                      flex: 0,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          await Clipboard.setData(ClipboardData(
-                                                  text:
-                                                      "${controller.kegiatan.value.data?[index].codeUrl}"))
-                                              .whenComplete(() {
-                                            showToast("Berhasil menyalin kode");
-                                          });
-                                        },
-                                        child: Container(
-                                          color: basicGrey4,
-                                          padding: const EdgeInsets.all(8),
-                                          child: const Icon(
-                                            Icons.copy,
-                                            size: 18,
+                                          child: Container(
+                                            color: basicGrey4,
+                                            padding: const EdgeInsets.all(8),
+                                            child: const Icon(
+                                              Icons.copy,
+                                              size: 18,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const CSizedBox.h5(),
-                                const Divider(height: 2),
-                                const CSizedBox.h5(),
-                                RichText(
-                                  text: TextSpan(children: [
-                                    const WidgetSpan(
-                                        child: Icon(
-                                      Icons.access_time_filled_rounded,
-                                      size: 16,
-                                    )),
-                                    const WidgetSpan(child: CSizedBox.w5()),
-                                    WidgetSpan(
-                                        child: CText(
-                                      dateToString(
-                                          controller.kegiatan.value.data?[index]
-                                              .createdAt,
-                                          format:
-                                              "EEEE, dd MMMM yyyy, HH:mm:ss"),
-                                      style: CText.textStyleBody.copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
-                                    ))
-                                  ]),
-                                )
-                              ],
+                                    ],
+                                  ),
+                                  const CSizedBox.h5(),
+                                  const Divider(height: 2),
+                                  const CSizedBox.h5(),
+                                  RichText(
+                                    text: TextSpan(children: [
+                                      const WidgetSpan(
+                                          child: Icon(
+                                        Icons.access_time_filled_rounded,
+                                        size: 16,
+                                      )),
+                                      const WidgetSpan(child: CSizedBox.w5()),
+                                      WidgetSpan(
+                                          child: CText(
+                                        dateToString(
+                                            controller.kegiatan.value
+                                                .data?[index].createdAt,
+                                            format:
+                                                "EEEE, dd MMMM yyyy, HH:mm:ss"),
+                                        style: CText.textStyleBody.copyWith(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400),
+                                      ))
+                                    ]),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         });

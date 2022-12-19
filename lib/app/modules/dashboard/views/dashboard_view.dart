@@ -7,7 +7,6 @@ import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/button/CButtonStyle.dart';
@@ -226,22 +225,11 @@ class DashboardView extends GetView<DashboardController> {
                                             softWrap: false,
                                           ),
                                           onTap: () {
-                                            if (orientation == WEB_LANDSCAPE ||
-                                                orientation == WEB_PORTRAIT) {
-                                              Get.toNamed(
-                                                      "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
-                                                  ?.then((value) {
-                                                controller.getKegiatan();
-                                              });
-                                            } else {
-                                              ///todo change with https url
-                                              final Uri uri = Uri(
-                                                  scheme: 'https',
-                                                  host: 'stackoverflow.com',
-                                                  path:
-                                                      'questions/55592392/how-to-fix-neterr-cleartext-not-permitted-in-flutter');
-                                              launchUrl(uri);
-                                            }
+                                            Get.toNamed(
+                                                    "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
+                                                ?.then((value) {
+                                              controller.getKegiatan();
+                                            });
                                           },
                                         ),
                                       ),

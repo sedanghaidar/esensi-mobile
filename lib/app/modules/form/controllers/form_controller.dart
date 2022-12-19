@@ -31,6 +31,8 @@ class FormController extends GetxController {
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
   final GlobalKey qrKey = GlobalKey();
 
+  FocusNode name = FocusNode();
+
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
 
@@ -166,5 +168,12 @@ class FormController extends GetxController {
         });
       });
     });
+  }
+
+  @override
+  void onInit() {
+    String code = Get.parameters['code'].toString();
+    getKegiatan(code);
+    super.onInit();
   }
 }

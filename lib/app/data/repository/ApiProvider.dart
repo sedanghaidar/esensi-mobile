@@ -10,8 +10,8 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  // static const String BASE_URL = "http://172.100.31.40:5000";
-  static const String BASE_URL = "http://10.99.1.171:8000";
+  static const String BASE_URL = "http://172.100.31.25:8000";
+  // static const String BASE_URL = "http://10.99.1.171:8000";
 
   HiveProvider hive = HiveProvider();
 
@@ -142,7 +142,8 @@ class ApiProvider extends GetConnect {
   }
 
   /// Menambah data kegiatan
-  Future<StatusRequestModel<KegiatanModel>> addNewKegiatan(Map<String, dynamic> kegiatan) async {
+  Future<StatusRequestModel<KegiatanModel>> addNewKegiatan(
+      Map<String, dynamic> kegiatan) async {
     final response = await post("/api/kegiatan", kegiatan);
     final model = toDefaultModel(response.body);
     if (response.isOk) {

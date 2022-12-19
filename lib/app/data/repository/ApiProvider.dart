@@ -166,6 +166,18 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Scan QR CODE peserta
+  Future<StatusRequestModel<PesertaModel>> scanPeserta(
+      Map<String, dynamic> peserta) async {
+    final response = await post("/api/peserta/scan", FormData(peserta));
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(PesertaModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
   /// Menambah data kegiatan
   Future<StatusRequestModel<KegiatanModel>> addNewKegiatan(
       Map<String, dynamic> kegiatan) async {

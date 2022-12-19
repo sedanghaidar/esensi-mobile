@@ -11,6 +11,7 @@ abstract class Routes {
   static const DETAIL_PESERTA = _Paths.DETAIL_PESERTA;
   static const PROFILE = _Paths.PROFILE;
   static const DETAIL_AGENDA = _Paths.DETAIL_AGENDA;
+  static const QR_SCANNER = _Paths.QR_SCANNER;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const DETAIL_PESERTA = '/detail-peserta';
   static const PROFILE = '/profile';
   static const DETAIL_AGENDA = '/detail-agenda';
+  static const QR_SCANNER = '/qr-scanner';
 }

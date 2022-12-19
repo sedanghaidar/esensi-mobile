@@ -37,6 +37,7 @@ class DashboardView extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.init();
     Widget menu = const SizedBox();
     double paddingHorizontal = 20;
 
@@ -44,7 +45,7 @@ class DashboardView extends GetView<DashboardController> {
     if (orientation == WEB_LANDSCAPE || orientation == DESKTOP_LANDSCAPE) {
       menu = Row(
         children: [
-          CText("Nama User",
+          CText(controller.user?.name ?? "Nama User",
               style: CText.textStyleBody.copyWith(
                 fontWeight: FontWeight.w200,
                 color: basicWhite,
@@ -60,8 +61,8 @@ class DashboardView extends GetView<DashboardController> {
       menu = iconProfil;
     }
 
-    debugPrint(
-        "TOKENNNN2 ${controller.repository.hive.getUserModel().toString()}");
+    // debugPrint(
+    //     "TOKENNNN2 ${controller.repository.hive.getUserModel().toString()}");
     controller.getKegiatan();
 
     return Scaffold(
@@ -71,6 +72,7 @@ class DashboardView extends GetView<DashboardController> {
           InkWell(
             onTap: () {
               ///TODO GO TO PROFILE
+              Get.toNamed(Routes.PROFILE);
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),

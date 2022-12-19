@@ -1,4 +1,5 @@
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequestModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
@@ -12,9 +13,15 @@ class DashboardController extends GetxController {
   ApiProvider repository = Get.find();
 
   final kegiatan = StatusRequestModel<List<KegiatanModel>>().obs;
+  UserModel? user;
+
+  init() {
+    user = repository.hive.getUserModel();
+    update();
+  }
 
   getKegiatan() {
-    debugPrint("GET KEGIATAN");
+    // debugPrint("GET KEGIATAN");
     kegiatan.value = StatusRequestModel.loading();
     repository.getKegiatan().then((value) {
       if (value.statusRequest == StatusRequest.SUCCESS) {
@@ -42,7 +49,8 @@ class DashboardController extends GetxController {
               getKegiatan();
             });
       } else {
-        dialogWarning(Get.context!, "Gagal menghapus kegiatan. ${value.failure?.msgShow}");
+        dialogWarning(Get.context!,
+            "Gagal menghapus kegiatan. ${value.failure?.msgShow}");
       }
     }, onError: (e) {
       dialogWarning(Get.context!, "Gagal menghapus kegiatan. $e");

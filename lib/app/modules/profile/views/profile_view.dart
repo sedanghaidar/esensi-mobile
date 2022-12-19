@@ -65,20 +65,23 @@ class ProfileView extends GetView<ProfileController> {
                 padding: EdgeInsets.all(16),
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: 32,
+                    ),
                     Text(
                       controller.user!.name!.toUpperCase(),
                       style: context.textTheme.titleLarge,
                     ),
                     Text(controller.user!.email.toString()),
                     SizedBox(
-                      height: 32,
+                      height: 64,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Menu Lain",
-                          style: context.textTheme.labelLarge
+                          style: context.textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
@@ -116,7 +119,8 @@ class MenuLink extends StatelessWidget {
     return InkWell(
       onTap: action,
       child: Padding(
-        padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 4.0),
+        padding:
+            const EdgeInsets.only(left: 4.0, right: 4.0, top: 8.0, bottom: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

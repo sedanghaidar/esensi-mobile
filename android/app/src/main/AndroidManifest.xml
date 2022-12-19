@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="id.go.jatengprov.absensikegiatan.absensi_kegiatan">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
         android:label="absensi_kegiatan"
         android:name="${applicationName}"

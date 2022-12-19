@@ -26,17 +26,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      // debugPrint(
-      //   '\n╔══════════════════════════ Response ══════════════════════════\n'
-      //   '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-      //   '╟ url: ${request.url}\n'
-      //   '╟ Headers: ${request.headers}\n'
-      //   '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-      //   '╟ Status Code: ${response.statusCode}\n'
-      //   '╟ Data: ${response.bodyString?.toString() ?? ''}'
-      //   '\n╚══════════════════════════ Response ══════════════════════════\n',
-      //   wrapWidth: 1024,
-      // );
+      debugPrint(
+        '\n╔══════════════════════════ Response ══════════════════════════\n'
+        '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+        '╟ url: ${request.url}\n'
+        '╟ Headers: ${request.headers}\n'
+        // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+        '╟ Status Code: ${response.statusCode}\n'
+        '╟ Data: ${response.bodyString?.toString() ?? ''}'
+        '\n╚══════════════════════════ Response ══════════════════════════\n',
+        wrapWidth: 1024,
+      );
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -81,10 +81,21 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  /// Mendapatkan data kegiatan berdasarkan [code]
+  /// Mendapatkan data kegiatan berdasarkan [code]. Dapat diakses tanpa header
   Future<StatusRequestModel<KegiatanModel>> getKegiatanByCode(
       String? code) async {
     final response = await get("/api/kegiatan/kode/$code");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data kegiatan berdasarkan [id]. Wajib diakses dengan header
+  Future<StatusRequestModel<KegiatanModel>> getKegiatanById(String? id) async {
+    final response = await get("/api/kegiatan/$id");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
@@ -136,6 +147,19 @@ class ApiProvider extends GetConnect {
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data daftar peserta berdasarkan [id] kegiatan
+  Future<StatusRequestModel<List<PesertaModel>>> getPesertaByKegiatan(
+      String? id) async {
+    final response = await get("/api/peserta/kegiatan/$id");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(List<PesertaModel>.from(
+          (model.data).map((u) => PesertaModel.fromJson(u))));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }

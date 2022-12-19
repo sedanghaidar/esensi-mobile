@@ -56,5 +56,15 @@ class AppPages {
       page: () => DetailPesertaView(),
       binding: DetailPesertaBinding(),
     ),
+    GetPage(
+      name: _Paths.DETAIL_AGENDA + "/:id",
+      page: () => DetailAgendaView(),
+      binding: DetailAgendaBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfileView(),
+      binding: ProfileBinding(),
+    ),
   ];
 }

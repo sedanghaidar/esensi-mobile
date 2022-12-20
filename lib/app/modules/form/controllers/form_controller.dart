@@ -31,6 +31,8 @@ class FormController extends GetxController {
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
   final GlobalKey qrKey = GlobalKey();
 
+  ScrollPhysics parentScroll = AlwaysScrollableScrollPhysics();
+
   FocusNode name = FocusNode();
 
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
@@ -40,7 +42,14 @@ class FormController extends GetxController {
   RxBool isOpenInstansi = false.obs;
 
   bool handleOnDrawStart() {
+    parentScroll = AlwaysScrollableScrollPhysics();
+    update();
     isSigned.value = true;
+    return false;
+  }
+
+  bool handleOnDrawEnd() {
+    parentScroll = AlwaysScrollableScrollPhysics();
     return false;
   }
 

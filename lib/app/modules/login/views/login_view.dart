@@ -41,6 +41,7 @@ class LoginView extends GetView<LoginController> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          CSizedBox.h30(),
           Container(height: 200, child: SvgPicture.asset(imgLogin)),
           formLogin()
         ],

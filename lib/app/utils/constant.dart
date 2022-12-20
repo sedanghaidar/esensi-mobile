@@ -12,3 +12,5 @@ const DESKTOP_PORTRAIT =
 
 ///HIVE UNIQUE ID
 const HIVE_USER_ID = 0; //Unique Hive ID untuk User Model
+
+const maxWidth = 720.0;

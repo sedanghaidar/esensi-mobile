@@ -65,16 +65,18 @@ class FormView extends GetView<FormController> {
 
   successBody(BuildContext context) {
     return Center(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        alignment: Alignment.topLeft,
-        color: basicWhite,
-        width: width,
-        child: GetBuilder<FormController>(
-          builder: (_) => SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            primary: false,
-            physics: controller.parentScroll,
+      child: GetBuilder<FormController>(
+        builder: (_) => SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          // primary: false,
+          // physics: controller.isSigned.value
+          //     ? NeverScrollableScrollPhysics()
+          //     : AlwaysScrollableScrollPhysics(), // controller.parentScroll,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            alignment: Alignment.topLeft,
+            color: basicWhite,
+            width: width,
             child: Form(
               key: controller.formKey,
               child: Column(
@@ -295,47 +297,51 @@ class FormView extends GetView<FormController> {
                   const CSizedBox.h10(),
                   const CText("Tanda Tangan"),
                   const CSizedBox.h5(),
-                  Container(
-                    decoration:
-                        BoxDecoration(border: Border.all(color: basicBlack)),
-                    child: InkWell(
-                      onTapDown: ((details) {
-                        controller.parentScroll =
-                            NeverScrollableScrollPhysics();
-                        controller.update();
-                      }),
-                      child: SfSignaturePad(
-                          minimumStrokeWidth: 1,
-                          maximumStrokeWidth: 1,
-                          strokeColor: basicBlack,
-                          backgroundColor: basicWhite,
-                          onDrawStart: controller.handleOnDrawStart,
-                          onDrawEnd: () {
-                            controller.parentScroll =
-                                AlwaysScrollableScrollPhysics();
-                            controller.update();
-                          },
-                          key: controller.signaturePadKey),
-                    ),
+                  // Container(
+                  //   decoration:
+                  //       BoxDecoration(border: Border.all(color: basicBlack)),
+                  //   child: SfSignaturePad(
+                  //       minimumStrokeWidth: 1,
+                  //       maximumStrokeWidth: 1,
+                  //       strokeColor: basicBlack,
+                  //       backgroundColor: basicWhite,
+                  //       onDrawStart: controller.handleOnDrawStart,
+                  //       key: controller.signaturePadKey),
+                  // ),
+                  InkWell(
+                    onTap: () => showPadTTD(context),
+                    child: Container(
+                        height: context.width >= maxWidth ? 350 : 250,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: basicBlack)),
+                        child: controller.fileBytes != null
+                            ? Image.memory(controller.fileBytes!)
+                            : Center(
+                                child: Text(
+                                  "Tap Me\n(Signature)",
+                                  textAlign: TextAlign.center,
+                                ),
+                              )),
                   ),
-                  CSizedBox.h5(),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: CButton.small(
-                      () {
-                        controller.isSigned.value = false;
-                        controller.signaturePadKey.currentState?.clear();
-                      },
-                      "CLEAR",
-                      style: styleButtonFilledBoxSmall2,
-                    ),
-                  ),
+                  // CSizedBox.h5(),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: CButton.small(
+                  //     () {
+                  //       controller.isSigned.value = false;
+                  //       controller.signaturePadKey.currentState?.clear();
+                  //     },
+                  //     "CLEAR",
+                  //     style: styleButtonFilledBoxSmall2,
+                  //   ),
+                  // ),
                   CSizedBox.h20(),
                   CButton(() {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (!controller.formKey.currentState!.validate()) return;
                     if (!controller.isSigned.value) {
-                      showToast("Tanda tangan terlebih dahulu");
+                      showToast("Silahkan tanda tangan terlebih dahulu");
                       return;
                     }
                     controller.insertPeserta();
@@ -343,6 +349,58 @@ class FormView extends GetView<FormController> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  showPadTTD(BuildContext context) {
+    Get.dialog(
+      Center(
+        child: Container(
+          // constraints: BoxConstraints(maxWidth: 1080),
+          height: context.width >= maxWidth ? 550 : 450,
+          width: context.width >= maxWidth ? 550 : double.infinity,
+          padding: EdgeInsets.all(8.0),
+          color: basicGrey1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: basicBlack),
+                  color: basicGrey1,
+                ),
+                width: context.width >= maxWidth ? 450 : double.infinity,
+                height: context.width >= maxWidth ? 350 : 350,
+                child: SfSignaturePad(
+                    minimumStrokeWidth: 1,
+                    maximumStrokeWidth: 2,
+                    strokeColor: basicBlack,
+                    backgroundColor: basicWhite,
+                    onDrawStart: controller.handleOnDrawStart,
+                    key: controller.signaturePadKey),
+              ),
+              SizedBox(
+                height: 32,
+              ),
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CButton.small(() {
+                      controller.signaturePadKey.currentState?.clear();
+                    }, "Clear"),
+                    CButton.small(() {
+                      controller.pushImage();
+                      Get.back();
+                    }, "Simpan"),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),

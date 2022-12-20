@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -11,7 +11,8 @@ class QrScannerView extends GetView<QrScannerController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scan Tamu Undangan'),
+        backgroundColor: basicPrimary,
+        title: const Text('Formulir'),
         centerTitle: true,
       ),
       body: GetBuilder<QrScannerController>(

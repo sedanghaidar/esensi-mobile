@@ -162,6 +162,7 @@ class DashboardView extends GetView<DashboardController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
+                                      ///NAMA KEGIATAN
                                       Flexible(
                                         child: CText(
                                           "${controller.kegiatan.value.data?[index].name}",
@@ -173,10 +174,13 @@ class DashboardView extends GetView<DashboardController> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
+
+                                      ///TOMBOL EDIT DAN HAPUS
                                       Expanded(
                                           flex: 0,
                                           child: Row(
                                             children: [
+                                              ///TOMBOL EDIT
                                               SizedBox(
                                                   width: 80,
                                                   child: CButton.icon(
@@ -189,6 +193,8 @@ class DashboardView extends GetView<DashboardController> {
                                                         color: basicWhite,
                                                       ))),
                                               const CSizedBox.w5(),
+
+                                              ///TOMBOL HAPUS
                                               SizedBox(
                                                   width: 95,
                                                   child: CButton.icon(() {
@@ -227,6 +233,7 @@ class DashboardView extends GetView<DashboardController> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
+                                      ///URL KEGIATAN
                                       Flexible(
                                         child: Container(
                                           constraints: BoxConstraints(
@@ -250,13 +257,15 @@ class DashboardView extends GetView<DashboardController> {
                                         ),
                                       ),
                                       const CSizedBox.w10(),
+
+                                      ///TOMBOL COPY URL
                                       Expanded(
                                         flex: 0,
                                         child: InkWell(
                                           onTap: () async {
                                             await Clipboard.setData(ClipboardData(
                                                     text:
-                                                        "${controller.kegiatan.value.data?[index].codeUrl}"))
+                                                        "${ApiProvider.BASE_URL}/form/${controller.kegiatan.value.data?[index].codeUrl}"))
                                                 .whenComplete(() {
                                               showToast(
                                                   "Berhasil menyalin kode");
@@ -277,27 +286,52 @@ class DashboardView extends GetView<DashboardController> {
                                   const CSizedBox.h5(),
                                   const Divider(height: 2),
                                   const CSizedBox.h5(),
-                                  RichText(
-                                    text: TextSpan(children: [
-                                      const WidgetSpan(
-                                          child: Icon(
-                                        Icons.access_time_filled_rounded,
-                                        size: 16,
-                                      )),
-                                      const WidgetSpan(child: CSizedBox.w5()),
-                                      WidgetSpan(
-                                          child: CText(
-                                        dateToString(
-                                            controller.kegiatan.value
-                                                .data?[index].createdAt,
-                                            format:
-                                                "EEEE, dd MMMM yyyy, HH:mm:ss"),
-                                        style: CText.textStyleBody.copyWith(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400),
-                                      ))
-                                    ]),
-                                  )
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const WidgetSpan(
+                                              child: Icon(
+                                            Icons.access_time_filled_rounded,
+                                            size: 16,
+                                          )),
+                                          const WidgetSpan(
+                                              child: CSizedBox.w5()),
+                                          WidgetSpan(
+                                              child: CText(
+                                            dateToString(
+                                                controller.kegiatan.value
+                                                    .data?[index].createdAt,
+                                                format:
+                                                    "EEEE, dd MMMM yyyy, HH:mm:ss"),
+                                            style: CText.textStyleBody.copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400),
+                                          ))
+                                        ]),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .kegiatan
+                                                .value
+                                                .data?[index]
+                                                .isLimitParticipant ??
+                                            false,
+                                        child: InkWell(
+                                          child: const Icon(
+                                            Icons.business_center,
+                                            color: basicPrimary2,
+                                          ),
+                                          onTap: () {
+                                            Get.toNamed(
+                                                "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),

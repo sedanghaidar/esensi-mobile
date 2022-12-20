@@ -1,17 +1,18 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
+import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get_connect/connect.dart';
 
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
   static const String BASE_URL = "http://172.100.31.25:8000";
+
   // static const String BASE_URL = "http://10.99.1.171:8000";
 
   HiveProvider hive = HiveProvider();
@@ -185,6 +186,31 @@ class ApiProvider extends GetConnect {
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mendapatkan data daftar instansi partisipan yang diijinkan berdasarkan [id] kegiatan
+  Future<StatusRequestModel<List<InstansiPartipantModel>>>
+      getInstansiParticipant(String? id) async {
+    final response = await get("/api/organization-limit/byactid/$id");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(List<InstansiPartipantModel>.from(
+          (model.data).map((u) => InstansiPartipantModel.fromJson(u))));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Mengupdate data instansi participant, [data] merupakan data yang akan dikirim
+  Future<StatusRequestModel<String>> postInstansiParticipant(
+      Map<String, dynamic> data) async {
+    final response = await post("/api/organization-limit/insert", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success("Berhasil kirim data");
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }

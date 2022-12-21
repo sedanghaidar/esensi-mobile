@@ -13,6 +13,7 @@ abstract class Routes {
   static const DETAIL_AGENDA = _Paths.DETAIL_AGENDA;
   static const QR_SCANNER = _Paths.QR_SCANNER;
   static const MANAGE_PARTICIPANT = _Paths.MANAGE_PARTICIPANT;
+  static const UPDATE_AGENDA = _Paths.UPDATE_AGENDA;
 }
 
 abstract class _Paths {
@@ -27,4 +28,5 @@ abstract class _Paths {
   static const DETAIL_AGENDA = '/detail-agenda';
   static const QR_SCANNER = '/qr-scanner';
   static const MANAGE_PARTICIPANT = '/manage-participant';
+  static const UPDATE_AGENDA = '/update-agenda';
 }

@@ -79,7 +79,6 @@ class DashboardView extends GetView<DashboardController> {
         actions: [
           InkWell(
             onTap: () {
-              ///TODO GO TO PROFILE
               Get.toNamed(Routes.PROFILE);
             },
             child: Container(
@@ -185,8 +184,10 @@ class DashboardView extends GetView<DashboardController> {
                                               ///TOMBOL EDIT
                                               SizedBox(
                                                   width: 80,
-                                                  child: CButton.icon(
-                                                      () {}, "Edit",
+                                                  child: CButton.icon(() {
+                                                    Get.toNamed(
+                                                        "${Routes.UPDATE_AGENDA}/${controller.kegiatan.value.data?[index].id}");
+                                                  }, "Edit",
                                                       style:
                                                           styleButtonFilledBoxSmall,
                                                       icon: const Icon(

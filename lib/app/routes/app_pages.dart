@@ -20,6 +20,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/qr_scanner/bindings/qr_scanner_binding.dart';
 import '../modules/qr_scanner/views/qr_scanner_view.dart';
+import '../modules/update_agenda/bindings/update_agenda_binding.dart';
+import '../modules/update_agenda/views/update_agenda_view.dart';
 
 part 'app_routes.dart';
 
@@ -75,9 +77,14 @@ class AppPages {
       binding: QrScannerBinding(),
     ),
     GetPage(
-      name: _Paths.MANAGE_PARTICIPANT+"/:id",
+      name: _Paths.MANAGE_PARTICIPANT + "/:id",
       page: () => ManageParticipantView(),
       binding: ManageParticipantBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPDATE_AGENDA + "/:id",
+      page: () => UpdateAgendaView(),
+      binding: UpdateAgendaBinding(),
     ),
   ];
 }

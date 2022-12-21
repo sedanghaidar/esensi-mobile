@@ -192,6 +192,18 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Mengubah data kegiatan berdasarkan [id]
+  Future<StatusRequestModel<KegiatanModel>> updateKegiatan(
+      Map<String, dynamic> kegiatan, String? id) async {
+    final response = await post("/api/kegiatan/$id", kegiatan);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
   /// Mendapatkan data daftar instansi partisipan yang diijinkan berdasarkan [id] kegiatan
   Future<StatusRequestModel<List<InstansiPartipantModel>>>
       getInstansiParticipant(String? id) async {

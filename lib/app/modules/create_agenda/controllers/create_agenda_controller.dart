@@ -5,6 +5,7 @@ import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/routes/app_pages.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
+import 'package:absensi_kegiatan/app/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,9 +21,15 @@ class CreateAgendaController extends GetxController {
   final TextEditingController controllerLocation = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
-  RxBool isParticiationLimit = false.obs;
+  final TextEditingController controllerType = TextEditingController();
 
+  final types = [].obs;
+  RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>();
+
+  getTypes(){
+    types.value = form_types;
+  }
 
   addKegiatan() {
     String? datetimeEnd = null;
@@ -36,7 +43,8 @@ class CreateAgendaController extends GetxController {
       "time": controllerTime.text,
       "location": controllerLocation.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
-      "limit_participant": isParticiationLimit.value
+      "limit_participant": isParticiationLimit.value,
+      "type": controllerType.text == TYPE_ABSENSI ? TYPE_ABSENSI_CODE : TYPE_PENDAFTARAN_CODE
     };
 
     debugPrint("$data");
@@ -62,5 +70,10 @@ class CreateAgendaController extends GetxController {
       hideLoading();
       dialogError(Get.context!, "$e", () => null);
     });
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
   }
 }

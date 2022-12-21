@@ -1,3 +1,4 @@
+import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextFieldDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -43,13 +44,13 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
         ),
       ),
       backgroundColor: basicGrey4,
-      body: Center(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          alignment: Alignment.topLeft,
-          color: basicWhite,
-          width: width,
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            alignment: Alignment.topLeft,
+            color: basicWhite,
+            width: width,
             child: Form(
               key: controller.formKey,
               child: Column(
@@ -183,6 +184,32 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                     validator: (value) {
                       if (GetUtils.isBlank(controller.controllerDateEnd.text) ==
                               false &&
+                          GetUtils.isBlank(value) == true) return msgBlank;
+                      return null;
+                    },
+                  ),
+                  CSizedBox.h10(),
+                  CText("Tipe Formulir"),
+                  CSizedBox.h5(),
+                  CTextFieldDropDown<String>(
+                    hintText: "Pilih Tipe Formulir",
+                    value: controller.controllerType.text == ""
+                        ? null
+                        : controller.controllerType.text,
+                    items: form_types
+                        .map((e) =>
+                            DropdownMenuItem<String>(value: e, child: CText(e)))
+                        .toList(),
+                    onChange: (value) {
+                      if (controller.controllerType.text != value) {
+                        controller.controllerType.text = value;
+                      }
+                    },
+                    validator: (value) {
+                      debugPrint("TIPE FORMULIR $value");
+                      if (value == null ||
+                          GetUtils.isBlank(controller.controllerType.text) ==
+                              true ||
                           GetUtils.isBlank(value) == true) return msgBlank;
                       return null;
                     },

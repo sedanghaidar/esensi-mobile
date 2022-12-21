@@ -70,7 +70,10 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                         }
                         return Align(
                             alignment: Alignment.centerLeft,
-                            child: CText("Total partisipan : $total", style: CText.textStyleBodyBold,));
+                            child: CText(
+                              "Total partisipan : $total",
+                              style: CText.textStyleBodyBold,
+                            ));
                       }
                     default:
                       return SizedBox();

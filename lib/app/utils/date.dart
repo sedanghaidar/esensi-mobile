@@ -13,7 +13,11 @@ String to24(TimeOfDay? time) {
 
 String dateToString(DateTime? date, {String? format}) {
   initializeDateFormatting();
-  return DateFormat(format ?? "EEEE, dd MMMM yyyy", "id").format(date ?? DateTime.now());
+  if(date==null){
+    return "-";
+  }else{
+    return DateFormat(format ?? "EEEE, dd MMMM yyyy", "id").format(date);
+  }
 }
 
 bool checkOutDate(DateTime dateActivity, DateTime? dateEnd) {

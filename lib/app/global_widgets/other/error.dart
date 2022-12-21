@@ -46,23 +46,25 @@ Widget error(BuildContext context, String? message, Function() reload,
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: background ?? Colors.transparent,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            imgError,
-            width: width ?? 200,
-            height: height ?? 200,
-          ),
-          CSizedBox.h5(),
-          CText(message ?? "Terjadi Kesalahan", maxLines: 1,),
-          CSizedBox.h5(),
-          CButton.small(
-            reload,
-            "Ulangi",
-            style: styleButtonFilledBoxSmall2,
-          )
-        ],
+      child: Material(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              imgError,
+              width: width ?? 200,
+              height: height ?? 200,
+            ),
+            CSizedBox.h5(),
+            CText(message ?? "Terjadi Kesalahan", maxLines: 1,),
+            CSizedBox.h5(),
+            CButton.small(
+              reload,
+              "Ulangi",
+              style: styleButtonFilledBoxSmall2,
+            )
+          ],
+        ),
       ),
     ),
   );

@@ -1,8 +1,12 @@
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
+import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequestModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
+import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DetailAgendaController extends GetxController {
@@ -15,17 +19,26 @@ class DetailAgendaController extends GetxController {
   @override
   void onInit() {
     id = Get.parameters["id"];
-    getDetailKegiatan();
     getDaftarPeserta();
     super.onInit();
   }
 
   getDetailKegiatan() {
-    kegiatan.value = StatusRequestModel.loading();
+    showLoading();
     repository.getKegiatanById(id).then((value) {
-      kegiatan.value = value;
+      hideLoading();
+      if (value.statusRequest == StatusRequest.SUCCESS) {
+        kegiatan.value = value;
+      } else {
+        dialogError(
+            Get.context!,
+            "Terjadi Kesalahan. ${value.failure?.msgShow}",
+            () => getDetailKegiatan());
+      }
     }, onError: (e) {
-      kegiatan.value = StatusRequestModel.error(failure2(e));
+      hideLoading();
+      dialogError(
+          Get.context!, "Terjadi Kesalahan. $e", () => getDetailKegiatan());
     });
   }
 
@@ -38,7 +51,14 @@ class DetailAgendaController extends GetxController {
         peserta.value = value;
       }
     }, onError: (e) {
+      debugPrint(e);
       peserta.value = StatusRequestModel.error(failure2(e));
     });
+  }
+
+  @override
+  void onReady() {
+    getDetailKegiatan();
+    super.onReady();
   }
 }

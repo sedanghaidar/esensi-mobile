@@ -270,6 +270,7 @@ class FormView extends GetView<FormController> {
                       child: CTextField(
                         hintText: "Masukkan nama instansi anda",
                         controller: controller.controllerInstansiManual,
+                        textCapitalization: TextCapitalization.characters,
                         validator: (value) {
                           if (controller.controllerInstansi.text == "LAINNYA") {
                             if (GetUtils.isBlank(value) == true) {
@@ -297,17 +298,6 @@ class FormView extends GetView<FormController> {
                   const CSizedBox.h10(),
                   const CText("Tanda Tangan"),
                   const CSizedBox.h5(),
-                  // Container(
-                  //   decoration:
-                  //       BoxDecoration(border: Border.all(color: basicBlack)),
-                  //   child: SfSignaturePad(
-                  //       minimumStrokeWidth: 1,
-                  //       maximumStrokeWidth: 1,
-                  //       strokeColor: basicBlack,
-                  //       backgroundColor: basicWhite,
-                  //       onDrawStart: controller.handleOnDrawStart,
-                  //       key: controller.signaturePadKey),
-                  // ),
                   InkWell(
                     onTap: () => showPadTTD(context),
                     child: Container(
@@ -317,26 +307,14 @@ class FormView extends GetView<FormController> {
                             border: Border.all(color: basicBlack)),
                         child: controller.fileBytes != null
                             ? Image.memory(controller.fileBytes!)
-                            : Center(
+                            : const Center(
                                 child: Text(
                                   "Tap Me\n(Signature)",
                                   textAlign: TextAlign.center,
                                 ),
                               )),
                   ),
-                  // CSizedBox.h5(),
-                  // Align(
-                  //   alignment: Alignment.centerRight,
-                  //   child: CButton.small(
-                  //     () {
-                  //       controller.isSigned.value = false;
-                  //       controller.signaturePadKey.currentState?.clear();
-                  //     },
-                  //     "CLEAR",
-                  //     style: styleButtonFilledBoxSmall2,
-                  //   ),
-                  // ),
-                  CSizedBox.h20(),
+                  const CSizedBox.h20(),
                   CButton(() {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (!controller.formKey.currentState!.validate()) return;

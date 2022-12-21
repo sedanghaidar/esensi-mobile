@@ -24,6 +24,7 @@ class CTextField extends StatefulWidget {
   final onTap;
   final suffixIcon;
   final focusNode;
+  final textCapitalization;
 
   CTextField(
       {Key? key,
@@ -46,7 +47,9 @@ class CTextField extends StatefulWidget {
       this.enabled,
       this.onTap,
       this.focusNode,
-      this.suffixIcon})
+      this.suffixIcon,
+        this.textCapitalization
+      })
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -71,7 +74,8 @@ class CTextField extends StatefulWidget {
       this.enabled,
       this.onTap,
       this.focusNode,
-      this.suffixIcon})
+      this.suffixIcon,
+        this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -96,7 +100,8 @@ class CTextField extends StatefulWidget {
       this.enabled,
       this.onTap,
       this.focusNode,
-      this.suffixIcon})
+      this.suffixIcon,
+        this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -199,6 +204,7 @@ class CTextFieldState extends State<CTextField> {
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       onTap: widget.onTap,
+      textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
     );
   }
 }

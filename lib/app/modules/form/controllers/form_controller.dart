@@ -132,7 +132,7 @@ class FormController extends GetxController {
         "activity_id": kegiatan.value.data?.id,
         "name": controllerName.text,
         "jabatan": controllerJabatan.text,
-        "instansi": i,
+        "instansi": i.toUpperCase(),
         "nohp": controllerPhone.text,
         "signature": MultipartFile(fileBytes,
             filename: "${controllerName.text}_${kegiatan.value.data?.id}.jpeg")

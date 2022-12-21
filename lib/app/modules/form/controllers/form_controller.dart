@@ -31,11 +31,14 @@ class FormController extends GetxController {
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
   final GlobalKey qrKey = GlobalKey();
 
+  ScrollPhysics parentScroll = AlwaysScrollableScrollPhysics();
+
   FocusNode name = FocusNode();
 
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
 
+  Uint8List? fileBytes;
   RxBool isSigned = false.obs;
   RxBool isOpenInstansi = false.obs;
 
@@ -46,6 +49,15 @@ class FormController extends GetxController {
 
   setIsOpenInstansi(bool value) {
     isOpenInstansi.value = value;
+  }
+
+  pushImage() {
+    convertImage().then(
+      (value) {
+        fileBytes = value;
+        update();
+      },
+    );
   }
 
   getKegiatan(String code) {
@@ -110,7 +122,7 @@ class FormController extends GetxController {
   }
 
   insertPeserta() async {
-    convertImage().then((value) {
+    if (fileBytes != null) {
       String i = controllerInstansi.text;
       if (i == "LAINNYA") {
         i = controllerInstansiManual.text;
@@ -122,7 +134,7 @@ class FormController extends GetxController {
         "jabatan": controllerJabatan.text,
         "instansi": i,
         "nohp": controllerPhone.text,
-        "signature": MultipartFile(value,
+        "signature": MultipartFile(fileBytes,
             filename: "${controllerName.text}_${kegiatan.value.data?.id}.jpeg")
       };
       showLoading();
@@ -142,6 +154,7 @@ class FormController extends GetxController {
                   controllerJabatan.clear();
                   isSigned.value = false;
                   signaturePadKey.currentState?.clear();
+                  fileBytes = null;
                   Get.back();
                 },
                 confirmTextColor: basicWhite,
@@ -167,7 +180,7 @@ class FormController extends GetxController {
           insertPeserta();
         });
       });
-    });
+    }
   }
 
   @override

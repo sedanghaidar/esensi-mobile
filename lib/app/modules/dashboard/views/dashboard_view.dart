@@ -66,12 +66,14 @@ class DashboardView extends GetView<DashboardController> {
     controller.getKegiatan();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed(Routes.QR_SCANNER),
-        child: const Icon(
-          Icons.qr_code_scanner,
-        ),
-      ),
+      floatingActionButton: GetPlatform.isWeb
+          ? SizedBox()
+          : FloatingActionButton(
+              onPressed: () => Get.toNamed(Routes.QR_SCANNER),
+              child: const Icon(
+                Icons.qr_code_scanner,
+              ),
+            ),
       appBar: AppBar(
         backgroundColor: basicPrimary,
         actions: [

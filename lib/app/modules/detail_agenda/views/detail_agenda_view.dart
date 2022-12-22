@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:ui' as ui;
 
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
@@ -17,7 +18,6 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/utils.dart';
 import '../controllers/detail_agenda_controller.dart';
-import 'dart:ui' as ui;
 
 class DetailAgendaView extends GetView<DetailAgendaController> {
   @override
@@ -165,21 +165,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                         CSizedBox.h10(),
                                         InkWell(
                                           onTap: () {
-                                            Get.dialog(
-                                                Center(
-                                                  child: Container(
-                                                    color: basicWhite,
-                                                    width: getWidthDefault(
-                                                        context),
-                                                    height: getWidthDefault(
-                                                        context),
-                                                    margin: EdgeInsets.all(10),
-                                                    child: HtmlElementView(
-                                                      viewType: 'images/$index',
-                                                    ),
-                                                  ),
-                                                ),
-                                                barrierDismissible: true);
+                                            Get.toNamed(
+                                                "${Routes.DETAIL_PESERTA}/${controller.kegiatan.value.data?.id}");
                                           },
                                           child: ClipRRect(
                                             borderRadius:

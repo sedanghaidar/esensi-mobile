@@ -1,6 +1,3 @@
-import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
-import 'dart:ui' as ui;
-
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
@@ -12,8 +9,11 @@ import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/text/CText.dart';
+// import 'dart:ui' as ui;
+import '../../../global_widgets/ui.dart' if (dart.library.html) 'dart:ui' as ui;
 import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/utils.dart';
@@ -60,8 +60,6 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                         ui.platformViewRegistry.registerViewFactory(
                             "images/$index",
                             (int viewId) => ImageElement(
-                                width: 100,
-                                height: 100,
                                 src:
                                     "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}")
                             // ..style.width = '100%'
@@ -138,8 +136,12 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                                 Center(
                                                   child: Container(
                                                     color: basicWhite,
-                                                    width: getWidthDefault(context)/2,
-                                                    height: getWidthDefault(context)/2,
+                                                    width: getWidthDefault(
+                                                            context) /
+                                                        2,
+                                                    height: getWidthDefault(
+                                                            context) /
+                                                        2,
                                                     margin: EdgeInsets.all(10),
                                                     child: HtmlElementView(
                                                       viewType: 'images/$index',

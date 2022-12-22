@@ -6,6 +6,7 @@ import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -143,9 +144,13 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                                             context) /
                                                         2,
                                                     margin: EdgeInsets.all(10),
-                                                    child: HtmlElementView(
-                                                      viewType: 'images/$index',
-                                                    ),
+                                                    child: kIsWeb
+                                                        ? HtmlElementView(
+                                                            viewType:
+                                                                'images/$index',
+                                                          )
+                                                        : Image.network(
+                                                            "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"),
                                                   ),
                                                 ),
                                                 barrierDismissible: true);

@@ -15,3 +15,13 @@ class AnchorElement{
 
   }
 }
+
+class ImageElement{
+
+  final src;
+  final width;
+  final height;
+
+  ImageElement({this.src, this.width, this.height,});
+
+}

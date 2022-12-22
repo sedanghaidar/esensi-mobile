@@ -73,7 +73,7 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                           child: CButton(
                             () {
                               Get.offAllNamed(Routes.FORM +
-                                  "${controller.peserta.value.data?.kegiatan?.codeUrl}");
+                                  "/${controller.peserta.value.data?.kegiatan?.codeUrl}");
                             },
                             "Kembali Ke Formulir",
                             style: styleButtonFilled2,
@@ -81,7 +81,7 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ));
@@ -112,11 +112,62 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
           child: Container(
             margin: EdgeInsets.all(10),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
+                  flex: 0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CText(
+                        "Pemerintah Provinsi Jawa Tengah",
+                        style: CText.textStyleSubhead,
+                        textAlign: TextAlign.center,
+                      ),
+                      Divider(),
+                      CSizedBox.h10(),
+                      CText(
+                        controller.peserta.value.data?.kegiatan?.name ?? "",
+                        textAlign: TextAlign.center,
+                        style: CText.textStyleBodyBold,
+                      ),
+                      CSizedBox.h10(),
+                      CText(
+                        "Tanggal",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(dateToString(
+                          controller.peserta.value.data?.kegiatan?.date)),
+                      CSizedBox.h10(),
+                      CText(
+                        "Waktu",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(
+                          "${controller.peserta.value.data?.kegiatan?.time} WIB"),
+                      CSizedBox.h10(),
+                      CText(
+                        "Tempat",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(
+                          "${controller.peserta.value.data?.kegiatan?.location}"),
+                    ],
+                  ),
+                ),
+                CSizedBox.h20(),
+                Expanded(
                     flex: 1,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 1,
@@ -159,50 +210,6 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                         ),
                       ],
                     )),
-                CSizedBox.h20(),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CText(
-                        "Pemerintah Provinsi Jawa Tengah",
-                        style: CText.textStyleSubhead,
-                      ),
-                      Divider(),
-                      CSizedBox.h10(),
-                      CText(
-                        controller.peserta.value.data?.kegiatan?.name ?? "",
-                        textAlign: TextAlign.center,
-                        style: CText.textStyleBodyBold,
-                      ),
-                      CSizedBox.h10(),
-                      CText(
-                        "Tanggal",
-                        style: CText.textStyleBodyBold
-                            .copyWith(color: basicPrimary),
-                      ),
-                      CText(dateToString(
-                          controller.peserta.value.data?.kegiatan?.date)),
-                      CSizedBox.h10(),
-                      CText(
-                        "Waktu",
-                        style: CText.textStyleBodyBold
-                            .copyWith(color: basicPrimary),
-                      ),
-                      CText(
-                          "${controller.peserta.value.data?.kegiatan?.time} WIB"),
-                      CSizedBox.h10(),
-                      CText(
-                        "Tempat",
-                        style: CText.textStyleBodyBold
-                            .copyWith(color: basicPrimary),
-                      ),
-                      CText(
-                          "${controller.peserta.value.data?.kegiatan?.location}"),
-                    ],
-                  ),
-                )
               ],
             ),
           ),

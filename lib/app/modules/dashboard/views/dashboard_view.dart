@@ -4,6 +4,7 @@ import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -64,13 +65,14 @@ class DashboardView extends GetView<DashboardController> {
     controller.getKegiatan();
 
     return Scaffold(
-      floatingActionButton: GetPlatform.isWeb
+      floatingActionButton: kIsWeb
           ? SizedBox()
           : FloatingActionButton(
               onPressed: () => Get.toNamed(Routes.QR_SCANNER),
               child: const Icon(
                 Icons.qr_code_scanner,
               ),
+              backgroundColor: basicPrimary,
             ),
       appBar: AppBar(
         backgroundColor: basicPrimary,

@@ -64,6 +64,7 @@ class CButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget button = CText(
       text,
+      textAlign: TextAlign.center,
       style: CText.textStyleBody.copyWith(color: basicWhite),
     );
 

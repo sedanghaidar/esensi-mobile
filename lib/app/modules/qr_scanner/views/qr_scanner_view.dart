@@ -12,29 +12,17 @@ class QrScannerView extends GetView<QrScannerController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: const Text('Formulir'),
+        title: const Text('QR SCANNER'),
         centerTitle: true,
       ),
       body: GetBuilder<QrScannerController>(
-        builder: (_) => Column(
-          children: <Widget>[
-            Expanded(
-              flex: 5,
-              child: QRView(
-                key: controller.qrKey,
-                onQRViewCreated: controller.onQRViewCreated,
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Center(
-                child: (controller.result != null)
-                    ? Text(
-                        '${controller.peserta.value.data?.name} - ${controller.peserta.value.data?.instansi}')
-                    : Text('Scan a code'),
-              ),
-            )
-          ],
+        builder: (_) => Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: QRView(
+            key: controller.qrKey,
+            onQRViewCreated: controller.onQRViewCreated,
+          ),
         ),
       ),
     );

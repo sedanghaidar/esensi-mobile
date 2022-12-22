@@ -166,7 +166,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                         InkWell(
                                           onTap: () {
                                             Get.toNamed(
-                                                "${Routes.DETAIL_PESERTA}/${controller.kegiatan.value.data?.id}");
+                                                "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
                                           },
                                           child: ClipRRect(
                                             borderRadius:

@@ -41,7 +41,7 @@ int getPlatform(BuildContext context) {
   }
 }
 
-double getWidthDefault(BuildContext context){
+double getWidthDefault(BuildContext context) {
   double width = context.width;
   final orientation = getPlatform(context);
   if (orientation == WEB_LANDSCAPE || orientation == DESKTOP_LANDSCAPE) {
@@ -50,4 +50,13 @@ double getWidthDefault(BuildContext context){
     width = context.width;
   }
   return width;
+}
+
+int getOrientation(BuildContext context) {
+  final orientation = getPlatform(context);
+  if (orientation == WEB_LANDSCAPE || orientation == DESKTOP_LANDSCAPE) {
+    return 1;
+  } else {
+    return 2;
+  }
 }

@@ -1,18 +1,18 @@
 import 'dart:convert';
-import '../../../global_widgets/Html.dart'
-if (dart.library.html) 'dart:html';
-// import 'dart:html';
 
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
+import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
+import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/routes/app_pages.dart';
+import 'package:absensi_kegiatan/app/utils/date.dart';
+import 'package:absensi_kegiatan/app/utils/utils.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../global_widgets/button/CButton.dart';
+import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../utils/colors.dart';
@@ -22,11 +22,9 @@ import '../controllers/detail_peserta_controller.dart';
 class DetailPesertaView extends GetView<DetailPesertaController> {
   @override
   Widget build(BuildContext context) {
-    String? id = Get.parameters["id"].toString();
-    controller.getPesertaById(id);
-
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: basicPrimary,
         title: Text('Tiket Kegiatan'.toUpperCase()),
         centerTitle: true,
@@ -38,80 +36,178 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
           case StatusRequest.SUCCESS:
             return Center(
                 child: Container(
+              width: getWidthDefault(context),
               padding: EdgeInsets.all(10),
               constraints: BoxConstraints(maxHeight: context.height),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: basicWhite,
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Image.memory(data!.buffer.asUint8List()),
-                  RepaintBoundary(
-                    key: controller.qrKey,
-                    child: Container(
-                      color: basicWhite,
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            imgJateng,
-                            width: 50,
-                            height: 50,
-                          ),
-                          CText(
-                            controller.peserta.value.data?.kegiatan?.name ??
-                                "-",
-                            style: CText.textStyleSubhead,
-                          ),
-                          CSizedBox.h10(),
-                          PrettyQr(
-                            data: controller.peserta.value.data?.qrCode ??
-                                "UNKNOWN",
-                            size: 400,
-                            errorCorrectLevel: QrErrorCorrectLevel.M,
-                            roundEdges: true,
-                            // typeNumber: 100,
-                          ),
-                          CSizedBox.h10(),
-                          CText(
-                            controller.peserta.value.data?.name ?? "UNKNOWN",
-                          ),
-                        ],
-                      ),
-                    ),
+                  Expanded(
+                    flex: 1,
+                    child: repaintBoundaryPortrait(context),
                   ),
                   CSizedBox.h10(),
-                  CButton.small(() {
-                    getWidgetToImage(controller.qrKey).then((value) {
-                      if (value != null) {
-                        debugPrint("ADA DATANYA");
-
-                        final content = base64Encode(value);
-                        AnchorElement(
-                            href:
-                                "data:application/octet-stream;charset=utf-16le;base64,$content")
-                          ..setAttribute("download", "file.png")
-                          ..click();
-                      } else {
-                        debugPrint("NULL BRO");
-                      }
-                    });
-                  }, "SIMPAN")
+                  Expanded(
+                    flex: 0,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: CButton(() {
+                            getWidgetToImage(controller.qrKey).then((value) {
+                              if (value != null) {
+                                final content = base64Encode(value);
+                                AnchorElement(
+                                    href:
+                                        "data:application/octet-stream;charset=utf-16le;base64,$content")
+                                  ..setAttribute("download", "file.png")
+                                  ..click();
+                              }
+                            });
+                          }, "Download Ulang QRCode"),
+                        ),
+                        CSizedBox.w10(),
+                        Expanded(
+                          flex: 1,
+                          child: CButton(
+                            () {
+                              Get.offAllNamed(Routes.FORM +
+                                  "${controller.peserta.value.data?.kegiatan?.codeUrl}");
+                            },
+                            "Kembali Ke Formulir",
+                            style: styleButtonFilled2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ));
           case StatusRequest.ERROR:
             return error(context, controller.peserta.value.failure?.msgShow,
                 () {
-              controller.getPesertaById(id);
+              controller.getPesertaById();
             });
           default:
             return SizedBox();
         }
       }),
+    );
+  }
+
+  Widget repaintBoundaryPortrait(BuildContext context) {
+    double width = ((getWidthDefault(context) - 20) / 2) > 250
+        ? 300
+        : (getWidthDefault(context) - 20) / 2;
+
+    return RepaintBoundary(
+      key: controller.qrKey,
+      child: Container(
+        color: basicWhite,
+        padding: EdgeInsets.all(10),
+        child: Card(
+          elevation: 10,
+          child: Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: controller.peserta.value.data?.qrCode == null
+                              ? SizedBox()
+                              : QrImage(
+                                  data: controller.peserta.value.data?.qrCode ??
+                                      "",
+                                  size: width,
+                                ),
+                        ),
+                        Expanded(
+                          flex: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: basicPrimary,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CText(
+                                  (controller.peserta.value.data?.name ?? "")
+                                      .toUpperCase(),
+                                  style: CText.textStyleBodyBold
+                                      .copyWith(color: basicWhite),
+                                ),
+                                CSizedBox.h5(),
+                                CText(
+                                  controller.peserta.value.data?.instansi ?? "",
+                                  textAlign: TextAlign.center,
+                                  style: CText.textStyleBody
+                                      .copyWith(color: basicGrey3),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                CSizedBox.h20(),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CText(
+                        "Pemerintah Provinsi Jawa Tengah",
+                        style: CText.textStyleSubhead,
+                      ),
+                      Divider(),
+                      CSizedBox.h10(),
+                      CText(
+                        controller.peserta.value.data?.kegiatan?.name ?? "",
+                        textAlign: TextAlign.center,
+                        style: CText.textStyleBodyBold,
+                      ),
+                      CSizedBox.h10(),
+                      CText(
+                        "Tanggal",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(dateToString(
+                          controller.peserta.value.data?.kegiatan?.date)),
+                      CSizedBox.h10(),
+                      CText(
+                        "Waktu",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(
+                          "${controller.peserta.value.data?.kegiatan?.time} WIB"),
+                      CSizedBox.h10(),
+                      CText(
+                        "Tempat",
+                        style: CText.textStyleBodyBold
+                            .copyWith(color: basicPrimary),
+                      ),
+                      CText(
+                          "${controller.peserta.value.data?.kegiatan?.location}"),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

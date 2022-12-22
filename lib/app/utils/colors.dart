@@ -3,6 +3,7 @@ import 'dart:ui';
 const basicBlack = Color(0xFF222222);
 const basicGrey1 = Color(0xFF898ea3);
 const basicGrey2 = Color(0xFFb9bdd0);
+const basicGrey3 = Color(0xffc6c6c6);
 const basicGrey4 = Color(0xFFf3f6fb);
 const basicGrey5 = Color(0xFFfafcff);
 const basicWhite = Color(0xFFffffff);

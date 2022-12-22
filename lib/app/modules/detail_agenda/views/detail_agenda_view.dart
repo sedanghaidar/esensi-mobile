@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
@@ -15,6 +17,7 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/utils.dart';
 import '../controllers/detail_agenda_controller.dart';
+import 'dart:ui' as ui;
 
 class DetailAgendaView extends GetView<DetailAgendaController> {
   @override
@@ -53,12 +56,23 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                       itemBuilder: (context, index) {
                         List<PesertaModel> peserta =
                             controller.peserta.value.data ?? [];
+
+                        ui.platformViewRegistry.registerViewFactory(
+                          "images/$index",
+                          (int viewId) => ImageElement()
+                            ..style.width = '100%'
+                            ..style.height = '100%'
+                            ..src =
+                                "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}",
+                        );
+
                         return Card(
                           color: basicPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(11.0),
                           ),
                           child: Container(
+                            padding: EdgeInsets.only(right: 10),
                             margin: EdgeInsets.only(left: 10),
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -112,28 +126,79 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                     )),
                                 Expanded(
                                     flex: 0,
-                                    child: InkWell(
-                                        onTap: () {
-                                          Get.dialog(
-                                              Center(
-                                                child: Container(
-                                                  color: basicWhite,
-                                                  width: context.width,
-                                                  height: context.width,
-                                                  margin: EdgeInsets.all(10),
-                                                  child: Image.network(
-                                                    "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}",
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Get.dialog(
+                                                Center(
+                                                  child: Container(
+                                                    color: basicWhite,
+                                                    width: getWidthDefault(
+                                                        context),
+                                                    height: getWidthDefault(
+                                                        context),
+                                                    margin: EdgeInsets.all(10),
+                                                    child: HtmlElementView(
+                                                      viewType: 'images/$index',
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              barrierDismissible: true);
-                                        },
-                                        child: Image.network(
-                                          "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}",
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        )))
+                                                barrierDismissible: true);
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Container(
+                                                color: basicPrimary,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Image.asset(
+                                                    icSignature,
+                                                    width: 20,
+                                                    height: 20,
+                                                    color: basicWhite,
+                                                  ),
+                                                )),
+                                          ),
+                                        ),
+                                        CSizedBox.h10(),
+                                        InkWell(
+                                          onTap: () {
+                                            Get.dialog(
+                                                Center(
+                                                  child: Container(
+                                                    color: basicWhite,
+                                                    width: getWidthDefault(
+                                                        context),
+                                                    height: getWidthDefault(
+                                                        context),
+                                                    margin: EdgeInsets.all(10),
+                                                    child: HtmlElementView(
+                                                      viewType: 'images/$index',
+                                                    ),
+                                                  ),
+                                                ),
+                                                barrierDismissible: true);
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Container(
+                                                color: basicPrimary2,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Image.asset(
+                                                    icQrcode,
+                                                    width: 20,
+                                                    height: 20,
+                                                    color: basicWhite,
+                                                  ),
+                                                )),
+                                          ),
+                                        ),
+                                      ],
+                                    ))
                               ],
                             ),
                           ),

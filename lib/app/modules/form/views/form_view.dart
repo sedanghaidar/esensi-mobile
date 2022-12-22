@@ -37,6 +37,7 @@ class FormView extends GetView<FormController> {
       appBar: AppBar(
         backgroundColor: basicPrimary,
         title: const Text('Formulir'),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       backgroundColor: basicGrey4,
@@ -374,10 +375,14 @@ class FormView extends GetView<FormController> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: CButton(() {
-                        controller.isSigned.value = false;
-                        controller.signaturePadKey.currentState?.clear();
-                      }, "Clear", style: styleButtonFilled2,),
+                      child: CButton(
+                        () {
+                          controller.isSigned.value = false;
+                          controller.signaturePadKey.currentState?.clear();
+                        },
+                        "Clear",
+                        style: styleButtonFilled2,
+                      ),
                     ),
                     CSizedBox.w10(),
                     Expanded(

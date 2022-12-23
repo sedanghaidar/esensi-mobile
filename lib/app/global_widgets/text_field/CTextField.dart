@@ -17,6 +17,7 @@ class CTextField extends StatefulWidget {
   final minLines;
   final maxLength;
   final onEditingComplete;
+  final onChange;
   final onFieldSubmitted;
   final validator;
   final autoValidateMode;
@@ -46,10 +47,10 @@ class CTextField extends StatefulWidget {
       this.autoValidateMode,
       this.enabled,
       this.onTap,
+      this.onChange,
       this.focusNode,
       this.suffixIcon,
-        this.textCapitalization
-      })
+      this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -67,6 +68,7 @@ class CTextField extends StatefulWidget {
       this.maxLines = 1,
       this.minLines,
       this.maxLength,
+      this.onChange,
       this.onEditingComplete,
       this.onFieldSubmitted,
       this.validator,
@@ -75,7 +77,7 @@ class CTextField extends StatefulWidget {
       this.onTap,
       this.focusNode,
       this.suffixIcon,
-        this.textCapitalization})
+      this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -99,9 +101,10 @@ class CTextField extends StatefulWidget {
       this.autoValidateMode,
       this.enabled,
       this.onTap,
+      this.onChange,
       this.focusNode,
       this.suffixIcon,
-        this.textCapitalization})
+      this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
 
@@ -204,6 +207,7 @@ class CTextFieldState extends State<CTextField> {
       enabled: widget.enabled,
       focusNode: widget.focusNode,
       onTap: widget.onTap,
+      onChanged: widget.onChange,
       textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
     );
   }

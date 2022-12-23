@@ -4,6 +4,7 @@ import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
+import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/foundation.dart';
@@ -43,127 +44,201 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
         ),
       ),
       backgroundColor: basicGrey4,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            width: getWidthDefault(context),
-            height: context.height,
-            padding: const EdgeInsets.all(10),
-            color: basicWhite,
-            child: Obx(() {
-              switch (controller.peserta.value.statusRequest) {
-                case StatusRequest.LOADING:
-                  return loading(context);
-                case StatusRequest.SUCCESS:
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      List<PesertaModel> peserta =
-                          controller.peserta.value.data ?? [];
-
-                      ui.platformViewRegistry.registerViewFactory(
-                          "images/$index",
-                          (int viewId) => ImageElement(
-                              src:
-                                  "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"));
-
-                      return Card(
-                        color: basicPrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11.0),
+      body: Center(
+        child: Container(
+          width: getWidthDefault(context),
+          height: context.height,
+          padding: const EdgeInsets.all(10),
+          color: basicWhite,
+          child: Column(
+            children: [
+              Expanded(
+                  flex: 0,
+                  child: Obx((){
+                    return Card(
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: columnCard(icParticipant, "${controller.peserta.value.data?.length??0}")),
+                                Expanded(
+                                    flex: 1,
+                                    child: columnCard(icOffice, "${controller.totalInstansi}")),
+                              ],
+                            ),
+                            CSizedBox.h10(),
+                            Row(
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: columnCard(icQrSuccess, "${controller.totalScanned}")),
+                                Expanded(
+                                    flex: 1,
+                                    child: columnCard(icQrError, "${controller.totalUnScanned}")),
+                              ],
+                            ),
+                          ],
                         ),
-                        child: Container(
-                          padding: const EdgeInsets.only(right: 10),
-                          margin: const EdgeInsets.only(left: 10),
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                              color: basicWhite),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
+                      ),
+                    );
+                  })),
+              Expanded(
+                  flex: 0,
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    child: CTextField(
+                      controller: controller.controllerSearch,
+                      hintText: "Cari Nama / Instansi",
+                      onChange: (value) {
+                        controller.filter.value = value;
+                      },
+                      suffixIcon: const Icon(Icons.search),
+                    ),
+                  )),
+              Expanded(
+                flex: 1,
+                child: Obx(() {
+                  String filter = controller.filter.value
+                      .toLowerCase(); // jangan dihapus buat trigger search!
+                  switch (controller.peserta.value.statusRequest) {
+                    case StatusRequest.LOADING:
+                      return loading(context);
+                    case StatusRequest.SUCCESS:
+                      return ListView.builder(
+                        shrinkWrap: false,
+                        itemBuilder: (context, index) {
+                          List<PesertaModel> peserta =
+                              controller.peserta.value.data ?? [];
+                          if (!(peserta[index].name ?? "")
+                              .toLowerCase()
+                              .contains(filter) &&
+                              !(peserta[index].instansi ?? "")
+                                  .toLowerCase()
+                                  .contains(filter)) {
+                            return Container();
+                          }
+                          ui.platformViewRegistry.registerViewFactory(
+                              "images/$index",
+                                  (int viewId) =>
+                                  ImageElement(
+                                      src:
+                                      "${ApiProvider
+                                          .BASE_URL}/storage/signature/${peserta[index]
+                                          .signature}"));
+
+                          return Card(
+                            color: basicPrimary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(11.0),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 10),
+                              margin: const EdgeInsets.only(left: 10),
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                  color: basicWhite),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: const EdgeInsets.all(10),
+                                        child: Column(
+                                          crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        CText(
-                                          dateToString(
-                                              peserta[index].createdAt),
-                                          style: CText.textStyleHint,
+                                          children: [
+                                            CText(
+                                              dateToString(
+                                                  peserta[index].createdAt),
+                                              style: CText.textStyleHint,
+                                            ),
+                                            const Divider(),
+                                            CText(peserta[index].name ?? ""),
+                                            CText(
+                                              peserta[index].instansi ?? "",
+                                              style: CText.textStyleBodyBold,
+                                            ),
+                                            CText(
+                                              peserta[index].jabatan ?? "",
+                                              style: CText.textStyleBody
+                                                  .copyWith(
+                                                  color: basicGrey2),
+                                            ),
+                                            const Divider(),
+                                            peserta[index].scannedAt == null
+                                                ? CText(
+                                              "Belum discan",
+                                              style: CText.textStyleHint
+                                                  .copyWith(
+                                                  fontSize: 12,
+                                                  color: basicRed1),
+                                            )
+                                                : CText(
+                                              "Discan pada ${dateToString(
+                                                  peserta[index].scannedAt)}",
+                                              style: CText.textStyleHint
+                                                  .copyWith(
+                                                  fontSize: 12,
+                                                  color:
+                                                  Colors.green),
+                                            )
+                                          ],
                                         ),
-                                        const Divider(),
-                                        CText(peserta[index].name ?? ""),
-                                        CText(
-                                          peserta[index].instansi ?? "",
-                                          style: CText.textStyleBodyBold,
-                                        ),
-                                        CText(
-                                          peserta[index].jabatan ?? "",
-                                          style: CText.textStyleBody
-                                              .copyWith(color: basicGrey2),
-                                        ),
-                                        const Divider(),
-                                        peserta[index].scannedAt == null
-                                            ? CText(
-                                                "Belum discan",
-                                                style: CText.textStyleHint
-                                                    .copyWith(
-                                                        fontSize: 12,
-                                                        color: basicRed1),
-                                              )
-                                            : CText(
-                                                "Discan pada ${dateToString(peserta[index].scannedAt)}",
-                                                style: CText.textStyleHint
-                                                    .copyWith(
-                                                        fontSize: 12,
-                                                        color: Colors.green),
-                                              )
-                                      ],
-                                    ),
-                                  )),
-                              Expanded(
-                                  flex: 0,
-                                  child: Column(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          openDialogSignature(context, index);
-                                        },
-                                        child: iconButton(icSignature, basicPrimary),
-                                      ),
-                                      const CSizedBox.h10(),
-                                      InkWell(
-                                        onTap: () {
-                                          openDialogQrcode(context, peserta[index]);
-                                          // Get.toNamed(
-                                          //     "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
-                                        },
-                                        child: iconButton(icQrcode, basicPrimary2),
-                                      ),
-                                    ],
-                                  ))
-                            ],
-                          ),
-                        ),
+                                      )),
+                                  Expanded(
+                                      flex: 0,
+                                      child: Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              openDialogSignature(
+                                                  context, index);
+                                            },
+                                            child: iconButton(
+                                                icSignature, basicPrimary),
+                                          ),
+                                          const CSizedBox.h10(),
+                                          InkWell(
+                                            onTap: () {
+                                              openDialogQrcode(
+                                                  context, peserta[index]);
+                                              // Get.toNamed(
+                                              //     "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
+                                            },
+                                            child: iconButton(
+                                                icQrcode, basicPrimary2),
+                                          ),
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: controller.peserta.value.data?.length ?? 0,
                       );
-                    },
-                    itemCount: controller.peserta.value.data?.length ?? 0,
-                  );
-                case StatusRequest.EMPTY:
-                  return warning(context, "Belum ada peserta");
-                case StatusRequest.ERROR:
-                  return error(
-                      context,
-                      "Terjadi Kesalahan.\n${controller.kegiatan.value.failure?.msgShow}",
-                      () => controller.getDetailKegiatan());
-                default:
-                  return const SizedBox();
-              }
-            }),
+                    case StatusRequest.EMPTY:
+                      return warning(context, "Belum ada peserta");
+                    case StatusRequest.ERROR:
+                      return error(
+                          context,
+                          "Terjadi Kesalahan.\n${controller.kegiatan.value
+                              .failure?.msgShow}",
+                              () => controller.getDetailKegiatan());
+                    default:
+                      return const SizedBox();
+                  }
+                }),
+              ),
+            ],
           ),
         ),
       ),
@@ -222,7 +297,9 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
               ),
               const CSizedBox.h10(),
               rowDetail(icDate, "Tanggal dan Waktu Pelaksanaan",
-                  "${dateToString(controller.kegiatan.value.data?.date)} ${controller.kegiatan.value.data?.time}"),
+                  "${dateToString(
+                      controller.kegiatan.value.data?.date)} ${controller
+                      .kegiatan.value.data?.time}"),
               const CSizedBox.h10(),
               rowDetail(icPlace, "Lokasi",
                   "${controller.kegiatan.value.data?.location}"),
@@ -233,7 +310,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                   controller.kegiatan.value.data?.dateEnd == null
                       ? "-"
                       : dateToString(controller.kegiatan.value.data?.dateEnd,
-                          format: "EEEE, dd MMMM yyyy hh:mm:ss")),
+                      format: "EEEE, dd MMMM yyyy hh:mm:ss")),
               const CSizedBox.h10(),
               rowDetail(
                   icType,
@@ -296,16 +373,17 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             margin: const EdgeInsets.all(10),
             child: kIsWeb
                 ? HtmlElementView(
-                    viewType: 'images/$index',
-                  )
+              viewType: 'images/$index',
+            )
                 : Image.network(
-                    "${ApiProvider.BASE_URL}/storage/signature/${controller.peserta.value.data?[index].signature}"),
+                "${ApiProvider.BASE_URL}/storage/signature/${controller.peserta
+                    .value.data?[index].signature}"),
           ),
         ),
         barrierDismissible: true);
   }
 
-  void openDialogQrcode(BuildContext context, PesertaModel? data){
+  void openDialogQrcode(BuildContext context, PesertaModel? data) {
     Get.dialog(
         Center(
           child: Container(
@@ -320,5 +398,18 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
           ),
         ),
         barrierDismissible: true);
+  }
+
+  Widget columnCard(String asset, String value) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(asset, width: 36, height: 32,),
+        CSizedBox.w10(),
+        CText(value, style: CText.textStyleSubhead,)
+      ],
+    );
   }
 }

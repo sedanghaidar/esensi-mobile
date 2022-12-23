@@ -23,6 +23,10 @@ const icType = "assets/ic_type_form.png";
 const icUserLimit = "assets/ic_user_limit.png";
 const icQrcode = "assets/qrcode.png";
 const icSignature = "assets/signature.png";
+const icOffice = "assets/office.png";
+const icParticipant = "assets/participant.png";
+const icQrSuccess = "assets/qrscan_success.png";
+const icQrError = "assets/qrscan_error.png";
 
 Future<Uint8List?> getWidgetToImage(GlobalKey key) async {
   try {

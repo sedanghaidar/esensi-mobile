@@ -5,6 +5,7 @@ import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequestModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,21 +35,12 @@ class DetailPesertaController extends GetxController {
           textConfirm: "SIAP",
           onConfirm: () {
             Get.back();
-            getWidgetToImage(qrKey).then((value) {
-              if (value != null) {
-                final content = base64Encode(value);
-                AnchorElement(
-                    href:
-                        "data:application/octet-stream;charset=utf-16le;base64,$content")
-                  ..setAttribute("download",
-                      "${peserta.value.data?.kegiatan?.name}_${peserta.value.data?.name}.png")
-                  ..click();
-              }
-            });
+            downloadQrcode(qrKey,
+                "${peserta.value.data?.kegiatan?.name}_${peserta.value.data?.name}");
           },
           barrierDismissible: false);
     }, onError: (e) {
-      debugPrint("${e}");
+      debugPrint("$e");
       peserta.value = StatusRequestModel.error(failure2(e));
     });
   }

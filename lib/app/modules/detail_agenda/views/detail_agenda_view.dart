@@ -9,10 +9,12 @@ import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/text/CText.dart';
+
 // import 'dart:ui' as ui;
 import '../../../global_widgets/ui.dart' if (dart.library.html) 'dart:ui' as ui;
 import '../../../routes/app_pages.dart';
@@ -21,18 +23,20 @@ import '../../../utils/utils.dart';
 import '../controllers/detail_agenda_controller.dart';
 
 class DetailAgendaView extends GetView<DetailAgendaController> {
+  const DetailAgendaView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: Text('Detail Agenda'),
+        title: const Text('Detail Agenda'),
         centerTitle: true,
         leading: InkWell(
           onTap: () {
             Get.offAllNamed(Routes.DASHBOARD);
           },
-          child: Icon(
+          child: const Icon(
             Icons.home,
             color: basicWhite,
           ),
@@ -44,178 +48,122 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
           child: Container(
             width: getWidthDefault(context),
             height: context.height,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             color: basicWhite,
-            child: Container(
-              child: Obx(() {
-                switch (controller.peserta.value.statusRequest) {
-                  case StatusRequest.LOADING:
-                    return loading(context);
-                  case StatusRequest.SUCCESS:
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        List<PesertaModel> peserta =
-                            controller.peserta.value.data ?? [];
+            child: Obx(() {
+              switch (controller.peserta.value.statusRequest) {
+                case StatusRequest.LOADING:
+                  return loading(context);
+                case StatusRequest.SUCCESS:
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      List<PesertaModel> peserta =
+                          controller.peserta.value.data ?? [];
 
-                        ui.platformViewRegistry.registerViewFactory(
-                            "images/$index",
-                            (int viewId) => ImageElement(
-                                src:
-                                    "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}")
-                            // ..style.width = '100%'
-                            // ..style.height = '100%'
-                            // ..src =
-                            //     "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}",
-                            );
+                      ui.platformViewRegistry.registerViewFactory(
+                          "images/$index",
+                          (int viewId) => ImageElement(
+                              src:
+                                  "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"));
 
-                        return Card(
-                          color: basicPrimary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(11.0),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.only(right: 10),
-                            margin: EdgeInsets.only(left: 10),
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)),
-                                color: basicWhite),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.all(10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CText(
-                                            dateToString(
-                                                peserta[index].createdAt),
-                                            style: CText.textStyleHint,
-                                          ),
-                                          Divider(),
-                                          CText(peserta[index].name ?? ""),
-                                          CText(
-                                            peserta[index].instansi ?? "",
-                                            style: CText.textStyleBodyBold,
-                                          ),
-                                          CText(
-                                            peserta[index].jabatan ?? "",
-                                            style: CText.textStyleBody
-                                                .copyWith(color: basicGrey2),
-                                          ),
-                                          Divider(),
-                                          peserta[index].scannedAt == null
-                                              ? CText(
-                                                  "Belum discan",
-                                                  style: CText.textStyleHint
-                                                      .copyWith(
-                                                          fontSize: 12,
-                                                          color: basicRed1),
-                                                )
-                                              : CText(
-                                                  "Discan pada ${dateToString(peserta[index].scannedAt ?? null)}",
-                                                  style: CText.textStyleHint
-                                                      .copyWith(
-                                                          fontSize: 12,
-                                                          color: Colors.green),
-                                                )
-                                        ],
-                                      ),
-                                    )),
-                                Expanded(
-                                    flex: 0,
+                      return Card(
+                        color: basicPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(11.0),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.only(left: 10),
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              color: basicWhite),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        InkWell(
-                                          onTap: () {
-                                            Get.dialog(
-                                                Center(
-                                                  child: Container(
-                                                    color: basicWhite,
-                                                    width: getWidthDefault(
-                                                            context) /
-                                                        2,
-                                                    height: getWidthDefault(
-                                                            context) /
-                                                        2,
-                                                    margin: EdgeInsets.all(10),
-                                                    child: kIsWeb
-                                                        ? HtmlElementView(
-                                                            viewType:
-                                                                'images/$index',
-                                                          )
-                                                        : Image.network(
-                                                            "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"),
-                                                  ),
-                                                ),
-                                                barrierDismissible: true);
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Container(
-                                                color: basicPrimary,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Image.asset(
-                                                    icSignature,
-                                                    width: 20,
-                                                    height: 20,
-                                                    color: basicWhite,
-                                                  ),
-                                                )),
-                                          ),
+                                        CText(
+                                          dateToString(
+                                              peserta[index].createdAt),
+                                          style: CText.textStyleHint,
                                         ),
-                                        CSizedBox.h10(),
-                                        InkWell(
-                                          onTap: () {
-                                            Get.toNamed(
-                                                "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Container(
-                                                color: basicPrimary2,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Image.asset(
-                                                    icQrcode,
-                                                    width: 20,
-                                                    height: 20,
-                                                    color: basicWhite,
-                                                  ),
-                                                )),
-                                          ),
+                                        const Divider(),
+                                        CText(peserta[index].name ?? ""),
+                                        CText(
+                                          peserta[index].instansi ?? "",
+                                          style: CText.textStyleBodyBold,
                                         ),
+                                        CText(
+                                          peserta[index].jabatan ?? "",
+                                          style: CText.textStyleBody
+                                              .copyWith(color: basicGrey2),
+                                        ),
+                                        const Divider(),
+                                        peserta[index].scannedAt == null
+                                            ? CText(
+                                                "Belum discan",
+                                                style: CText.textStyleHint
+                                                    .copyWith(
+                                                        fontSize: 12,
+                                                        color: basicRed1),
+                                              )
+                                            : CText(
+                                                "Discan pada ${dateToString(peserta[index].scannedAt)}",
+                                                style: CText.textStyleHint
+                                                    .copyWith(
+                                                        fontSize: 12,
+                                                        color: Colors.green),
+                                              )
                                       ],
-                                    ))
-                              ],
-                            ),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 0,
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          openDialogSignature(context, index);
+                                        },
+                                        child: iconButton(icSignature, basicPrimary),
+                                      ),
+                                      const CSizedBox.h10(),
+                                      InkWell(
+                                        onTap: () {
+                                          openDialogQrcode(context, peserta[index]);
+                                          // Get.toNamed(
+                                          //     "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
+                                        },
+                                        child: iconButton(icQrcode, basicPrimary2),
+                                      ),
+                                    ],
+                                  ))
+                            ],
                           ),
-                        );
-                      },
-                      itemCount: controller.peserta.value.data?.length ?? 0,
-                    );
-                  case StatusRequest.EMPTY:
-                    return warning(context, "Belum ada peserta");
-                  case StatusRequest.ERROR:
-                    return error(
-                        context,
-                        "Terjadi Kesalahan. ${controller.kegiatan.value.failure?.msgShow}",
-                        () => controller.getDetailKegiatan());
-                  default:
-                    {
-                      return SizedBox();
-                    }
-                }
-              }),
-            ),
+                        ),
+                      );
+                    },
+                    itemCount: controller.peserta.value.data?.length ?? 0,
+                  );
+                case StatusRequest.EMPTY:
+                  return warning(context, "Belum ada peserta");
+                case StatusRequest.ERROR:
+                  return error(
+                      context,
+                      "Terjadi Kesalahan.\n${controller.kegiatan.value.failure?.msgShow}",
+                      () => controller.getDetailKegiatan());
+                default:
+                  return const SizedBox();
+              }
+            }),
           ),
         ),
       ),
@@ -235,12 +183,31 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     );
   }
 
+  ///Mengatur tombol lihat tanda tangan dan qrcode pada setiap item di daftar
+  ///[asset] icon yang akan dipakai
+  Widget iconButton(String asset, Color background) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: Container(
+          color: background,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              asset,
+              width: 20,
+              height: 20,
+              color: basicWhite,
+            ),
+          )),
+    );
+  }
+
   openDialogDetail(BuildContext context) {
     Get.dialog(Center(
       child: Container(
         width: getWidthDefault(context),
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
+        margin: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: basicWhite),
@@ -253,13 +220,13 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 controller.kegiatan.value.data?.name ?? "Tidak Ada Judul",
                 style: CText.textStyleSubhead,
               ),
-              CSizedBox.h10(),
+              const CSizedBox.h10(),
               rowDetail(icDate, "Tanggal dan Waktu Pelaksanaan",
                   "${dateToString(controller.kegiatan.value.data?.date)} ${controller.kegiatan.value.data?.time}"),
-              CSizedBox.h10(),
+              const CSizedBox.h10(),
               rowDetail(icPlace, "Lokasi",
                   "${controller.kegiatan.value.data?.location}"),
-              CSizedBox.h10(),
+              const CSizedBox.h10(),
               rowDetail(
                   icDateClose,
                   "Tanggal dan Waktu Formulir Ditutup",
@@ -267,14 +234,14 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                       ? "-"
                       : dateToString(controller.kegiatan.value.data?.dateEnd,
                           format: "EEEE, dd MMMM yyyy hh:mm:ss")),
-              CSizedBox.h10(),
+              const CSizedBox.h10(),
               rowDetail(
                   icType,
                   "Jenis Formulir",
                   controller.kegiatan.value.data?.type == 1
                       ? "Absensi"
                       : "Pendaftaran"),
-              CSizedBox.h10(),
+              const CSizedBox.h10(),
               rowDetail(
                   icUserLimit,
                   "Pembatasan Peserta?",
@@ -288,6 +255,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     ));
   }
 
+  ///Membuat dan mengatur konten yang ditampilkan pada dialog detail
+  ///[icon] ikon konten
+  ///[title] judul konten
+  ///[value] isi dari konten
   Widget rowDetail(String icon, String title, String value) {
     return Row(
       children: [
@@ -298,7 +269,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
               width: 24,
               height: 24,
             )),
-        CSizedBox.w10(),
+        const CSizedBox.w10(),
         Expanded(
             flex: 0,
             child: Column(
@@ -313,5 +284,41 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             )),
       ],
     );
+  }
+
+  void openDialogSignature(BuildContext context, int index) {
+    Get.dialog(
+        Center(
+          child: Container(
+            color: basicWhite,
+            width: getWidthDefault(context) / 2,
+            height: getWidthDefault(context) / 2,
+            margin: const EdgeInsets.all(10),
+            child: kIsWeb
+                ? HtmlElementView(
+                    viewType: 'images/$index',
+                  )
+                : Image.network(
+                    "${ApiProvider.BASE_URL}/storage/signature/${controller.peserta.value.data?[index].signature}"),
+          ),
+        ),
+        barrierDismissible: true);
+  }
+
+  void openDialogQrcode(BuildContext context, PesertaModel? data){
+    Get.dialog(
+        Center(
+          child: Container(
+            color: basicWhite,
+            width: getWidthDefault(context) / 2,
+            height: getWidthDefault(context) / 2,
+            margin: const EdgeInsets.all(10),
+            child: QrImage(
+              data: data?.qrCode ?? "",
+              size: getWidthDefault(context) / 2,
+            ),
+          ),
+        ),
+        barrierDismissible: true);
   }
 }

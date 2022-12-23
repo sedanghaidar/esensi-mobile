@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:absensi_kegiatan/app/utils/constant.dart';
+import 'package:absensi_kegiatan/app/utils/images.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 
-/***
- * Mendeteksi aplikasi dibuka dimana
- * */
+/// Mendeteksi aplikasi dibuka dimana
 int getPlatform(BuildContext context) {
   final isMobile = GetPlatform.isMobile;
   final isDesktop = GetPlatform.isDesktop;
@@ -41,6 +44,9 @@ int getPlatform(BuildContext context) {
   }
 }
 
+/// Mendpatkan nilai lebar
+/// - Jika landscape maka mengembalikan setengah lebar penuh
+/// - Jika portrait maka mengembalikan lebar penuh
 double getWidthDefault(BuildContext context) {
   double width = context.width;
   final orientation = getPlatform(context);
@@ -52,6 +58,7 @@ double getWidthDefault(BuildContext context) {
   return width;
 }
 
+/// Mendapatkan orientasi layar
 int getOrientation(BuildContext context) {
   final orientation = getPlatform(context);
   if (orientation == WEB_LANDSCAPE || orientation == DESKTOP_LANDSCAPE) {
@@ -59,4 +66,22 @@ int getOrientation(BuildContext context) {
   } else {
     return 2;
   }
+}
+
+///Melakukan download QRCode dengan [qrkey] adalah konten/qrcode dan [filename] adalah nama file hasil download
+downloadQrcode(GlobalKey qrKey, String filename) {
+  getWidgetToImage(qrKey).then((value) {
+    if (value != null) {
+      if (kIsWeb) {
+        final content = base64Encode(value);
+        AnchorElement(
+            href:
+                "data:application/octet-stream;charset=utf-16le;base64,$content")
+          ..setAttribute("download", "$filename.png")
+          ..click();
+      } else {
+        ///todo DOWNLOAD FOR MOBILE
+      }
+    }
+  });
 }

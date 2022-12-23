@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
@@ -12,11 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../utils/colors.dart';
-import '../../../utils/images.dart';
 import '../controllers/detail_peserta_controller.dart';
 
 class DetailPesertaView extends GetView<DetailPesertaController> {
@@ -55,16 +51,8 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                         Expanded(
                           flex: 1,
                           child: CButton(() {
-                            getWidgetToImage(controller.qrKey).then((value) {
-                              if (value != null) {
-                                final content = base64Encode(value);
-                                AnchorElement(
-                                    href:
-                                        "data:application/octet-stream;charset=utf-16le;base64,$content")
-                                  ..setAttribute("download", "file.png")
-                                  ..click();
-                              }
-                            });
+                            downloadQrcode(controller.qrKey,
+                                "${controller.peserta.value.data?.kegiatan?.name}_${controller.peserta.value.data?.name}");
                           }, "Download Ulang QRCode"),
                         ),
                         CSizedBox.w10(),
@@ -72,8 +60,7 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                           flex: 1,
                           child: CButton(
                             () {
-                              Get.offAllNamed(Routes.FORM +
-                                  "/${controller.peserta.value.data?.kegiatan?.codeUrl}");
+                              Get.offAllNamed("${Routes.FORM}/${controller.peserta.value.data?.kegiatan?.codeUrl}");
                             },
                             "Kembali Ke Formulir",
                             style: styleButtonFilled2,

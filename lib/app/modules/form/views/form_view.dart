@@ -355,8 +355,8 @@ class FormView extends GetView<FormController> {
                 width: context.width >= maxWidth ? 450 : double.infinity,
                 height: context.width >= maxWidth ? 350 : 350,
                 child: SfSignaturePad(
-                    minimumStrokeWidth: 1,
-                    maximumStrokeWidth: 2,
+                    minimumStrokeWidth: 3.0,
+                    maximumStrokeWidth: 5.0,
                     strokeColor: basicBlack,
                     backgroundColor: basicWhite,
                     onDrawStart: controller.handleOnDrawStart,

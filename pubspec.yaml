@@ -1,14 +1,14 @@
 name: absensi_kegiatan
 version: 1.0.0+1
 publish_to: none
-description: Multiplatform Apps for Absensi Kegiatan
-environment: 
+description: Multiplatform Apps for Presensi Kegiatan by Diskominfo Jateng
+environment:
   sdk: '>=2.17.6 <3.0.0'
 
-dependencies: 
+dependencies:
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  flutter: 
+  flutter:
     sdk: flutter
   flutter_svg: ^1.1.6
   intl: ^0.17.0
@@ -23,14 +23,14 @@ dependencies:
   url_launcher: ^6.1.7
   qr_code_scanner: ^1.0.1
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
   hive_generator: ^1.0.0
   build_runner: ^1.11.5
 
-flutter: 
+flutter:
   uses-material-design: true
 
   assets:

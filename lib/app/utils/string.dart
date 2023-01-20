@@ -7,3 +7,4 @@ const TYPE_ABSENSI = "Absensi";
 const TYPE_PENDAFTARAN_CODE = 2;
 const TYPE_PENDAFTARAN = "Pendaftaran";
 List<String> form_types = [TYPE_ABSENSI, TYPE_PENDAFTARAN];
+List<String> form_gender = ["Laki-laki", "Perempuan"];

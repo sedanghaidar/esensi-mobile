@@ -28,6 +28,7 @@ class FormController extends GetxController {
   TextEditingController controllerInstansi = TextEditingController();
   TextEditingController controllerInstansiManual = TextEditingController();
   final TextEditingController controllerJabatan = TextEditingController();
+  final TextEditingController controllerGender = TextEditingController();
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
   final GlobalKey qrKey = GlobalKey();
 
@@ -134,6 +135,7 @@ class FormController extends GetxController {
         "jabatan": controllerJabatan.text,
         "instansi": i.toUpperCase(),
         "nohp": controllerPhone.text,
+        "gender": controllerGender.text,
         "signature": MultipartFile(fileBytes,
             filename: "${controllerName.text}_${kegiatan.value.data?.id}.jpeg")
       };

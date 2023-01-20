@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/button/CButtonStyle.dart';
@@ -64,120 +65,128 @@ class DashboardView extends GetView<DashboardController> {
 
     controller.getKegiatan();
 
-    return Scaffold(
-      floatingActionButton: kIsWeb
-          ? SizedBox()
-          : FloatingActionButton(
-              onPressed: () => Get.toNamed(Routes.QR_SCANNER),
-              child: const Icon(
-                Icons.qr_code_scanner,
+    return Title(
+      color: basicPrimaryDark,
+      title: "Esensi",
+      child: Scaffold(
+        floatingActionButton: (GetPlatform.isMobile &&
+                !GetPlatform.isWeb &&
+                !GetPlatform.isWindows)
+            ? FloatingActionButton(
+                onPressed: () => Get.toNamed(Routes.QR_SCANNER),
+                child: const Icon(
+                  Icons.qr_code_scanner,
+                ),
+                backgroundColor: basicPrimary,
+              )
+            : SizedBox(),
+        appBar: AppBar(
+          title: Text("ESENSI", style: CText.styleTitleAppBar),
+          backgroundColor: basicPrimary,
+          actions: [
+            InkWell(
+              onTap: () {
+                Get.toNamed(Routes.PROFILE);
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: menu,
+                ),
               ),
-              backgroundColor: basicPrimary,
-            ),
-      appBar: AppBar(
-        backgroundColor: basicPrimary,
-        actions: [
-          InkWell(
-            onTap: () {
-              Get.toNamed(Routes.PROFILE);
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: Align(
+            )
+          ],
+        ),
+        backgroundColor: basicGrey4,
+        body: Padding(
+          padding: EdgeInsets.only(
+              top: 20, bottom: 20, left: 20, right: paddingHorizontal),
+          child: Column(
+            children: [
+              Stack(
                 alignment: Alignment.center,
-                child: menu,
+                children: [
+                  CTextField.noStyle(
+                    hintText: "Masukkan nama agenda",
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: SizedBox(
+                        width: 150,
+                        child: CButton.box(
+                          () {
+                            Get.toNamed(Routes.CREATE_AGENDA);
+                          },
+                          "Buat Agenda",
+                        )),
+                  ),
+                ],
               ),
-            ),
-          )
-        ],
-      ),
-      backgroundColor: basicGrey4,
-      body: Padding(
-        padding: EdgeInsets.only(
-            top: 20, bottom: 20, left: 20, right: paddingHorizontal),
-        child: Column(
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CTextField.noStyle(
-                  hintText: "Masukkan nama agenda",
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                      width: 150,
-                      child: CButton.box(
-                        () {
-                          Get.toNamed(Routes.CREATE_AGENDA);
-                        },
-                        "Buat Agenda",
-                      )),
-                ),
-              ],
-            ),
-            const CSizedBox.h20(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                CText.header(
-                  "Daftar Agenda",
-                  style: CText.textStyleSubhead,
-                ),
-              ],
-            ),
-            const CSizedBox.h20(),
-            Expanded(
-              flex: 1,
-              child: Obx(() {
-                switch (controller.kegiatan.value.statusRequest) {
-                  case StatusRequest.LOADING:
-                    return loading(context);
-                  case StatusRequest.EMPTY:
-                    return error(context, "Daftar Kegiatan Kosong",
-                        () => controller.getKegiatan());
-                  case StatusRequest.SUCCESS:
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: controller.kegiatan.value.data?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Get.toNamed(
-                                  "${Routes.DETAIL_AGENDA}/${controller.kegiatan.value.data?[index].id}");
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: basicWhite,
-                                  border: Border.all(color: basicGrey2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ///NAMA KEGIATAN
-                                      Flexible(
-                                        child: CText(
-                                          "${controller.kegiatan.value.data?[index].name}",
-                                          style: CText.textStyleBodyBold
-                                              .copyWith(
-                                                  fontSize: 24,
-                                                  letterSpacing: 0.75,
-                                                  fontWeight: FontWeight.w600),
-                                          overflow: TextOverflow.ellipsis,
+              const CSizedBox.h20(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  CText.header(
+                    "Daftar Agenda",
+                    style: CText.textStyleSubhead,
+                  ),
+                ],
+              ),
+              const CSizedBox.h20(),
+              Expanded(
+                flex: 1,
+                child: Obx(() {
+                  switch (controller.kegiatan.value.statusRequest) {
+                    case StatusRequest.LOADING:
+                      return loading(context);
+                    case StatusRequest.EMPTY:
+                      return error(context, "Daftar Kegiatan Kosong",
+                          () => controller.getKegiatan());
+                    case StatusRequest.SUCCESS:
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount:
+                              controller.kegiatan.value.data?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Get.toNamed(
+                                    "${Routes.DETAIL_AGENDA}/${controller.kegiatan.value.data?[index].id}");
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 5),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: basicWhite,
+                                    border: Border.all(color: basicGrey2),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ///NAMA KEGIATAN
+                                        Flexible(
+                                          child: CText(
+                                            "${controller.kegiatan.value.data?[index].name}",
+                                            style: CText.textStyleBodyBold
+                                                .copyWith(
+                                                    fontSize: 24,
+                                                    letterSpacing: 0.75,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                      ),
 
-                                      ///TOMBOL EDIT DAN HAPUS
-                                      Expanded(
+                                        ///TOMBOL EDIT DAN HAPUS
+                                        Expanded(
                                           flex: 0,
                                           child: Row(
                                             children: [
@@ -229,129 +238,133 @@ class DashboardView extends GetView<DashboardController> {
                                                         color: basicWhite,
                                                       )))
                                             ],
-                                          ))
-                                    ],
-                                  ),
-                                  const CSizedBox.h5(),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ///URL KEGIATAN
-                                      Flexible(
-                                        child: Container(
-                                          constraints: BoxConstraints(
-                                              maxWidth: context.width / 2),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const CSizedBox.h5(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        ///URL KEGIATAN
+                                        Flexible(
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: context.width / 2),
+                                            child: InkWell(
+                                              child: CText(
+                                                "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}",
+                                                style: CText.textStyleBody
+                                                    .copyWith(fontSize: 16),
+                                                // overflow: TextOverflow.ellipsis,
+                                                softWrap: false,
+                                              ),
+                                              onTap: () {
+                                                Get.toNamed(
+                                                        "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
+                                                    ?.then((value) {
+                                                  controller.getKegiatan();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        const CSizedBox.w10(),
+
+                                        ///TOMBOL COPY URL
+                                        Expanded(
+                                          flex: 0,
                                           child: InkWell(
-                                            child: CText(
-                                              "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}",
+                                            onTap: () async {
+                                              await Clipboard.setData(ClipboardData(
+                                                      text:
+                                                          "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}"))
+                                                  .whenComplete(() {
+                                                showToast(
+                                                    "Berhasil menyalin kode");
+                                              });
+                                            },
+                                            child: Container(
+                                              color: basicGrey4,
+                                              padding: const EdgeInsets.all(8),
+                                              child: const Icon(
+                                                Icons.copy,
+                                                size: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const CSizedBox.h5(),
+                                    const Divider(height: 2),
+                                    const CSizedBox.h5(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(children: [
+                                            const WidgetSpan(
+                                                child: Icon(
+                                              Icons.access_time_filled_rounded,
+                                              size: 16,
+                                            )),
+                                            const WidgetSpan(
+                                                child: CSizedBox.w5()),
+                                            WidgetSpan(
+                                                child: CText(
+                                              dateToString(
+                                                  controller.kegiatan.value
+                                                      .data?[index].date,
+                                                  format: "EEEE, dd MMMM yyyy"),
                                               style: CText.textStyleBody
-                                                  .copyWith(fontSize: 16),
-                                              // overflow: TextOverflow.ellipsis,
-                                              softWrap: false,
+                                                  .copyWith(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            ))
+                                          ]),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .kegiatan
+                                                  .value
+                                                  .data?[index]
+                                                  .isLimitParticipant ??
+                                              false,
+                                          child: InkWell(
+                                            child: const Icon(
+                                              Icons.business_center,
+                                              color: basicPrimary2,
                                             ),
                                             onTap: () {
                                               Get.toNamed(
-                                                      "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
-                                                  ?.then((value) {
-                                                controller.getKegiatan();
-                                              });
+                                                  "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
                                             },
                                           ),
-                                        ),
-                                      ),
-                                      const CSizedBox.w10(),
-
-                                      ///TOMBOL COPY URL
-                                      Expanded(
-                                        flex: 0,
-                                        child: InkWell(
-                                          onTap: () async {
-                                            await Clipboard.setData(ClipboardData(
-                                                    text:
-                                                        "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}"))
-                                                .whenComplete(() {
-                                              showToast(
-                                                  "Berhasil menyalin kode");
-                                            });
-                                          },
-                                          child: Container(
-                                            color: basicGrey4,
-                                            padding: const EdgeInsets.all(8),
-                                            child: const Icon(
-                                              Icons.copy,
-                                              size: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const CSizedBox.h5(),
-                                  const Divider(height: 2),
-                                  const CSizedBox.h5(),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const WidgetSpan(
-                                              child: Icon(
-                                            Icons.access_time_filled_rounded,
-                                            size: 16,
-                                          )),
-                                          const WidgetSpan(
-                                              child: CSizedBox.w5()),
-                                          WidgetSpan(
-                                              child: CText(
-                                            dateToString(
-                                                controller.kegiatan.value
-                                                    .data?[index].createdAt,
-                                                format:
-                                                    "EEEE, dd MMMM yyyy, HH:mm:ss"),
-                                            style: CText.textStyleBody.copyWith(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400),
-                                          ))
-                                        ]),
-                                      ),
-                                      Visibility(
-                                        visible: controller
-                                                .kegiatan
-                                                .value
-                                                .data?[index]
-                                                .isLimitParticipant ??
-                                            false,
-                                        child: InkWell(
-                                          child: const Icon(
-                                            Icons.business_center,
-                                            color: basicPrimary2,
-                                          ),
-                                          onTap: () {
-                                            Get.toNamed(
-                                                "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        });
-                  case StatusRequest.ERROR:
-                    return error(
-                        context,
-                        "${controller.kegiatan.value.failure?.msgShow}",
-                        () => controller.getKegiatan(),
-                        height: 200);
-                  default:
-                    return const SizedBox();
-                }
-              }),
-            ),
-          ],
+                            );
+                          });
+                    case StatusRequest.ERROR:
+                      return error(
+                          context,
+                          "${controller.kegiatan.value.failure?.msgShow}",
+                          () => controller.getKegiatan(),
+                          height: 200);
+                    default:
+                      return const SizedBox();
+                  }
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

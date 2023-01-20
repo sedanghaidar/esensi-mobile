@@ -31,7 +31,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: const Text('Detail Agenda'),
+        title: Text(
+          'Detail Agenda',
+          style: CText.styleTitleAppBar,
+        ),
         centerTitle: true,
         leading: InkWell(
           onTap: () {
@@ -54,7 +57,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             children: [
               Expanded(
                   flex: 0,
-                  child: Obx((){
+                  child: Obx(() {
                     return Card(
                       elevation: 5,
                       margin: EdgeInsets.all(10),
@@ -66,10 +69,12 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                               children: [
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icParticipant, "${controller.peserta.value.data?.length??0}")),
+                                    child: columnCard(icParticipant,
+                                        "${controller.peserta.value.data?.length ?? 0}")),
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icOffice, "${controller.totalInstansi}")),
+                                    child: columnCard(icOffice,
+                                        "${controller.totalInstansi}")),
                               ],
                             ),
                             CSizedBox.h10(),
@@ -77,10 +82,12 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                               children: [
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icQrSuccess, "${controller.totalScanned}")),
+                                    child: columnCard(icQrSuccess,
+                                        "${controller.totalScanned}")),
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icQrError, "${controller.totalUnScanned}")),
+                                    child: columnCard(icQrError,
+                                        "${controller.totalUnScanned}")),
                               ],
                             ),
                           ],
@@ -116,8 +123,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                           List<PesertaModel> peserta =
                               controller.peserta.value.data ?? [];
                           if (!(peserta[index].name ?? "")
-                              .toLowerCase()
-                              .contains(filter) &&
+                                  .toLowerCase()
+                                  .contains(filter) &&
                               !(peserta[index].instansi ?? "")
                                   .toLowerCase()
                                   .contains(filter)) {
@@ -125,12 +132,9 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                           }
                           ui.platformViewRegistry.registerViewFactory(
                               "images/$index",
-                                  (int viewId) =>
-                                  ImageElement(
-                                      src:
-                                      "${ApiProvider
-                                          .BASE_URL}/storage/signature/${peserta[index]
-                                          .signature}"));
+                              (int viewId) => ImageElement(
+                                  src:
+                                      "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"));
 
                           return Card(
                             color: basicPrimary,
@@ -153,7 +157,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                         margin: const EdgeInsets.all(10),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             CText(
                                               dateToString(
@@ -169,27 +173,25 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                             CText(
                                               peserta[index].jabatan ?? "",
                                               style: CText.textStyleBody
-                                                  .copyWith(
-                                                  color: basicGrey2),
+                                                  .copyWith(color: basicGrey2),
                                             ),
                                             const Divider(),
                                             peserta[index].scannedAt == null
                                                 ? CText(
-                                              "Belum discan",
-                                              style: CText.textStyleHint
-                                                  .copyWith(
-                                                  fontSize: 12,
-                                                  color: basicRed1),
-                                            )
+                                                    "Belum discan",
+                                                    style: CText.textStyleHint
+                                                        .copyWith(
+                                                            fontSize: 12,
+                                                            color: basicRed1),
+                                                  )
                                                 : CText(
-                                              "Discan pada ${dateToString(
-                                                  peserta[index].scannedAt)}",
-                                              style: CText.textStyleHint
-                                                  .copyWith(
-                                                  fontSize: 12,
-                                                  color:
-                                                  Colors.green),
-                                            )
+                                                    "Discan pada ${dateToString(peserta[index].scannedAt)}",
+                                                    style: CText.textStyleHint
+                                                        .copyWith(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.green),
+                                                  )
                                           ],
                                         ),
                                       )),
@@ -230,9 +232,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                     case StatusRequest.ERROR:
                       return error(
                           context,
-                          "Terjadi Kesalahan.\n${controller.kegiatan.value
-                              .failure?.msgShow}",
-                              () => controller.getDetailKegiatan());
+                          "Terjadi Kesalahan.\n${controller.kegiatan.value.failure?.msgShow}",
+                          () => controller.getDetailKegiatan());
                     default:
                       return const SizedBox();
                   }
@@ -297,9 +298,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
               ),
               const CSizedBox.h10(),
               rowDetail(icDate, "Tanggal dan Waktu Pelaksanaan",
-                  "${dateToString(
-                      controller.kegiatan.value.data?.date)} ${controller
-                      .kegiatan.value.data?.time}"),
+                  "${dateToString(controller.kegiatan.value.data?.date)} ${controller.kegiatan.value.data?.time}"),
               const CSizedBox.h10(),
               rowDetail(icPlace, "Lokasi",
                   "${controller.kegiatan.value.data?.location}"),
@@ -310,7 +309,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                   controller.kegiatan.value.data?.dateEnd == null
                       ? "-"
                       : dateToString(controller.kegiatan.value.data?.dateEnd,
-                      format: "EEEE, dd MMMM yyyy hh:mm:ss")),
+                          format: "EEEE, dd MMMM yyyy hh:mm:ss")),
               const CSizedBox.h10(),
               rowDetail(
                   icType,
@@ -373,11 +372,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             margin: const EdgeInsets.all(10),
             child: kIsWeb
                 ? HtmlElementView(
-              viewType: 'images/$index',
-            )
+                    viewType: 'images/$index',
+                  )
                 : Image.network(
-                "${ApiProvider.BASE_URL}/storage/signature/${controller.peserta
-                    .value.data?[index].signature}"),
+                    "${ApiProvider.BASE_URL}/storage/signature/${controller.peserta.value.data?[index].signature}"),
           ),
         ),
         barrierDismissible: true);
@@ -406,9 +404,16 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(asset, width: 36, height: 32,),
+        Image.asset(
+          asset,
+          width: 36,
+          height: 32,
+        ),
         CSizedBox.w10(),
-        CText(value, style: CText.textStyleSubhead,)
+        CText(
+          value,
+          style: CText.textStyleSubhead,
+        )
       ],
     );
   }

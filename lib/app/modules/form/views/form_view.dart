@@ -14,6 +14,7 @@ import '../../../global_widgets/other/toast.dart';
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../global_widgets/text_field/CTextField.dart';
+import '../../../global_widgets/text_field/CTextFieldDropDown.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/string.dart';
@@ -160,6 +161,31 @@ class FormView extends GetView<FormController> {
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.phone,
+                ),
+                const CSizedBox.h10(),
+                const CText("Jenis Kelamin"),
+                const CSizedBox.h5(),
+                CTextFieldDropDown<String>(
+                  hintText: "Pilih Jenis Kelamin",
+                  value: controller.controllerGender.text == ""
+                      ? null
+                      : controller.controllerGender.text,
+                  items: form_gender
+                      .map((e) =>
+                      DropdownMenuItem<String>(value: e, child: CText(e)))
+                      .toList(),
+                  onChange: (value) {
+                    if (controller.controllerGender.text != value) {
+                      controller.controllerGender.text = value;
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null ||
+                        GetUtils.isBlank(controller.controllerGender.text) ==
+                            true ||
+                        GetUtils.isBlank(value) == true) return msgBlank;
+                    return null;
+                  },
                 ),
                 const CSizedBox.h10(),
                 const CText("Instansi"),

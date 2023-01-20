@@ -160,11 +160,14 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                           flex: 1,
                           child: controller.peserta.value.data?.qrCode == null
                               ? SizedBox()
-                              : QrImage(
-                                  data: controller.peserta.value.data?.qrCode ??
-                                      "",
-                                  size: width,
-                                ),
+                              : Align(
+                                alignment: Alignment.center,
+                                child: QrImage(
+                                    data: controller.peserta.value.data?.qrCode ??
+                                        "",
+                                    // size: width,
+                                  ),
+                              ),
                         ),
                         Expanded(
                           flex: 0,

@@ -10,6 +10,8 @@ import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../utils/colors.dart';
+
 class DetailAgendaController extends GetxController {
   ApiProvider repository = Get.find();
 
@@ -73,6 +75,58 @@ class DetailAgendaController extends GetxController {
     }, onError: (e) {
       debugPrint(e);
       peserta.value = StatusRequestModel.error(failure2(e));
+    });
+  }
+
+  scanQrPeserta(String? qrCode) {
+    showLoading();
+    Map<String, dynamic> data = {
+      "qr_code": qrCode,
+    };
+    repository.scanPeserta(data).then((value) {
+      hideLoading();
+      if (value.statusRequest == StatusRequest.SUCCESS) {
+        Get.defaultDialog(
+          title: "Berhasil Scan",
+          middleText: "Selamat datang, ${value.data?.name} - ${value.data?.instansi}",
+          barrierDismissible: false,
+          confirmTextColor: basicWhite,
+          buttonColor: basicPrimary,
+          onConfirm: () {
+            Get.back();
+            int? index = peserta.value.data?.indexWhere((element) => element.name == value.data?.name);
+            if(index!=null){
+              peserta.value.data?[index] = value.data!;
+              peserta.value = StatusRequestModel.success(peserta.value.data??[]);
+            }
+          },
+        );
+      } else {
+        if (value.failure?.code == 400) {
+          Get.defaultDialog(
+            title: "PERHATIAN",
+            middleText: "${value.failure?.msgShow}",
+            barrierDismissible: false,
+            confirmTextColor: basicWhite,
+            buttonColor: basicPrimary,
+            onConfirm: () {
+              Get.back();
+            },
+          );
+        }
+      }
+    }, onError: (e) {
+      hideLoading();
+      Get.defaultDialog(
+        title: "PERHATIAN",
+        middleText: "${e.toString()}",
+        barrierDismissible: false,
+        confirmTextColor: basicWhite,
+        buttonColor: basicPrimary,
+        onConfirm: () {
+          Get.back();
+        },
+      );
     });
   }
 

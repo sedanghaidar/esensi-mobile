@@ -56,8 +56,10 @@ class _BottomSheetDemoState extends State<BottomSheetDemo> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
-            child: RaisedButton(
-          color: Colors.teal[100],
+            child: ElevatedButton(
+              style: ButtonStyle(
+
+              ),
           onPressed: _showPersistantBottomSheetCallBack,
           child: Text(
             "Show Persistent BottomSheet",

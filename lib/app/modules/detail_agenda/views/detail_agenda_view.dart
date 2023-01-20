@@ -384,15 +384,28 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
   void openDialogQrcode(BuildContext context, PesertaModel? data) {
     Get.dialog(
         Center(
-          child: Container(
-            color: basicWhite,
-            width: getWidthDefault(context) / 2,
-            height: getWidthDefault(context) / 2,
-            margin: const EdgeInsets.all(10),
-            child: QrImage(
-              data: data?.qrCode ?? "",
-              size: getWidthDefault(context) / 2,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                color: basicWhite,
+                width: getWidthDefault(context) / 2,
+                height: (getWidthDefault(context) / 2),
+                margin: const EdgeInsets.all(10),
+                child: QrImage(
+                  data: data?.qrCode ?? "",
+                  size: getWidthDefault(context) / 2,
+                ),
+              ),
+              Visibility(
+                  visible: data?.scannedAt == null,
+                  child: Container(
+                      width: getWidthDefault(context) / 2,
+                      child: CButton(() {
+                        Get.back();
+                        controller.scanQrPeserta(data?.qrCode);
+                      }, "SCAN !"))),
+            ],
           ),
         ),
         barrierDismissible: true);

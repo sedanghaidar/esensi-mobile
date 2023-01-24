@@ -75,8 +75,11 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                         "${controller.peserta.value.data?.length ?? 0}")),
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icOffice,
-                                        "${controller.totalInstansi}")),
+                                    child: columnCard(icOffice, "${controller.totalInstansi}", action: (){
+                                      if(controller.kegiatan.value.data?.isLimitParticipant==true){
+                                          controller.getInstansiParticipant();
+                                      }
+                                    })),
                               ],
                             ),
                             CSizedBox.h10(),
@@ -446,23 +449,26 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
         barrierDismissible: true);
   }
 
-  Widget columnCard(String asset, String value) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          asset,
-          width: 36,
-          height: 32,
-        ),
-        CSizedBox.w10(),
-        CText(
-          value,
-          style: CText.textStyleSubhead,
-        )
-      ],
+  Widget columnCard(String asset, String value, {Function()? action}) {
+    return InkWell(
+      onTap: action,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            asset,
+            width: 36,
+            height: 32,
+          ),
+          CSizedBox.w10(),
+          CText(
+            value,
+            style: CText.textStyleSubhead,
+          )
+        ],
+      ),
     );
   }
 }

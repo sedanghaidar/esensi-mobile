@@ -1,3 +1,4 @@
+import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
@@ -6,10 +7,13 @@ import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/utils/date.dart';
 import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../global_widgets/other/toast.dart';
 import '../../../utils/colors.dart';
 
 class DetailAgendaController extends GetxController {
@@ -175,6 +179,43 @@ class DetailAgendaController extends GetxController {
           Get.back();
         },
       );
+    });
+  }
+
+  getInstansiParticipant() {
+    showLoading();
+    repository.getInstansiParticipant(id).then((value) async {
+      if (value.statusRequest == StatusRequest.SUCCESS) {
+        hideLoading();
+        if (value.data == null || value.data?.isEmpty == true) {
+          //empty
+        } else {
+          String sudahTerdaftar = "";
+          int sudahTerdaftarNumber = 0;
+          String belumTerdaftar = "";
+          int belumTerdaftarNumber = 0;
+          for(InstansiPartipantModel data in value.data!){
+            if(peserta.value.data?.any((element) => element.instansi == data.organization?.name) == true){
+              sudahTerdaftar += "- ${data.organization?.name}\n";
+              sudahTerdaftarNumber++;
+            }else{
+              belumTerdaftar += "- ${data.organization?.name}\n";
+              belumTerdaftarNumber++;
+            }
+          }
+          await Clipboard.setData(
+              ClipboardData(
+                  text: "Rekap ${kegiatan.value.data?.name}\nTanggal ${dateToString(kegiatan.value.data?.date, format: "EEEE, dd MMMM yyyy")}\n\nSudah Daftar (Total $sudahTerdaftarNumber) :\n$sudahTerdaftar\n\nBelum Daftar (Total $belumTerdaftarNumber) : \n$belumTerdaftar"))
+              .whenComplete(() {
+            showToast(
+                "Berhasil menyalin nama!");
+          });
+        }
+      } else {
+        //maybe error
+      }
+    }, onError: (e) {
+      hideLoading();
     });
   }
 

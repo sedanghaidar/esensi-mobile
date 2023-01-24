@@ -155,6 +155,17 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Menghapus peserta berdasarkan [id]
+  Future<StatusRequestModel<PesertaModel>> deletePeserta(int? id) async {
+    final response = await post("/api/peserta/delete/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(PesertaModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
   /// Mendapatkan data daftar peserta berdasarkan [id] kegiatan
   Future<StatusRequestModel<List<PesertaModel>>> getPesertaByKegiatan(
       String? id) async {

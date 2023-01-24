@@ -9,11 +9,13 @@ import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/button/CButton.dart';
+import '../../../global_widgets/other/toast.dart';
 import '../../../global_widgets/text/CText.dart';
 
 // import 'dart:ui' as ui;
@@ -165,7 +167,20 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                               style: CText.textStyleHint,
                                             ),
                                             const Divider(),
-                                            CText(peserta[index].name ?? ""),
+                                            InkWell(
+                                              onTap: () async {
+                                                await Clipboard.setData(
+                                                        ClipboardData(
+                                                            text:
+                                                                "${peserta[index].name}, ${peserta[index].instansi}"))
+                                                    .whenComplete(() {
+                                                  showToast(
+                                                      "Berhasil menyalin nama!");
+                                                });
+                                              },
+                                              child: CText(
+                                                  peserta[index].name ?? ""),
+                                            ),
                                             CText(
                                               peserta[index].instansi ?? "",
                                               style: CText.textStyleBodyBold,
@@ -201,13 +216,33 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                         children: [
                                           InkWell(
                                             onTap: () {
+                                              Get.defaultDialog(
+                                                  title: "Perhatian",
+                                                  middleText:
+                                                      "Apakah anda yakin ingin mengpaus data?",
+                                                  textConfirm: "Ya",
+                                                  textCancel: "Tidak",
+                                                  confirmTextColor: basicWhite,
+                                                  cancelTextColor: basicPrimary,
+                                                  buttonColor: basicPrimary,
+                                                  onConfirm: () {
+                                                    controller.deletePeserta(
+                                                        peserta[index].id);
+                                                  });
+                                            },
+                                            child:
+                                                iconButton(icDelete, basicRed1),
+                                          ),
+                                          const CSizedBox.h5(),
+                                          InkWell(
+                                            onTap: () {
                                               openDialogSignature(
                                                   context, index);
                                             },
                                             child: iconButton(
                                                 icSignature, basicPrimary),
                                           ),
-                                          const CSizedBox.h10(),
+                                          const CSizedBox.h5(),
                                           InkWell(
                                             onTap: () {
                                               openDialogQrcode(

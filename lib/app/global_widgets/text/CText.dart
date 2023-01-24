@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/colors.dart';
 
@@ -35,18 +36,18 @@ class CText extends StatelessWidget {
 
   const CText.header(this.text,
       {super.key,
-        this.style = textStyleHead,
-        this.strutStyle,
-        this.textAlign,
-        this.textDirection,
-        this.locale,
-        this.softWrap,
-        this.overflow,
-        this.textScaleFactor,
-        this.maxLines,
-        this.semanticsLabel,
-        this.textWidthBasis,
-        this.textHeightBehavior});
+      this.style = textStyleHead,
+      this.strutStyle,
+      this.textAlign,
+      this.textDirection,
+      this.locale,
+      this.softWrap,
+      this.overflow,
+      this.textScaleFactor,
+      this.maxLines,
+      this.semanticsLabel,
+      this.textWidthBasis,
+      this.textHeightBehavior});
 
   @override
   Widget build(BuildContext context) {
@@ -107,4 +108,7 @@ class CText extends StatelessWidget {
     color: basicBlack,
   );
 
+  static TextStyle styleTitleAppBar = GoogleFonts.lato(
+    textStyle: TextStyle(color: Colors.white, letterSpacing: 2),
+  );
 }

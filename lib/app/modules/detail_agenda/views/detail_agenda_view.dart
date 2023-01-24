@@ -33,7 +33,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: basicPrimary,
-        title: const Text('Detail Agenda'),
+        title: Text(
+          'Detail Agenda',
+          style: CText.styleTitleAppBar,
+        ),
         centerTitle: true,
         leading: InkWell(
           onTap: () {

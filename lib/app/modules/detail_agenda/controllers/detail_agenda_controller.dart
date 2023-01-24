@@ -92,16 +92,19 @@ class DetailAgendaController extends GetxController {
       if (value.statusRequest == StatusRequest.SUCCESS) {
         Get.defaultDialog(
           title: "Berhasil Scan",
-          middleText: "Selamat datang, ${value.data?.name} - ${value.data?.instansi}",
+          middleText:
+              "Selamat datang, ${value.data?.name} - ${value.data?.instansi}",
           barrierDismissible: false,
           confirmTextColor: basicWhite,
           buttonColor: basicPrimary,
           onConfirm: () {
             Get.back();
-            int? index = peserta.value.data?.indexWhere((element) => element.name == value.data?.name);
-            if(index!=null){
+            int? index = peserta.value.data
+                ?.indexWhere((element) => element.name == value.data?.name);
+            if (index != null) {
               peserta.value.data?[index] = value.data!;
-              peserta.value = StatusRequestModel.success(peserta.value.data??[]);
+              peserta.value =
+                  StatusRequestModel.success(peserta.value.data ?? []);
             }
           },
         );
@@ -141,7 +144,8 @@ class DetailAgendaController extends GetxController {
       if (value.statusRequest == StatusRequest.SUCCESS) {
         Get.defaultDialog(
           title: "Berhasil",
-          middleText: "Berhasil menghapus, ${value.data?.name} - ${value.data?.instansi}",
+          middleText:
+              "Berhasil menghapus, ${value.data?.name} - ${value.data?.instansi}",
           barrierDismissible: false,
           confirmTextColor: basicWhite,
           buttonColor: basicPrimary,
@@ -150,7 +154,8 @@ class DetailAgendaController extends GetxController {
             List<PesertaModel> newData = peserta.value.data ?? [];
             newData.removeWhere((element) => element.id == id);
             peserta.value.data = newData;
-            peserta.value = StatusRequestModel.success(peserta.value.data??[]);
+            peserta.value =
+                StatusRequestModel.success(peserta.value.data ?? []);
           },
         );
       } else {
@@ -194,21 +199,27 @@ class DetailAgendaController extends GetxController {
           int sudahTerdaftarNumber = 0;
           String belumTerdaftar = "";
           int belumTerdaftarNumber = 0;
-          for(InstansiPartipantModel data in value.data!){
-            if(peserta.value.data?.any((element) => element.instansi == data.organization?.name) == true){
-              sudahTerdaftar += "- ${data.organization?.name}\n";
+
+          Map<dynamic, List<PesertaModel>>? groups =
+              peserta.value.data?.groupListsBy((element) => element.instansi);
+
+          for (InstansiPartipantModel data in value.data!) {
+            if (groups?.containsKey(data.organization?.name?.toUpperCase()) == true) {
               sudahTerdaftarNumber++;
-            }else{
-              belumTerdaftar += "- ${data.organization?.name}\n";
+              sudahTerdaftar += "$sudahTerdaftarNumber. *${data.organization?.name}* (jumlah : ${groups?[data.organization?.name]?.length})\n";
+              for(PesertaModel psrta in groups![data.organization?.name?.toUpperCase()]!){
+                sudahTerdaftar += "\t- ${psrta.name}\n";
+              }
+            } else {
               belumTerdaftarNumber++;
+              belumTerdaftar += "$belumTerdaftarNumber. *${data.organization?.name}* (jumlah: ${groups?[data.organization?.name]?.length??0})\n";
             }
           }
-          await Clipboard.setData(
-              ClipboardData(
-                  text: "Rekap ${kegiatan.value.data?.name}\nTanggal ${dateToString(kegiatan.value.data?.date, format: "EEEE, dd MMMM yyyy")}\n\nSudah Daftar (Total $sudahTerdaftarNumber) :\n$sudahTerdaftar\n\nBelum Daftar (Total $belumTerdaftarNumber) : \n$belumTerdaftar"))
+          await Clipboard.setData(ClipboardData(
+                  text:
+                      "Rekap ${kegiatan.value.data?.name}\nTanggal ${dateToString(kegiatan.value.data?.date, format: "EEEE, dd MMMM yyyy")}\n\nSudah Daftar (Total $sudahTerdaftarNumber) :\n$sudahTerdaftar\n\nBelum Daftar (Total $belumTerdaftarNumber) : \n$belumTerdaftar"))
               .whenComplete(() {
-            showToast(
-                "Berhasil menyalin nama!");
+            showToast("Berhasil menyalin nama!");
           });
         }
       } else {

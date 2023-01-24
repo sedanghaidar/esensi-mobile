@@ -130,6 +130,54 @@ class DetailAgendaController extends GetxController {
     });
   }
 
+  deletePeserta(int? id) {
+    showLoading();
+    repository.deletePeserta(id).then((value) {
+      hideLoading();
+      if (value.statusRequest == StatusRequest.SUCCESS) {
+        Get.defaultDialog(
+          title: "Berhasil",
+          middleText: "Berhasil menghapus, ${value.data?.name} - ${value.data?.instansi}",
+          barrierDismissible: false,
+          confirmTextColor: basicWhite,
+          buttonColor: basicPrimary,
+          onConfirm: () {
+            Get.back();
+            List<PesertaModel> newData = peserta.value.data ?? [];
+            newData.removeWhere((element) => element.id == id);
+            peserta.value.data = newData;
+            peserta.value = StatusRequestModel.success(peserta.value.data??[]);
+          },
+        );
+      } else {
+        if (value.failure?.code == 400) {
+          Get.defaultDialog(
+            title: "PERHATIAN",
+            middleText: "${value.failure?.msgShow}",
+            barrierDismissible: false,
+            confirmTextColor: basicWhite,
+            buttonColor: basicPrimary,
+            onConfirm: () {
+              Get.back();
+            },
+          );
+        }
+      }
+    }, onError: (e) {
+      hideLoading();
+      Get.defaultDialog(
+        title: "PERHATIAN",
+        middleText: "${e.toString()}",
+        barrierDismissible: false,
+        confirmTextColor: basicWhite,
+        buttonColor: basicPrimary,
+        onConfirm: () {
+          Get.back();
+        },
+      );
+    });
+  }
+
   @override
   void onReady() {
     getDetailKegiatan();

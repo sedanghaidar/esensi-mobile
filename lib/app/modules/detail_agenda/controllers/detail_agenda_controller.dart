@@ -26,6 +26,7 @@ class DetailAgendaController extends GetxController {
 
   final controllerSearch = TextEditingController();
   RxString filter = "".obs;
+  RxString status = "1".obs;        //filter status scanned
   RxInt totalInstansi = 0.obs;
   RxInt totalScanned = 0.obs;
   RxInt totalUnScanned = 0.obs;
@@ -99,12 +100,12 @@ class DetailAgendaController extends GetxController {
           buttonColor: basicPrimary,
           onConfirm: () {
             Get.back();
-            int? index = peserta.value.data
-                ?.indexWhere((element) => element.name == value.data?.name);
+            int? index = peserta.value.data?.indexWhere((element) => element.name == value.data?.name);
             if (index != null) {
+              totalScanned.value = totalScanned.value+1;
+              totalUnScanned.value = totalUnScanned.value-1;
               peserta.value.data?[index] = value.data!;
-              peserta.value =
-                  StatusRequestModel.success(peserta.value.data ?? []);
+              peserta.value = StatusRequestModel.success(peserta.value.data ?? []);
             }
           },
         );

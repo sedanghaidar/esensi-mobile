@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/button/CButtonStyle.dart';
@@ -79,7 +80,7 @@ class DashboardView extends GetView<DashboardController> {
                 ),
                 backgroundColor: basicPrimary,
               )
-            : SizedBox(),
+            : const SizedBox(),
         appBar: AppBar(
           title: Text("ESENSI", style: CText.styleTitleAppBar),
           backgroundColor: basicPrimary,
@@ -327,24 +328,50 @@ class DashboardView extends GetView<DashboardController> {
                                             ))
                                           ]),
                                         ),
-                                        Visibility(
-                                          visible: controller
-                                                  .kegiatan
-                                                  .value
-                                                  .data?[index]
-                                                  .isLimitParticipant ??
-                                              false,
-                                          child: InkWell(
-                                            child: const Icon(
-                                              Icons.business_center,
-                                              color: basicPrimary2,
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Visibility(
+                                              visible: controller
+                                                      .kegiatan
+                                                      .value
+                                                      .data?[index]
+                                                      .isLimitParticipant ??
+                                                  false,
+                                              child: InkWell(
+                                                child: const Icon(
+                                                  Icons.business_center,
+                                                  color: basicPrimary2,
+                                                ),
+                                                onTap: () {
+                                                  Get.toNamed(
+                                                      "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
+                                                },
+                                              ),
                                             ),
-                                            onTap: () {
-                                              Get.toNamed(
-                                                  "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
-                                            },
-                                          ),
-                                        )
+                                            const CSizedBox.w5(),
+                                            InkWell(
+                                              child: Icon(
+                                                Icons.file_download_outlined,
+                                              ),
+                                              onTap: () {
+                                                launchUrl(Uri.parse(
+                                                    "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
+                                              },
+                                            ),
+                                            const CSizedBox.w5(),
+                                            InkWell(
+                                              child: Icon(
+                                                Icons.downloading_rounded,
+                                              ),
+                                              onTap: () {
+                                                launchUrl(Uri.parse(
+                                                    "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],

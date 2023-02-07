@@ -20,6 +20,9 @@ class ManageParticipantController extends GetxController {
   GlobalKey<FormState> keyForm = GlobalKey<FormState>();
   TextEditingController controllerInstansi = TextEditingController();
   TextEditingController controllerMax = TextEditingController();
+  final controllerSearch = TextEditingController();
+  RxString filter = "".obs;
+  RxBool isChange = false.obs;
 
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
   Rx<StatusRequestModel<List<InstansiPartipantModel>>> participants = StatusRequestModel<List<InstansiPartipantModel>>().obs;
@@ -67,6 +70,7 @@ class ManageParticipantController extends GetxController {
   addParticipant(InstansiPartipantModel data){
     List<InstansiPartipantModel> list = List.from(participants.value.data ?? List.empty())..add(data);
     participants.value = StatusRequestModel.success((list));
+    isChange.value = true;
   }
 
   updateParticipant(InstansiPartipantModel data){
@@ -76,6 +80,7 @@ class ManageParticipantController extends GetxController {
       }
     }).toList();
     participants.value = StatusRequestModel.success((list));
+    isChange.value = true;
   }
 
   deleteParticipant(InstansiPartipantModel? data){
@@ -85,6 +90,7 @@ class ManageParticipantController extends GetxController {
     }else{
       participants.value = StatusRequestModel.success((list));
     }
+    isChange.value = true;
   }
 
   updateInstansiParticipant(){
@@ -105,6 +111,7 @@ class ManageParticipantController extends GetxController {
     repository.postInstansiParticipant(map).then((value){
       hideLoading();
       getInstansiParticipant();
+      isChange.value = false;
       showToast("Berhasil menambah data");
     }, onError: (e){
       hideLoading();

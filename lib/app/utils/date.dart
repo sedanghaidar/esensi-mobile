@@ -21,7 +21,8 @@ String dateToString(DateTime? date, {String? format}) {
 }
 
 bool checkOutDate(DateTime dateActivity, DateTime? dateEnd) {
-  if (compareDate(DateTime.now(), dateActivity) == 1) return true;
+  DateTime dateActivityEnd = DateTime(dateActivity.year, dateActivity.month, dateActivity.day, 23, 59, 59);
+  if (compareDate(DateTime.now(), dateActivityEnd) == 1) return true;
   if (dateEnd != null) {
     if (compareDate(DateTime.now(), dateEnd) == 1) return true;
   }

@@ -72,11 +72,16 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icParticipant,
-                                        "${controller.peserta.value.data?.length ?? 0}")),
+                                        "${controller.peserta.value.data?.length ?? 0}", action: (){
+                                          controller.status.value = "1";
+                                        })),
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icOffice,
-                                        "${controller.totalInstansi}")),
+                                    child: columnCard(icOffice, "${controller.totalInstansi}", action: (){
+                                      if(controller.kegiatan.value.data?.isLimitParticipant==true){
+                                          controller.getInstansiParticipant();
+                                      }
+                                    })),
                               ],
                             ),
                             CSizedBox.h10(),
@@ -85,11 +90,15 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icQrSuccess,
-                                        "${controller.totalScanned}")),
+                                        "${controller.totalScanned}", action: (){
+                                            controller.status.value = "2";
+                                        })),
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icQrError,
-                                        "${controller.totalUnScanned}")),
+                                        "${controller.totalUnScanned}", action: (){
+                                            controller.status.value = "3";
+                                        })),
                               ],
                             ),
                           ],
@@ -115,6 +124,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 child: Obx(() {
                   String filter = controller.filter.value
                       .toLowerCase(); // jangan dihapus buat trigger search!
+                  String status = controller.status.value;
                   switch (controller.peserta.value.statusRequest) {
                     case StatusRequest.LOADING:
                       return loading(context);
@@ -124,13 +134,15 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                         itemBuilder: (context, index) {
                           List<PesertaModel> peserta =
                               controller.peserta.value.data ?? [];
-                          if (!(peserta[index].name ?? "")
-                                  .toLowerCase()
-                                  .contains(filter) &&
-                              !(peserta[index].instansi ?? "")
-                                  .toLowerCase()
-                                  .contains(filter)) {
+                          if (!(peserta[index].name ?? "").toLowerCase().contains(filter) && !(peserta[index].instansi ?? "").toLowerCase().contains(filter)) {
                             return Container();
+                          }
+                          if(status=="1"){
+
+                          }else if(status=="2"){
+                            if(peserta[index].scannedAt==null) return Container();
+                          }else{
+                            if(peserta[index].scannedAt!=null) return Container();
                           }
                           ui.platformViewRegistry.registerViewFactory(
                               "images/$index",
@@ -446,23 +458,26 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
         barrierDismissible: true);
   }
 
-  Widget columnCard(String asset, String value) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          asset,
-          width: 36,
-          height: 32,
-        ),
-        CSizedBox.w10(),
-        CText(
-          value,
-          style: CText.textStyleSubhead,
-        )
-      ],
+  Widget columnCard(String asset, String value, {Function()? action}) {
+    return InkWell(
+      onTap: action,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            asset,
+            width: 36,
+            height: 32,
+          ),
+          CSizedBox.w10(),
+          CText(
+            value,
+            style: CText.textStyleSubhead,
+          )
+        ],
+      ),
     );
   }
 }

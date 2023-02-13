@@ -14,6 +14,7 @@ abstract class Routes {
   static const QR_SCANNER = _Paths.QR_SCANNER;
   static const MANAGE_PARTICIPANT = _Paths.MANAGE_PARTICIPANT;
   static const UPDATE_AGENDA = _Paths.UPDATE_AGENDA;
+  static const MANAGE_INSTANSI = _Paths.MANAGE_INSTANSI;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const QR_SCANNER = '/qr-scanner';
   static const MANAGE_PARTICIPANT = '/manage-participant';
   static const UPDATE_AGENDA = '/update-agenda';
+  static const MANAGE_INSTANSI = '/manage-instansi';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../utils/colors.dart';
 import '../text/CText.dart';
@@ -26,6 +27,7 @@ class CTextField extends StatefulWidget {
   final suffixIcon;
   final focusNode;
   final textCapitalization;
+  final inputFormatters;
 
   CTextField(
       {Key? key,
@@ -50,6 +52,7 @@ class CTextField extends StatefulWidget {
       this.onChange,
       this.focusNode,
       this.suffixIcon,
+        this.inputFormatters,
       this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -77,6 +80,7 @@ class CTextField extends StatefulWidget {
       this.onTap,
       this.focusNode,
       this.suffixIcon,
+        this.inputFormatters,
       this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -104,6 +108,7 @@ class CTextField extends StatefulWidget {
       this.onChange,
       this.focusNode,
       this.suffixIcon,
+        this.inputFormatters,
       this.textCapitalization})
       : assert(decoration != null || hintText != null,
             "Hanya boleh diisi salah satu");
@@ -208,7 +213,18 @@ class CTextFieldState extends State<CTextField> {
       focusNode: widget.focusNode,
       onTap: widget.onTap,
       onChanged: widget.onChange,
+      inputFormatters: widget.inputFormatters ?? [],
       textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

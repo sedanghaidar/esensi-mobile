@@ -150,9 +150,9 @@ class ManageInstansiView extends GetView<ManageInstansiController> {
                                       flex: 0,
                                       child: InkWell(
                                         onTap: () {
-                                          // openDialog(context, 2,
-                                          //     initial: controller.participants
-                                          //         .value.data?[index]);
+                                          openDialog(context, 2,
+                                              initial: controller.instansi
+                                                  .value.data?[index]);
                                         },
                                         child: const Icon(Icons.edit),
                                       )),
@@ -161,9 +161,9 @@ class ManageInstansiView extends GetView<ManageInstansiController> {
                                       flex: 0,
                                       child: InkWell(
                                         onTap: () {
-                                          // controller.deleteParticipant(
-                                          //     controller.participants.value
-                                          //         .data?[index]);
+                                          controller.deleteInstansi(
+                                              controller.instansi.value
+                                                  .data?[index]);
                                         },
                                         child: const Icon(
                                           Icons.delete,
@@ -248,7 +248,9 @@ class ManageInstansiView extends GetView<ManageInstansiController> {
                   Get.back();
                   if (action == 1) {
                     controller.addNewInstansi();
-                  } else {}
+                  } else {
+                    controller.updateInstansi(initial);
+                  }
                 }, action == 1 ? "Tambah" : "Ubah")
               ],
             ),

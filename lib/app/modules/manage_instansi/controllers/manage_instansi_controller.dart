@@ -59,4 +59,31 @@ class ManageInstansiController extends GetxController {
       showToast("Gagal menambah instansi. $e");
     });
   }
+
+  deleteInstansi(InstansiModel? instansi){
+    showLoading();
+    repository.deleteInstansi("${instansi?.id}").then((value){
+      hideLoading();
+      showToast("Berhasil menghapus instansi");
+      getInstansiAll();
+    }, onError: (e){
+      hideLoading();
+      showToast("Gagal manghapus instansi. $e");
+    });
+  }
+
+  updateInstansi(InstansiModel? instansi){
+    showLoading();
+    repository.updateInstansi("${instansi?.id}", InstansiModel(
+      name: controllerName.text,
+      shortName: controllerShortName.text
+    )).then((value){
+      hideLoading();
+      showToast("Berhasil mengubah instansi");
+      getInstansiAll();
+    }, onError: (e){
+      hideLoading();
+      showToast("Gagal mengubah instansi. $e");
+    });
+  }
 }

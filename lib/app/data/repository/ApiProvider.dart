@@ -11,9 +11,9 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  // static const String BASE_URL = "http://172.100.31.25:8000";
-  // static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  static const String BASE_URL = "http://127.0.0.1:8000";
+  // static const String BASE_URL = "http://172.100.31.190:5000";
+  static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
+  // static const String BASE_URL = "http://127.0.0.1:8000";
 
   // static const String BASE_URL = "http://10.99.1.171:8000";
 
@@ -248,6 +248,29 @@ class ApiProvider extends GetConnect {
     final response = await post("/api/organisasi/tambah", {
       "name": data.name,
       "short_name": data.shortName
+    });
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(InstansiModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<InstansiModel>> deleteInstansi(String? id) async {
+    final response = await post("/api/organisasi/hapus/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(InstansiModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<InstansiModel>> updateInstansi(String? id, InstansiModel instansi) async {
+    final response = await post("/api/organisasi/update/$id", {
+      "name": instansi.name,
+      "short_name": instansi.shortName
     });
     final model = toDefaultModel(response.body);
     if (response.isOk) {

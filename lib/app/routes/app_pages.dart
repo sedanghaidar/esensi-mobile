@@ -14,6 +14,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/manage_instansi/bindings/manage_instansi_binding.dart';
+import '../modules/manage_instansi/views/manage_instansi_view.dart';
 import '../modules/manage_participant/bindings/manage_participant_binding.dart';
 import '../modules/manage_participant/views/manage_participant_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -85,6 +87,11 @@ class AppPages {
       name: _Paths.UPDATE_AGENDA + "/:id",
       page: () => UpdateAgendaView(),
       binding: UpdateAgendaBinding(),
+    ),
+    GetPage(
+      name: _Paths.MANAGE_INSTANSI,
+      page: () => const ManageInstansiView(),
+      binding: ManageInstansiBinding(),
     ),
   ];
 }

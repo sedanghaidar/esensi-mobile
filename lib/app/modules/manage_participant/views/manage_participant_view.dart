@@ -49,7 +49,16 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                     alignment: Alignment.centerRight,
                     child: CButton.small(() {
                       openDialog(context, 1);
-                    }, "Tambah Instansi Partisipan")),
+                    }, "Tambah Partisipan")),
+              ),
+              const Expanded(flex: 0, child: CSizedBox.h10()),
+              Expanded(
+                flex: 0,
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: CButton.small(() {
+                      Get.toNamed(Routes.MANAGE_INSTANSI);
+                    }, "Tambah Instansi")),
               ),
               const Expanded(flex: 0, child: CSizedBox.h30()),
               const Expanded(

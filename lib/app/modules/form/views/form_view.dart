@@ -130,13 +130,18 @@ class FormView extends GetView<FormController> {
                         margin: const EdgeInsets.only(top: 10),
                         child: Row(
                           children: [
-                            Icon(Icons.info),
+                            Icon(
+                              Icons.info,
+                              color: basicPrimary,
+                            ),
                             CSizedBox.w10(),
                             Expanded(
                               flex: 1,
                               child: CText(
                                 "${controller.kegiatan.value.data?.information}",
-                                style: CText.textStyleBodyBold,
+                                style: CText.textStyleBodyBold.copyWith(
+                                    color: basicPrimary,
+                                    fontStyle: FontStyle.italic),
                               ),
                             )
                           ],

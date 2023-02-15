@@ -17,7 +17,6 @@ import '../../../utils/string.dart';
 import '../controllers/manage_participant_controller.dart';
 
 class ManageParticipantView extends GetView<ManageParticipantController> {
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -202,11 +201,6 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                   }
                 }),
               ),
-              Expanded(
-                  flex: 0,
-                  child: CButton(() {
-                    controller.updateInstansiParticipant();
-                  }, "SIMPAN"))
             ],
           ),
         ),
@@ -214,25 +208,9 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
     );
   }
 
-  bool dialogOnBackPressed(){
-    if (controller.isChange.value == true) {
-      Get.defaultDialog(
-          title: "Perhatian",
-          middleText: "Ada perubahan yang belum disimpan. Yakin kembali?",
-          textConfirm: "Ya",
-          textCancel: "Tidak",
-          onConfirm: () {
-            Get.back();
-            Get.offAllNamed(Routes.DASHBOARD);
-          },
-          buttonColor: basicPrimary,
-          cancelTextColor: basicPrimary,
-          confirmTextColor: basicWhite);
-      return false;
-    } else {
-      Get.offAllNamed(Routes.DASHBOARD);
-      return true;
-    }
+  bool dialogOnBackPressed() {
+    Get.offAllNamed(Routes.DASHBOARD);
+    return true;
   }
 
   openDialog(BuildContext context, int action,
@@ -280,16 +258,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.keyForm.currentState!.validate()) return;
                   Get.back();
-                  controller.isChange.value = true;
-                  InstansiPartipantModel newIpm = InstansiPartipantModel(
-                      maxParticipant: int.parse(controller.controllerMax.text),
-                      organization: InstansiModel(
-                          name: controller.controllerInstansi.text));
-                  if (action == 1) {
-                    controller.addParticipant(newIpm);
-                  } else {
-                    controller.updateParticipant(newIpm);
-                  }
+                  controller.createOrUpdateParticipant(action);
                 }, action == 1 ? "Tambah" : "Ubah")
               ],
             ),

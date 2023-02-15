@@ -11,9 +11,9 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  // static const String BASE_URL = "http://172.100.31.190:5000";
-  static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  // static const String BASE_URL = "http://127.0.0.1:8000";
+  // static const String BASE_URL = "http://172.100.31.212:5000";
+  // static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String BASE_URL = "http://127.0.0.1:8000";
 
   // static const String BASE_URL = "http://10.99.1.171:8000";
 
@@ -30,19 +30,19 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      if(request.url!="http://127.0.0.1:8000/api/organization-limit/byactid/16" && request.url!="http://127.0.0.1:8000/api/organisasi"){
-        debugPrint(
-          '\n╔══════════════════════════ Response ══════════════════════════\n'
-              '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-              '╟ url: ${request.url}\n'
-              '╟ Headers: ${request.headers}\n'
-          // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-              '╟ Status Code: ${response.statusCode}\n'
-              '╟ Data: ${response.bodyString?.toString() ?? ''}'
-              '\n╚══════════════════════════ Response ══════════════════════════\n',
-          wrapWidth: 1024,
-        );
-      }
+      // if(request.url!="http://127.0.0.1:8000/api/organization-limit/byactid/16" && request.url!="http://127.0.0.1:8000/api/organisasi"){
+      //   debugPrint(
+      //     '\n╔══════════════════════════ Response ══════════════════════════\n'
+      //         '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+      //         '╟ url: ${request.url}\n'
+      //         '╟ Headers: ${request.headers}\n'
+      //     // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+      //         '╟ Status Code: ${response.statusCode}\n'
+      //         '╟ Data: ${response.bodyString?.toString() ?? ''}'
+      //         '\n╚══════════════════════════ Response ══════════════════════════\n',
+      //     wrapWidth: 1024,
+      //   );
+      // }
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -218,6 +218,8 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// ----------------------------------------------------------------------------------------
+
   /// Mendapatkan data daftar instansi partisipan yang diijinkan berdasarkan [id] kegiatan
   Future<StatusRequestModel<List<InstansiPartipantModel>>>
       getInstansiParticipant(String? id) async {
@@ -231,6 +233,7 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// [ TIDAK_DIIMPLEMENTASIKAN ]
   /// Mengupdate data instansi participant, [data] merupakan data yang akan dikirim
   Future<StatusRequestModel<String>> postInstansiParticipant(
       Map<String, dynamic> data) async {
@@ -242,6 +245,30 @@ class ApiProvider extends GetConnect {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }
   }
+
+  /// Menambah atau mengubah data partisipan instansi
+  Future<StatusRequestModel<InstansiPartipantModel>> createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
+    final response = await post("/api/organization-limit/", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk && model.success==true) {
+      return StatusRequestModel.success(InstansiPartipantModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Menghapus data partisipan instansi
+  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(String? id) async {
+    final response = await post("/api/organization-limit/delete/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk && model.success==true) {
+      return StatusRequestModel.success("Berhasil menghapus isntansi");
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// ----------------------------------------------------------------------------------------
 
   /// Menambah data Instansi
   Future<StatusRequestModel<InstansiModel>> postInstansi(InstansiModel data) async {

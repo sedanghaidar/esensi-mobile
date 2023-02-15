@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../routes/app_pages.dart';
@@ -19,6 +20,10 @@ FailureModel failure(int? code, DefaultModel model) {
 
 FailureModel failure2(dynamic e){
   return FailureModel(400, "Terjadi Kesalahan. $e", "$e");
+}
+
+FailureModel toFailureModel(dynamic e, {String? message}) {
+  return FailureModel(400, message == null ? "$e" : "$message. $e", "$e");
 }
 
 DefaultModel toDefaultModel(dynamic response) {

@@ -17,6 +17,9 @@ class ManageParticipantController extends GetxController {
   ApiProvider repository = Get.find();
   String? id = "0";
 
+  RxInt totalInstansi = 0.obs;
+  RxInt totalPartisipan = 0.obs;
+
   GlobalKey<FormState> keyForm = GlobalKey<FormState>();
   TextEditingController controllerInstansi = TextEditingController();
   TextEditingController controllerMax = TextEditingController();
@@ -129,6 +132,24 @@ class ManageParticipantController extends GetxController {
       participants.value = StatusRequestModel.empty();
     } else {
       participants.value = StatusRequestModel.success((list));
+    }
+  }
+
+  countTotalInstansi(){
+    totalInstansi.value = 0;
+    for (InstansiPartipantModel i in participants.value.data ?? []) {
+      if (i.organization?.name?.toLowerCase().contains(filter) == true) {
+        totalInstansi.value++;
+      }
+    }
+  }
+
+  countTotalPartisipan(){
+    totalPartisipan.value = 0;
+    for (InstansiPartipantModel i in participants.value.data ?? []) {
+      if (i.organization?.name?.toLowerCase().contains(filter) == true) {
+        totalPartisipan.value = totalPartisipan.value + (i.maxParticipant ?? 0);
+      }
     }
   }
 }

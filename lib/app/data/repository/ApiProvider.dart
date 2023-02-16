@@ -12,8 +12,8 @@ import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
   // static const String BASE_URL = "http://172.100.31.212:5000";
-  // static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  static const String BASE_URL = "http://127.0.0.1:8000";
+  static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
+  // static const String BASE_URL = "http://127.0.0.1:8000";
 
   // static const String BASE_URL = "http://10.99.1.171:8000";
 

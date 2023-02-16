@@ -12,8 +12,8 @@ import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
   // static const String BASE_URL = "http://172.100.31.212:5000";
-  static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  // static const String BASE_URL = "http://127.0.0.1:8000";
+  // static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String BASE_URL = "http://127.0.0.1:8000";
 
   // static const String BASE_URL = "http://10.99.1.171:8000";
 
@@ -30,19 +30,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      // if(request.url!="http://127.0.0.1:8000/api/organization-limit/byactid/16" && request.url!="http://127.0.0.1:8000/api/organisasi"){
-      //   debugPrint(
-      //     '\n╔══════════════════════════ Response ══════════════════════════\n'
-      //         '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-      //         '╟ url: ${request.url}\n'
-      //         '╟ Headers: ${request.headers}\n'
-      //     // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-      //         '╟ Status Code: ${response.statusCode}\n'
-      //         '╟ Data: ${response.bodyString?.toString() ?? ''}'
-      //         '\n╚══════════════════════════ Response ══════════════════════════\n',
-      //     wrapWidth: 1024,
-      //   );
-      // }
+        debugPrint(
+          '\n╔══════════════════════════ Response ══════════════════════════\n'
+              '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+              '╟ url: ${request.url}\n'
+              '╟ Headers: ${request.headers}\n'
+          // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+              '╟ Status Code: ${response.statusCode}\n'
+              '╟ Data: ${response.bodyString?.toString() ?? ''}'
+              '\n╚══════════════════════════ Response ══════════════════════════\n',
+          wrapWidth: 1024,
+        );
 
       httpClient.timeout = const Duration(minutes: 1);
 

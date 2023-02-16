@@ -140,11 +140,10 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                   CSizedBox.h5(),
                   CTextField(
                     controller: controller.controllerInformation,
-                    hintText: "Masukkan Informasi Tambahan",
+                    hintText: "Masukkan Informasi Tambahan (Opsional)",
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.newline,
                     validator: (value) {
-                      if (GetUtils.isBlank(value) == true) return msgBlank;
                       return null;
                     },
                     suffixIcon: suffixIconClear(() {
@@ -152,7 +151,7 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                     }),
                   ),
                   CSizedBox.h10(),
-                  CText("Tanggal Agenda"),
+                  CText("Tanggal Formulir Berakhir (Opsional)"),
                   CSizedBox.h5(),
                   CTextField(
                     controller: controller.controllerDateEnd,
@@ -179,7 +178,7 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                     },
                   ),
                   CSizedBox.h10(),
-                  CText("Waktu Formulir Berakhir"),
+                  CText("Waktu Formulir Berakhir (Opsional)"),
                   CSizedBox.h5(),
                   CTextField(
                     controller: controller.controllerTimeEnd,

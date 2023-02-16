@@ -15,6 +15,7 @@ import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../global_widgets/text/CText.dart';
 import '../../../global_widgets/text_field/CTextField.dart';
 import '../../../global_widgets/text_field/CTextFieldDropDown.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/string.dart';
@@ -40,6 +41,15 @@ class FormView extends GetView<FormController> {
         title: const Text('Formulir'),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        leading: controller.repository.hive.isLoggedIn()==true?InkWell(
+          onTap: () {
+            Get.offAllNamed(Routes.DASHBOARD);
+          },
+          child: Icon(
+            Icons.home,
+            color: basicWhite,
+          ),
+        ):Container(),
       ),
       backgroundColor: basicGrey4,
       body: SingleChildScrollView(
@@ -288,19 +298,24 @@ class FormView extends GetView<FormController> {
                         fieldViewBuilder: (context, controller, focusNode,
                             onEditingComplete) {
                           this.controller.controllerInstansi = controller;
+                          String hint = "Ketikkan instansi anda atau pilih dari daftar yang tersedia";
+                          if(this.controller.kegiatan.value.data?.isLimitParticipant==true){
+                            hint = "Pilih salah satu dari pilihan yang ada";
+                          }
                           return CTextField(
                             controller: controller,
                             focusNode: focusNode,
-                            hintText: "Pilih salah satu dari pilihan yang ada",
+                            hintText: hint,
                             onEditingComplete: onEditingComplete,
                             validator: (value) {
                               if (GetUtils.isBlank(value) == true) {
                                 return msgBlank;
                               }
-                              Iterable<InstansiModel> data = result
-                                  .where((element) => element.name == value);
-                              if (data.isEmpty) {
-                                return "Silahkan pilih salah satu dari pilihan yang ada";
+                              if(this.controller.kegiatan.value.data?.isLimitParticipant==true){
+                                Iterable<InstansiModel> data = result.where((element) => element.name == value);
+                                if (data.isEmpty) {
+                                  return "Silahkan pilih salah satu dari pilihan yang ada";
+                                }
                               }
                               return null;
                             },

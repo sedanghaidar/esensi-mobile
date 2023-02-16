@@ -150,7 +150,7 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           }),
                         ),
                         CSizedBox.h10(),
-                        CText("Informasi Tambahan"),
+                        CText("Informasi Tambahan (Opsional)"),
                         CSizedBox.h5(),
                         CTextField(
                           controller: controller.controllerInformation,
@@ -158,8 +158,6 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           keyboardType: TextInputType.multiline,
                           textInputAction: TextInputAction.newline,
                           validator: (value) {
-                            if (GetUtils.isBlank(value) == true)
-                              return msgBlank;
                             return null;
                           },
                           suffixIcon: suffixIconClear(() {
@@ -167,7 +165,7 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           }),
                         ),
                         CSizedBox.h10(),
-                        CText("Tanggal Agenda"),
+                        CText("Tanggal Formulir Berakhir (Opsional)"),
                         CSizedBox.h5(),
                         CTextField(
                           controller: controller.controllerDateEnd,
@@ -197,7 +195,7 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           },
                         ),
                         CSizedBox.h10(),
-                        CText("Waktu Formulir Berakhir"),
+                        CText("Waktu Formulir Berakhir (Opsional)"),
                         CSizedBox.h5(),
                         CTextField(
                           controller: controller.controllerTimeEnd,

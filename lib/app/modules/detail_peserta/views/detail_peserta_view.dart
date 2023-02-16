@@ -48,14 +48,14 @@ class DetailPesertaView extends GetView<DetailPesertaController> {
                     flex: 0,
                     child: Row(
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: CButton(() {
-                            downloadQrcode(controller.qrKey,
-                                "${controller.peserta.value.data?.kegiatan?.name}_${controller.peserta.value.data?.name}");
-                          }, "Download Ulang QRCode"),
-                        ),
-                        CSizedBox.w10(),
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: CButton(() {
+                        //     downloadQrcode(controller.qrKey,
+                        //         "${controller.peserta.value.data?.kegiatan?.name}_${controller.peserta.value.data?.name}");
+                        //   }, "Download Ulang QRCode"),
+                        // ),
+                        // CSizedBox.w10(),
                         Expanded(
                           flex: 1,
                           child: CButton(

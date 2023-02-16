@@ -5,17 +5,17 @@ import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_connect/connect.dart';
 
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
   // static const String BASE_URL = "http://172.100.31.25:8000";
-  // static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  static const String BASE_URL = "http://127.0.0.1:8000";
+  static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String LOCAL_URL = "http://127.0.0.1:8000";
 
-  // static const String BASE_URL = "http://10.99.1.171:8000";
+  static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
 
   HiveProvider hive = HiveProvider();
 
@@ -30,16 +30,18 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      if(request.url!="http://127.0.0.1:8000/api/organization-limit/byactid/16" && request.url!="http://127.0.0.1:8000/api/organisasi"){
+      if (request.url !=
+              "http://127.0.0.1:8000/api/organization-limit/byactid/16" &&
+          request.url != "http://127.0.0.1:8000/api/organisasi") {
         debugPrint(
           '\n╔══════════════════════════ Response ══════════════════════════\n'
-              '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-              '╟ url: ${request.url}\n'
-              '╟ Headers: ${request.headers}\n'
+          '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+          '╟ url: ${request.url}\n'
+          '╟ Headers: ${request.headers}\n'
           // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-              '╟ Status Code: ${response.statusCode}\n'
-              '╟ Data: ${response.bodyString?.toString() ?? ''}'
-              '\n╚══════════════════════════ Response ══════════════════════════\n',
+          '╟ Status Code: ${response.statusCode}\n'
+          '╟ Data: ${response.bodyString?.toString() ?? ''}'
+          '\n╚══════════════════════════ Response ══════════════════════════\n',
           wrapWidth: 1024,
         );
       }
@@ -244,11 +246,10 @@ class ApiProvider extends GetConnect {
   }
 
   /// Menambah data Instansi
-  Future<StatusRequestModel<InstansiModel>> postInstansi(InstansiModel data) async {
-    final response = await post("/api/organisasi/tambah", {
-      "name": data.name,
-      "short_name": data.shortName
-    });
+  Future<StatusRequestModel<InstansiModel>> postInstansi(
+      InstansiModel data) async {
+    final response = await post("/api/organisasi/tambah",
+        {"name": data.name, "short_name": data.shortName});
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));

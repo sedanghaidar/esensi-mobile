@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
+import '../../../global_widgets/text/CText.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/images.dart';
 
@@ -28,8 +29,15 @@ class DetailPesertaController extends GetxController {
 
       Get.defaultDialog(
           title: "PERHATIAN",
+          titleStyle: CText.textStyleBodyBold.copyWith(
+            fontSize: 20,
+            color: basicPrimary
+          ),
+          middleTextStyle: CText.textStyleBody.copyWith(
+            fontSize: 18
+          ),
           middleText:
-              "Mohon simpan QRCode ini dan tunjukan saat akan masuk ke tempat kegiatan. Terimakasih.",
+              "Mohon Screenshoot dan Simpan QRCode ini.\nTunjukan saat akan masuk ke tempat kegiatan.\nTerimakasih.",
           buttonColor: basicPrimary,
           confirmTextColor: basicWhite,
           textConfirm: "SIAP",

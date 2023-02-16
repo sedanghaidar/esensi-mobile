@@ -3,6 +3,7 @@ import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/global_widgets/responsive_layout/ResponsiveLayout.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
@@ -17,222 +18,341 @@ import '../../../utils/string.dart';
 import '../controllers/manage_participant_controller.dart';
 
 class ManageParticipantView extends GetView<ManageParticipantController> {
+  late BuildContext context;
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return WillPopScope(
       onWillPop: () async {
         return dialogOnBackPressed();
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: basicPrimary,
-          title: Text('Manajemen Instansi Partisipan'),
-          centerTitle: true,
-          leading: InkWell(
-            onTap: () {
-              dialogOnBackPressed();
-            },
-            child: Icon(
-              Icons.home,
-              color: basicWhite,
+          appBar: AppBar(
+            backgroundColor: basicPrimary,
+            centerTitle: true,
+            leading: InkWell(
+              onTap: () {
+                dialogOnBackPressed();
+              },
+              child: Icon(
+                Icons.home,
+                color: basicWhite,
+              ),
             ),
-          ),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 0,
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: CButton.small(() {
-                      openDialog(context, 1);
-                    }, "Tambah Partisipan")),
-              ),
-              const Expanded(flex: 0, child: CSizedBox.h10()),
-              Expanded(
-                flex: 0,
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: CButton.small(() {
-                      Get.toNamed(Routes.MANAGE_INSTANSI);
-                    }, "Tambah Instansi")),
-              ),
-              const Expanded(flex: 0, child: CSizedBox.h30()),
-              const Expanded(
-                flex: 0,
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CText(
-                      "Daftar Instansi Partisipan",
-                      style: CText.textStyleSubhead,
-                    )),
-              ),
-              const Expanded(flex: 0, child: CSizedBox.h20()),
-              Expanded(
-                  flex: 0,
-                  child: Obx(() {
-                    switch (controller.participants.value.statusRequest) {
-                      case StatusRequest.SUCCESS:
-                        {
-                          int total = 0;
-                          for (InstansiPartipantModel i
-                              in controller.participants.value.data ?? []) {
-                            total = total + (i.maxParticipant ?? 0);
-                          }
-                          return Align(
-                              alignment: Alignment.centerLeft,
-                              child: CText(
-                                "Total partisipan : $total",
-                                style: CText.textStyleBodyBold,
-                              ));
-                        }
-                      default:
-                        return SizedBox();
-                    }
-                  })),
-              const Expanded(flex: 0, child: CSizedBox.h10()),
-              Expanded(
-                  flex: 0,
+            actions: [
+              Center(
+                child: InkWell(
+                  onTap: () {
+                    openDialog(context, 1);
+                  },
                   child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: CTextField(
-                      controller: controller.controllerSearch,
-                      hintText: "Cari Nama Instansi",
-                      onChange: (value) {
-                        controller.filter.value = value;
-                      },
-                      suffixIcon: const Icon(Icons.search),
-                    ),
-                  )),
-              Expanded(
-                flex: 1,
-                child: Obx(() {
-                  switch (controller.participants.value.statusRequest) {
-                    case StatusRequest.LOADING:
-                      return loading(context);
-                    case StatusRequest.EMPTY:
-                      return warning(
-                          context, "Instansi partisipan masih kosong");
-                    case StatusRequest.SUCCESS:
-                      String filter = controller.filter.value
-                          .toLowerCase(); // jangan dihapus buat trigger search!
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          List<InstansiPartipantModel> instansi =
-                              controller.participants.value.data ?? [];
-                          if (instansi[index]
-                                  .organization
-                                  ?.name
-                                  ?.toLowerCase()
-                                  .contains(filter) ==
-                              false) {
-                            return Container();
-                          }
-                          return Card(
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CText(
-                                          controller
-                                                  .participants
-                                                  .value
-                                                  .data?[index]
-                                                  .organization
-                                                  ?.name ??
-                                              "",
-                                          style: CText.textStyleBodyBold,
-                                        ),
-                                        CText(
-                                            "Jumlah maksimal : ${controller.participants.value.data?[index].maxParticipant}")
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 0,
-                                      child: InkWell(
-                                        onTap: () {
-                                          openDialog(context, 2,
-                                              initial: controller.participants
-                                                  .value.data?[index]);
-                                        },
-                                        child: const Icon(Icons.edit),
-                                      )),
-                                  Expanded(flex: 0, child: CSizedBox.w10()),
-                                  Expanded(
-                                      flex: 0,
-                                      child: InkWell(
-                                        onTap: () {
-                                          controller.deleteParticipant(
-                                              controller.participants.value
-                                                  .data?[index]);
-                                        },
-                                        child: const Icon(
-                                          Icons.delete,
-                                          color: basicRed1,
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        itemCount:
-                            controller.participants.value.data?.length ?? 0,
-                      );
-                    case StatusRequest.ERROR:
-                      return error(
-                          context,
-                          controller.participants.value.failure?.msgShow ??
-                              "Terjadi Kesalahan", () {
-                        controller.getInstansiParticipant();
-                      });
-                    default:
-                      return SizedBox();
-                  }
-                }),
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Image.network(
+                            "https://cdn-icons-png.flaticon.com/512/2861/2861698.png",
+                            width: 32,
+                            height: 32,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CText(
+                            "Tambah\nPartisipan",
+                            style:
+                                CText.textStyleHint.copyWith(color: basicWhite),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )),
+                ),
               ),
-              Expanded(
-                  flex: 0,
-                  child: CButton(() {
-                    controller.updateInstansiParticipant();
-                  }, "SIMPAN"))
+              Center(
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed(Routes.MANAGE_INSTANSI);
+                  },
+                  child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Image.network(
+                            "https://cdn-icons-png.flaticon.com/512/993/993928.png",
+                            width: 32,
+                            height: 32,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CText(
+                            "Tambah\nInstansi",
+                            style:
+                                CText.textStyleHint.copyWith(color: basicWhite),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              )
             ],
           ),
+          body: ResponsiveLayout(
+            largeScreen(),
+            smallScreen: smallScreen(),
+          )),
+    );
+  }
+
+  Widget smallScreen() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        width: context.width,
+        child: Stack(
+          children: [
+            Container(
+              height: 220,
+              decoration: BoxDecoration(
+                  color: basicPrimary.withOpacity(0.25),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(120),
+                      bottomRight: Radius.circular(120))),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CText(
+                      "Manajemen Partisipan",
+                      style: CText.textStyleSubhead,
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+                ),
+                textFieldSearch(),
+                rowInformation(),
+                listView()
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  bool dialogOnBackPressed(){
-    if (controller.isChange.value == true) {
-      Get.defaultDialog(
-          title: "Perhatian",
-          middleText: "Ada perubahan yang belum disimpan. Yakin kembali?",
-          textConfirm: "Ya",
-          textCancel: "Tidak",
-          onConfirm: () {
-            Get.back();
-            Get.offAllNamed(Routes.DASHBOARD);
-          },
-          buttonColor: basicPrimary,
-          cancelTextColor: basicPrimary,
-          confirmTextColor: basicWhite);
-      return false;
-    } else {
-      Get.offAllNamed(Routes.DASHBOARD);
-      return true;
-    }
+  Widget largeScreen() {
+    return Center(
+      child: Container(
+        width: context.width / 1.5,
+        child: Stack(
+          children: [
+            Container(
+              height: 220,
+              decoration: BoxDecoration(
+                  color: basicPrimary.withOpacity(0.25),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(120),
+                      bottomRight: Radius.circular(120))),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CText(
+                        "Manajemen Partisipan",
+                        style: CText.textStyleSubhead,
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+                  ),
+                  textFieldSearch(),
+                  rowInformation(),
+                  listView()
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget rowInformation() {
+    return Row(
+      children: [
+        Obx(() {
+          switch (controller.participants.value.statusRequest) {
+            case StatusRequest.SUCCESS:
+              {
+                controller.countTotalInstansi();
+                return information(
+                    "Total Instansi", controller.totalInstansi.value);
+              }
+            default:
+              return SizedBox();
+          }
+        }),
+        Obx(() {
+          switch (controller.participants.value.statusRequest) {
+            case StatusRequest.SUCCESS:
+              {
+                controller.countTotalPartisipan();
+                return information(
+                    "Total Partisipan", controller.totalPartisipan.value);
+              }
+            default:
+              return SizedBox();
+          }
+        }),
+      ],
+    );
+  }
+
+  Widget information(String title, int total) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10), color: basicWhite, border: Border.all(
+          color: basicPrimary,
+          width: 2.0
+        )),
+        child: Column(
+          children: [
+            CText(
+              title,
+              textAlign: TextAlign.center,
+              style: CText.textStyleBodyBold.copyWith(color: basicPrimary),
+            ),
+            CText(
+              "$total",
+              textAlign: TextAlign.center,
+              style: CText.textStyleSubhead.copyWith(color: basicPrimary),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget textFieldSearch() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: CTextField(
+        controller: controller.controllerSearch,
+        hintText: "Cari Nama Instansi",
+        onChange: (value) {
+          controller.filter.value = value;
+        },
+        suffixIcon: const Icon(Icons.search),
+      ),
+    );
+  }
+
+  Widget listView() {
+    return Expanded(
+      flex: 1,
+      child: Obx(() {
+        switch (controller.participants.value.statusRequest) {
+          case StatusRequest.LOADING:
+            return loading(context);
+          case StatusRequest.EMPTY:
+            return warning(context, "Instansi partisipan masih kosong");
+          case StatusRequest.SUCCESS:
+            String filter = controller.filter.value
+                .toLowerCase(); // jangan dihapus buat trigger search!
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                List<InstansiPartipantModel> instansi =
+                    controller.participants.value.data ?? [];
+                if (instansi[index]
+                        .organization
+                        ?.name
+                        ?.toLowerCase()
+                        .contains(filter) ==
+                    false) {
+                  return Container();
+                }
+                return Card(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CText(
+                                controller.participants.value.data?[index]
+                                        .organization?.name ??
+                                    "",
+                                style: CText.textStyleBodyBold,
+                              ),
+                              CText(
+                                  "Jumlah maksimal : ${controller.participants.value.data?[index].maxParticipant}")
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                            flex: 0,
+                            child: InkWell(
+                              onTap: () {
+                                openDialog(context, 2,
+                                    initial: controller
+                                        .participants.value.data?[index]);
+                              },
+                              child: const Icon(Icons.edit),
+                            )),
+                        Expanded(flex: 0, child: CSizedBox.w10()),
+                        Expanded(
+                            flex: 0,
+                            child: InkWell(
+                              onTap: () {
+                                controller.deleteParticipant(
+                                    controller.participants.value.data?[index]);
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                color: basicRed1,
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: controller.participants.value.data?.length ?? 0,
+            );
+          case StatusRequest.ERROR:
+            return error(
+                context,
+                controller.participants.value.failure?.msgShow ??
+                    "Terjadi Kesalahan", () {
+              controller.getInstansiParticipant();
+            });
+          default:
+            return SizedBox();
+        }
+      }),
+    );
+  }
+
+  bool dialogOnBackPressed() {
+    Get.offAllNamed(Routes.DASHBOARD);
+    return true;
   }
 
   openDialog(BuildContext context, int action,
@@ -280,16 +400,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.keyForm.currentState!.validate()) return;
                   Get.back();
-                  controller.isChange.value = true;
-                  InstansiPartipantModel newIpm = InstansiPartipantModel(
-                      maxParticipant: int.parse(controller.controllerMax.text),
-                      organization: InstansiModel(
-                          name: controller.controllerInstansi.text));
-                  if (action == 1) {
-                    controller.addParticipant(newIpm);
-                  } else {
-                    controller.updateParticipant(newIpm);
-                  }
+                  controller.createOrUpdateParticipant(action);
                 }, action == 1 ? "Tambah" : "Ubah")
               ],
             ),

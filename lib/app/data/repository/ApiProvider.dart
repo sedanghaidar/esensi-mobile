@@ -30,9 +30,12 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
+<<<<<<< HEAD
       if (request.url !=
               "http://127.0.0.1:8000/api/organization-limit/byactid/16" &&
           request.url != "http://127.0.0.1:8000/api/organisasi") {
+=======
+>>>>>>> origin/hanif
         debugPrint(
           '\n╔══════════════════════════ Response ══════════════════════════\n'
           '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
@@ -44,7 +47,6 @@ class ApiProvider extends GetConnect {
           '\n╚══════════════════════════ Response ══════════════════════════\n',
           wrapWidth: 1024,
         );
-      }
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -220,6 +222,8 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// ----------------------------------------------------------------------------------------
+
   /// Mendapatkan data daftar instansi partisipan yang diijinkan berdasarkan [id] kegiatan
   Future<StatusRequestModel<List<InstansiPartipantModel>>>
       getInstansiParticipant(String? id) async {
@@ -233,6 +237,7 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// [ TIDAK_DIIMPLEMENTASIKAN ]
   /// Mengupdate data instansi participant, [data] merupakan data yang akan dikirim
   Future<StatusRequestModel<String>> postInstansiParticipant(
       Map<String, dynamic> data) async {
@@ -245,11 +250,58 @@ class ApiProvider extends GetConnect {
     }
   }
 
+  /// Menambah atau mengubah data partisipan instansi
+  Future<StatusRequestModel<InstansiPartipantModel>> createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
+    final response = await post("/api/organization-limit/", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk && model.success==true) {
+      return StatusRequestModel.success(InstansiPartipantModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// Menghapus data partisipan instansi
+  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(String? id) async {
+    final response = await post("/api/organization-limit/delete/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk && model.success==true) {
+      return StatusRequestModel.success("Berhasil menghapus isntansi");
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  /// ----------------------------------------------------------------------------------------
+
   /// Menambah data Instansi
   Future<StatusRequestModel<InstansiModel>> postInstansi(
       InstansiModel data) async {
     final response = await post("/api/organisasi/tambah",
         {"name": data.name, "short_name": data.shortName});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(InstansiModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<InstansiModel>> deleteInstansi(String? id) async {
+    final response = await post("/api/organisasi/hapus/$id", {});
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(InstansiModel.fromJson(model.data));
+    } else {
+      return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<InstansiModel>> updateInstansi(String? id, InstansiModel instansi) async {
+    final response = await post("/api/organisasi/update/$id", {
+      "name": instansi.name,
+      "short_name": instansi.shortName
+    });
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));

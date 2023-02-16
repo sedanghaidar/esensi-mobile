@@ -18,6 +18,8 @@ import '../modules/manage_instansi/bindings/manage_instansi_binding.dart';
 import '../modules/manage_instansi/views/manage_instansi_view.dart';
 import '../modules/manage_participant/bindings/manage_participant_binding.dart';
 import '../modules/manage_participant/views/manage_participant_view.dart';
+import '../modules/privacy-policy/bindings/privacy_policy_binding.dart';
+import '../modules/privacy-policy/views/privacy_policy_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/qr_scanner/bindings/qr_scanner_binding.dart';
@@ -92,6 +94,11 @@ class AppPages {
       name: _Paths.MANAGE_INSTANSI,
       page: () => const ManageInstansiView(),
       binding: ManageInstansiBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRIVACY_POLICY,
+      page: () => PrivacyPolicyView(),
+      binding: PrivacyPolicyBinding(),
     ),
   ];
 }

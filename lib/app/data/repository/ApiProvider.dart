@@ -30,23 +30,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-<<<<<<< HEAD
-      if (request.url !=
-              "http://127.0.0.1:8000/api/organization-limit/byactid/16" &&
-          request.url != "http://127.0.0.1:8000/api/organisasi") {
-=======
->>>>>>> origin/hanif
-        debugPrint(
-          '\n╔══════════════════════════ Response ══════════════════════════\n'
-          '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-          '╟ url: ${request.url}\n'
-          '╟ Headers: ${request.headers}\n'
-          // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-          '╟ Status Code: ${response.statusCode}\n'
-          '╟ Data: ${response.bodyString?.toString() ?? ''}'
-          '\n╚══════════════════════════ Response ══════════════════════════\n',
-          wrapWidth: 1024,
-        );
+      debugPrint(
+        '\n╔══════════════════════════ Response ══════════════════════════\n'
+        '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+        '╟ url: ${request.url}\n'
+        '╟ Headers: ${request.headers}\n'
+        // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+        '╟ Status Code: ${response.statusCode}\n'
+        '╟ Data: ${response.bodyString?.toString() ?? ''}'
+        '\n╚══════════════════════════ Response ══════════════════════════\n',
+        wrapWidth: 1024,
+      );
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -251,21 +245,24 @@ class ApiProvider extends GetConnect {
   }
 
   /// Menambah atau mengubah data partisipan instansi
-  Future<StatusRequestModel<InstansiPartipantModel>> createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
+  Future<StatusRequestModel<InstansiPartipantModel>>
+      createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
     final response = await post("/api/organization-limit/", data);
     final model = toDefaultModel(response.body);
-    if (response.isOk && model.success==true) {
-      return StatusRequestModel.success(InstansiPartipantModel.fromJson(model.data));
+    if (response.isOk && model.success == true) {
+      return StatusRequestModel.success(
+          InstansiPartipantModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }
   }
 
   /// Menghapus data partisipan instansi
-  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(String? id) async {
+  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(
+      String? id) async {
     final response = await post("/api/organization-limit/delete/$id", {});
     final model = toDefaultModel(response.body);
-    if (response.isOk && model.success==true) {
+    if (response.isOk && model.success == true) {
       return StatusRequestModel.success("Berhasil menghapus isntansi");
     } else {
       throw StatusRequestModel.error(failure(response.statusCode, model));
@@ -297,11 +294,10 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<StatusRequestModel<InstansiModel>> updateInstansi(String? id, InstansiModel instansi) async {
-    final response = await post("/api/organisasi/update/$id", {
-      "name": instansi.name,
-      "short_name": instansi.shortName
-    });
+  Future<StatusRequestModel<InstansiModel>> updateInstansi(
+      String? id, InstansiModel instansi) async {
+    final response = await post("/api/organisasi/update/$id",
+        {"name": instansi.name, "short_name": instansi.shortName});
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));

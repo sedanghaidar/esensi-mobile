@@ -19,6 +19,7 @@ class CreateAgendaController extends GetxController {
   final TextEditingController controllerDate = TextEditingController();
   final TextEditingController controllerTime = TextEditingController();
   final TextEditingController controllerLocation = TextEditingController();
+  final TextEditingController controllerInformation = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
@@ -27,7 +28,7 @@ class CreateAgendaController extends GetxController {
   RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>();
 
-  getTypes(){
+  getTypes() {
     types.value = form_types;
   }
 
@@ -42,9 +43,12 @@ class CreateAgendaController extends GetxController {
       "date": controllerDate.text,
       "time": controllerTime.text,
       "location": controllerLocation.text,
+      "information": controllerInformation.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
       "limit_participant": isParticiationLimit.value,
-      "type": controllerType.text == TYPE_ABSENSI ? TYPE_ABSENSI_CODE : TYPE_PENDAFTARAN_CODE
+      "type": controllerType.text == TYPE_ABSENSI
+          ? TYPE_ABSENSI_CODE
+          : TYPE_PENDAFTARAN_CODE
     };
 
     debugPrint("$data");

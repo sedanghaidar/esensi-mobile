@@ -17,15 +17,18 @@ class ManageParticipantController extends GetxController {
   ApiProvider repository = Get.find();
   String? id = "0";
 
+  RxInt totalInstansi = 0.obs;
+  RxInt totalPartisipan = 0.obs;
+
   GlobalKey<FormState> keyForm = GlobalKey<FormState>();
   TextEditingController controllerInstansi = TextEditingController();
   TextEditingController controllerMax = TextEditingController();
   final controllerSearch = TextEditingController();
   RxString filter = "".obs;
-  RxBool isChange = false.obs;
 
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
-  Rx<StatusRequestModel<List<InstansiPartipantModel>>> participants = StatusRequestModel<List<InstansiPartipantModel>>().obs;
+  Rx<StatusRequestModel<List<InstansiPartipantModel>>> participants =
+      StatusRequestModel<List<InstansiPartipantModel>>().obs;
 
   @override
   void onInit() {
@@ -67,55 +70,86 @@ class ManageParticipantController extends GetxController {
     });
   }
 
-  addParticipant(InstansiPartipantModel data){
-    List<InstansiPartipantModel> list = List.from(participants.value.data ?? List.empty())..add(data);
-    participants.value = StatusRequestModel.success((list));
-    isChange.value = true;
-  }
-
-  updateParticipant(InstansiPartipantModel data){
-    List<InstansiPartipantModel> list = List.from(participants.value.data ?? List.empty())..map((e){
-      if(e.organization?.name == data.organization?.name){
-        e.maxParticipant = data.maxParticipant;
+  createOrUpdateParticipant(int action) {
+    showLoading();
+    repository.createOrUpdatePartisipanInstansi({
+      "activity_id": id,
+      "organization_name": controllerInstansi.text,
+      "max_participant": controllerMax.text
+    }).then((value) {
+      hideLoading();
+      showToast("Berhasil menambah/mengubah data");
+      if (value.data != null) {
+        if (action == 1) {
+          addParticipantToList(value.data!.copyWith(organization: InstansiModel(
+            id: value.data?.organizationId,
+            name: controllerInstansi.text
+          )));
+        } else {
+          updateParticipantToList(value.data!);
+        }
       }
-    }).toList();
-    participants.value = StatusRequestModel.success((list));
-    isChange.value = true;
+    }, onError: (e) {
+      hideLoading();
+      showToast("Gagal menambah/mengubah data. ${failure2(e).msgShow}");
+    });
   }
 
-  deleteParticipant(InstansiPartipantModel? data){
-    List<InstansiPartipantModel> list = List.from(participants.value.data ?? List.empty())..remove(data);
-    if(list.isEmpty){
+  addParticipantToList(InstansiPartipantModel data) {
+    List<InstansiPartipantModel> list =
+        List.from(participants.value.data ?? List.empty())..add(data);
+    participants.value = StatusRequestModel.success((list));
+  }
+
+  updateParticipantToList(InstansiPartipantModel data) {
+    List<InstansiPartipantModel> list =
+        List.from(participants.value.data ?? List.empty())
+          ..map((e) {
+            if (e.organization?.id == data.organizationId) {
+              e.maxParticipant = data.maxParticipant;
+            }
+          }).toList();
+    participants.value = StatusRequestModel.success((list));
+  }
+
+  deleteParticipant(InstansiPartipantModel? data) {
+    showLoading();
+    debugPrint("${data?.id}");
+    repository.deletePartisipanInstansi("${data?.id}").then((value) {
+      hideLoading();
+      showToast("Berhasil menghapus data");
+      deleteParticipantFromList(data);
+    }, onError: (Object e) {
+      hideLoading();
+      showToast("${(e as StatusRequestModel).failure?.msgShow}");
+    });
+  }
+
+  deleteParticipantFromList(InstansiPartipantModel? data) {
+    List<InstansiPartipantModel> list =
+        List.from(participants.value.data ?? List.empty())..remove(data);
+    if (list.isEmpty) {
       participants.value = StatusRequestModel.empty();
-    }else{
+    } else {
       participants.value = StatusRequestModel.success((list));
     }
-    isChange.value = true;
   }
 
-  updateInstansiParticipant(){
-    showLoading();
-    List<PostPartipantModel> data = [];
-    for(InstansiPartipantModel i in participants.value.data??List.empty()){
-      data.add(PostPartipantModel(
-        activityId: int.parse(id??"0"),
-        organizationName: i.organization?.name,
-        maxParticipant: i.maxParticipant
-      ));
+  countTotalInstansi(){
+    totalInstansi.value = 0;
+    for (InstansiPartipantModel i in participants.value.data ?? []) {
+      if (i.organization?.name?.toLowerCase().contains(filter) == true) {
+        totalInstansi.value++;
+      }
     }
-    String json = jsonEncode(data);
-    Map<String, dynamic> map = {
-      "activity_id" : id,
-      "data" : data
-    };
-    repository.postInstansiParticipant(map).then((value){
-      hideLoading();
-      getInstansiParticipant();
-      isChange.value = false;
-      showToast("Berhasil menambah data");
-    }, onError: (e){
-      hideLoading();
-      showToast("Terjadi Kesalahan. $e");
-    });
+  }
+
+  countTotalPartisipan(){
+    totalPartisipan.value = 0;
+    for (InstansiPartipantModel i in participants.value.data ?? []) {
+      if (i.organization?.name?.toLowerCase().contains(filter) == true) {
+        totalPartisipan.value = totalPartisipan.value + (i.maxParticipant ?? 0);
+      }
+    }
   }
 }

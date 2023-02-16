@@ -56,7 +56,7 @@ class InstansiPartipantModel {
     id: json["id"] == null ? null : json["id"],
     activityId: json["activity_id"] == null ? null : json["activity_id"],
     organizationId: json["organization_id"] == null ? null : json["organization_id"],
-    maxParticipant: json["max_participant"] == null ? null : json["max_participant"],
+    maxParticipant: json["max_participant"] == null ? null : int.parse(json["max_participant"].toString()),
     createdBy: json["created_by"] == null ? null : json["created_by"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),

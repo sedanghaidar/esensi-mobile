@@ -85,41 +85,69 @@ class FormView extends GetView<FormController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CText.header("${controller.kegiatan.value.data?.name}"),
-                const CSizedBox.h5(),
+                const CSizedBox.h20(),
                 const CText("Kegiatan akan dilaksanakan pada :"),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, top: 5),
-                  child: RichText(
-                      text: TextSpan(children: [
-                    const WidgetSpan(child: Icon(Icons.calendar_month)),
-                    const WidgetSpan(child: CSizedBox.w5()),
-                    WidgetSpan(
-                        child: CText(
-                            dateToString(controller.kegiatan.value.data?.date)))
-                  ])),
+                  margin: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.calendar_month),
+                      CSizedBox.w10(),
+                      CText(dateToString(controller.kegiatan.value.data?.date))
+                    ],
+                  ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, top: 5),
-                  child: RichText(
-                      text: TextSpan(children: [
-                    const WidgetSpan(child: Icon(Icons.access_time_rounded)),
-                    const WidgetSpan(child: CSizedBox.w5()),
-                    WidgetSpan(
+                  margin: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time_rounded),
+                      CSizedBox.w10(),
+                      Expanded(
+                        flex: 1,
                         child: CText(
-                            "${controller.kegiatan.value.data?.time} - selesai"))
-                  ])),
+                            "${controller.kegiatan.value.data?.time} - selesai"),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, top: 5),
-                  child: RichText(
-                      text: TextSpan(children: [
-                    const WidgetSpan(child: Icon(Icons.location_on_outlined)),
-                    const WidgetSpan(child: CSizedBox.w5()),
-                    WidgetSpan(
+                  margin: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on_outlined),
+                      CSizedBox.w10(),
+                      Expanded(
+                        flex: 1,
                         child: CText(
-                            "${controller.kegiatan.value.data?.location}"))
-                  ])),
+                            "${controller.kegiatan.value.data?.location}"),
+                      )
+                    ],
+                  ),
                 ),
+                controller.kegiatan.value.data?.information != null
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info,
+                              color: basicPrimary,
+                            ),
+                            CSizedBox.w10(),
+                            Expanded(
+                              flex: 1,
+                              child: CText(
+                                "${controller.kegiatan.value.data?.information}",
+                                style: CText.textStyleBodyBold.copyWith(
+                                    color: basicPrimary,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
                 Visibility(
                   visible: controller.kegiatan.value.data?.dateEnd == null
                       ? false
@@ -172,7 +200,7 @@ class FormView extends GetView<FormController> {
                       : controller.controllerGender.text,
                   items: form_gender
                       .map((e) =>
-                      DropdownMenuItem<String>(value: e, child: CText(e)))
+                          DropdownMenuItem<String>(value: e, child: CText(e)))
                       .toList(),
                   onChange: (value) {
                     if (controller.controllerGender.text != value) {

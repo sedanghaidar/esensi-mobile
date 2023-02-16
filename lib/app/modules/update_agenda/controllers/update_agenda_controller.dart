@@ -21,6 +21,7 @@ class UpdateAgendaController extends GetxController {
   final TextEditingController controllerDate = TextEditingController();
   final TextEditingController controllerTime = TextEditingController();
   final TextEditingController controllerLocation = TextEditingController();
+  final TextEditingController controllerInformation = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
@@ -47,6 +48,7 @@ class UpdateAgendaController extends GetxController {
             : dateToString(value.data?.date, format: "yyyy-MM-dd");
         controllerTime.text = value.data?.time ?? "";
         controllerLocation.text = value.data?.location ?? "";
+        controllerInformation.text = value.data?.information ?? "";
         controllerDateEnd.text = value.data?.dateEnd == null
             ? ""
             : dateToString(value.data?.dateEnd, format: "yyyy-MM-dd");
@@ -69,6 +71,7 @@ class UpdateAgendaController extends GetxController {
       "date": controllerDate.text,
       "time": controllerTime.text,
       "location": controllerLocation.text,
+      "information": controllerInformation.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
       "limit_participant": isParticiationLimit.value,
       "type": controllerType.text == TYPE_ABSENSI

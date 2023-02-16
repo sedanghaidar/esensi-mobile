@@ -136,6 +136,22 @@ class CreateAgendaView extends GetView<CreateAgendaController> {
                     }),
                   ),
                   CSizedBox.h10(),
+                  CText("Informasi Tambahan"),
+                  CSizedBox.h5(),
+                  CTextField(
+                    controller: controller.controllerInformation,
+                    hintText: "Masukkan Informasi Tambahan",
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    validator: (value) {
+                      if (GetUtils.isBlank(value) == true) return msgBlank;
+                      return null;
+                    },
+                    suffixIcon: suffixIconClear(() {
+                      controller.controllerInformation.clear();
+                    }),
+                  ),
+                  CSizedBox.h10(),
                   CText("Tanggal Agenda"),
                   CSizedBox.h5(),
                   CTextField(

@@ -13,7 +13,8 @@ import '../model/repository/StatusRequestModel.dart';
 class ApiProvider extends GetConnect {
   // static const String BASE_URL = "http://172.100.31.25:8000";
   static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
-  static const String LOCAL_URL = "http://127.0.0.1:8000";
+  // static const String LOCAL_URL = "http://127.0.0.1:8000";
+  static const String LOCAL_URL = "https://cs.saturnalia.jatengprov.go.id";
 
   static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
 
@@ -35,9 +36,9 @@ class ApiProvider extends GetConnect {
         '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
         '╟ url: ${request.url}\n'
         '╟ Headers: ${request.headers}\n'
-        // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+        // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
         '╟ Status Code: ${response.statusCode}\n'
-        '╟ Data: ${response.bodyString?.toString() ?? ''}'
+        // '╟ Data: ${response.bodyString?.toString() ?? ''}'
         '\n╚══════════════════════════ Response ══════════════════════════\n',
         wrapWidth: 1024,
       );
@@ -247,7 +248,7 @@ class ApiProvider extends GetConnect {
   /// Menambah atau mengubah data partisipan instansi
   Future<StatusRequestModel<InstansiPartipantModel>>
       createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
-    final response = await post("/api/organization-limit/", data);
+    final response = await post("/api/organization-limit/createupdate", data);
     final model = toDefaultModel(response.body);
     if (response.isOk && model.success == true) {
       return StatusRequestModel.success(

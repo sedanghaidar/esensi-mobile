@@ -160,221 +160,245 @@ class DashboardView extends GetView<DashboardController> {
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(vertical: 5),
-                                padding: const EdgeInsets.all(10),
+                                padding: EdgeInsets.only(top: 10),
                                 decoration: BoxDecoration(
-                                    color: basicWhite,
+                                    color: getColorByDate(
+                                        controller.kegiatan.value.data?[index]
+                                                .date ??
+                                            DateTime.now(),
+                                        controller
+                                            .kegiatan.value.data?[index].time),
                                     border: Border.all(color: basicGrey2),
                                     borderRadius: BorderRadius.circular(5)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ///NAMA KEGIATAN
-                                        Flexible(
-                                          child: CText(
-                                            "${controller.kegiatan.value.data?[index].name}",
-                                            style: CText.textStyleBodyBold
-                                                .copyWith(
-                                                    fontSize: 24,
-                                                    letterSpacing: 0.75,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-
-                                        ///TOMBOL EDIT DAN HAPUS
-                                        Expanded(
-                                          flex: 0,
-                                          child: Row(
-                                            children: [
-                                              ///TOMBOL EDIT
-                                              SizedBox(
-                                                  width: 80,
-                                                  child: CButton.icon(() {
-                                                    Get.toNamed(
-                                                        "${Routes.UPDATE_AGENDA}/${controller.kegiatan.value.data?[index].id}");
-                                                  }, "Edit",
-                                                      style:
-                                                          styleButtonFilledBoxSmall,
-                                                      icon: const Icon(
-                                                        Icons.edit,
-                                                        size: 16,
-                                                        color: basicWhite,
-                                                      ))),
-                                              const CSizedBox.w5(),
-
-                                              ///TOMBOL HAPUS
-                                              SizedBox(
-                                                  width: 95,
-                                                  child: CButton.icon(() {
-                                                    Get.defaultDialog(
-                                                        title: "Perhatian",
-                                                        middleText:
-                                                            "Apakah anda yakin ingin menghapus?",
-                                                        textConfirm: "Ya",
-                                                        onConfirm: () {
-                                                          controller.deleteKegiatan(
-                                                              "${controller.kegiatan.value.data?[index].id}");
-                                                        },
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .all(10),
-                                                        confirmTextColor:
-                                                            basicWhite,
-                                                        buttonColor:
-                                                            basicPrimary,
-                                                        cancelTextColor:
-                                                            basicPrimary,
-                                                        textCancel: "Batal");
-                                                  }, "Hapus",
-                                                      style:
-                                                          styleButtonFilledBoxSmall,
-                                                      icon: const Icon(
-                                                        Icons.delete,
-                                                        size: 16,
-                                                        color: basicWhite,
-                                                      )))
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const CSizedBox.h5(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        ///URL KEGIATAN
-                                        Flexible(
-                                          child: Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: context.width / 2),
-                                            child: InkWell(
-                                              child: CText(
-                                                "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}",
-                                                style: CText.textStyleBody
-                                                    .copyWith(fontSize: 16),
-                                                // overflow: TextOverflow.ellipsis,
-                                                softWrap: false,
-                                              ),
-                                              onTap: () {
-                                                Get.toNamed(
-                                                        "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
-                                                    ?.then((value) {
-                                                  controller.getKegiatan();
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        const CSizedBox.w10(),
-
-                                        ///TOMBOL COPY URL
-                                        Expanded(
-                                          flex: 0,
-                                          child: InkWell(
-                                            onTap: () async {
-                                              await Clipboard.setData(ClipboardData(
-                                                      text:
-                                                          "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}"))
-                                                  .whenComplete(() {
-                                                showToast(
-                                                    "Berhasil menyalin kode");
-                                              });
-                                            },
-                                            child: Container(
-                                              color: basicGrey4,
-                                              padding: const EdgeInsets.all(8),
-                                              child: const Icon(
-                                                Icons.copy,
-                                                size: 18,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const CSizedBox.h5(),
-                                    const Divider(height: 2),
-                                    const CSizedBox.h5(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(children: [
-                                            const WidgetSpan(
-                                                child: Icon(
-                                              Icons.access_time_filled_rounded,
-                                              size: 16,
-                                            )),
-                                            const WidgetSpan(
-                                                child: CSizedBox.w5()),
-                                            WidgetSpan(
-                                                child: CText(
-                                              dateToString(
-                                                  controller.kegiatan.value
-                                                      .data?[index].date,
-                                                  format: "EEEE, dd MMMM yyyy"),
-                                              style: CText.textStyleBody
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: basicWhite,
+                                      border: Border.all(color: basicGrey2),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ///NAMA KEGIATAN
+                                          Flexible(
+                                            child: CText(
+                                              "${controller.kegiatan.value.data?[index].name}",
+                                              style: CText.textStyleBodyBold
                                                   .copyWith(
-                                                      fontSize: 12,
+                                                      fontSize: 24,
+                                                      letterSpacing: 0.75,
                                                       fontWeight:
-                                                          FontWeight.w400),
-                                            ))
-                                          ]),
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Visibility(
-                                              visible: controller
-                                                      .kegiatan
-                                                      .value
-                                                      .data?[index]
-                                                      .isLimitParticipant ??
-                                                  false,
+                                                          FontWeight.w600),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+
+                                          ///TOMBOL EDIT DAN HAPUS
+                                          Expanded(
+                                            flex: 0,
+                                            child: Visibility(
+                                                visible: getStatusEditableKegiatan(
+                                                    controller.kegiatan.value.data?[index].date ?? DateTime.now(),
+                                                    controller.kegiatan.value.data?[index].time
+                                                ),
+                                              child: Row(
+                                                children: [
+                                                  ///TOMBOL EDIT
+                                                  SizedBox(
+                                                      width: 80,
+                                                      child: CButton.icon(() {
+                                                        Get.toNamed(
+                                                            "${Routes.UPDATE_AGENDA}/${controller.kegiatan.value.data?[index].id}");
+                                                      }, "Edit",
+                                                          style:
+                                                              styleButtonFilledBoxSmall,
+                                                          icon: const Icon(
+                                                            Icons.edit,
+                                                            size: 16,
+                                                            color: basicWhite,
+                                                          ))),
+                                                  const CSizedBox.w5(),
+
+                                                  ///TOMBOL HAPUS
+                                                  SizedBox(
+                                                      width: 95,
+                                                      child: CButton.icon(() {
+                                                        Get.defaultDialog(
+                                                            title: "Perhatian",
+                                                            middleText:
+                                                                "Apakah anda yakin ingin menghapus?",
+                                                            textConfirm: "Ya",
+                                                            onConfirm: () {
+                                                              controller
+                                                                  .deleteKegiatan(
+                                                                      "${controller.kegiatan.value.data?[index].id}");
+                                                            },
+                                                            contentPadding:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            confirmTextColor:
+                                                                basicWhite,
+                                                            buttonColor:
+                                                                basicPrimary,
+                                                            cancelTextColor:
+                                                                basicPrimary,
+                                                            textCancel: "Batal");
+                                                      }, "Hapus",
+                                                          style:
+                                                              styleButtonFilledBoxSmall,
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            size: 16,
+                                                            color: basicWhite,
+                                                          )))
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const CSizedBox.h5(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          ///URL KEGIATAN
+                                          Flexible(
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth: context.width / 2),
                                               child: InkWell(
-                                                child: const Icon(
-                                                  Icons.business_center,
-                                                  color: basicPrimary2,
+                                                child: CText(
+                                                  "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}",
+                                                  style: CText.textStyleBody
+                                                      .copyWith(fontSize: 16),
+                                                  // overflow: TextOverflow.ellipsis,
+                                                  softWrap: false,
                                                 ),
                                                 onTap: () {
                                                   Get.toNamed(
-                                                      "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
+                                                          "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
+                                                      ?.then((value) {
+                                                    controller.getKegiatan();
+                                                  });
                                                 },
                                               ),
                                             ),
-                                            const CSizedBox.w5(),
-                                            InkWell(
-                                              child: Icon(
-                                                Icons.file_download_outlined,
-                                              ),
-                                              onTap: () {
-                                                launchUrl(Uri.parse(
-                                                    "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
+                                          ),
+                                          const CSizedBox.w10(),
+
+                                          ///TOMBOL COPY URL
+                                          Expanded(
+                                            flex: 0,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                await Clipboard.setData(
+                                                        ClipboardData(
+                                                            text:
+                                                                "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}"))
+                                                    .whenComplete(() {
+                                                  showToast(
+                                                      "Berhasil menyalin kode");
+                                                });
                                               },
-                                            ),
-                                            const CSizedBox.w5(),
-                                            InkWell(
-                                              child: Icon(
-                                                Icons.downloading_rounded,
+                                              child: Container(
+                                                color: basicGrey4,
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: const Icon(
+                                                  Icons.copy,
+                                                  size: 18,
+                                                ),
                                               ),
-                                              onTap: () {
-                                                launchUrl(Uri.parse(
-                                                    "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
-                                              },
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          ),
+                                        ],
+                                      ),
+                                      const CSizedBox.h5(),
+                                      const Divider(height: 2),
+                                      const CSizedBox.h5(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const WidgetSpan(
+                                                  child: Icon(
+                                                Icons
+                                                    .access_time_filled_rounded,
+                                                size: 16,
+                                              )),
+                                              const WidgetSpan(
+                                                  child: CSizedBox.w5()),
+                                              WidgetSpan(
+                                                  child: CText(
+                                                dateToString(
+                                                    controller.kegiatan.value
+                                                        .data?[index].date,
+                                                    format:
+                                                        "EEEE, dd MMMM yyyy"),
+                                                style: CText.textStyleBody
+                                                    .copyWith(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                              ))
+                                            ]),
+                                          ),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Visibility(
+                                                visible: controller
+                                                        .kegiatan
+                                                        .value
+                                                        .data?[index]
+                                                        .isLimitParticipant ??
+                                                    false,
+                                                child: InkWell(
+                                                  child: const Icon(
+                                                    Icons.business_center,
+                                                    color: basicPrimary2,
+                                                  ),
+                                                  onTap: () {
+                                                    Get.toNamed(
+                                                        "${Routes.MANAGE_PARTICIPANT}/${controller.kegiatan.value.data?[index].id}");
+                                                  },
+                                                ),
+                                              ),
+                                              const CSizedBox.w5(),
+                                              InkWell(
+                                                child: Icon(
+                                                  Icons.file_download_outlined,
+                                                ),
+                                                onTap: () {
+                                                  launchUrl(Uri.parse(
+                                                      "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
+                                                },
+                                              ),
+                                              const CSizedBox.w5(),
+                                              InkWell(
+                                                child: Icon(
+                                                  Icons.downloading_rounded,
+                                                ),
+                                                onTap: () {
+                                                  launchUrl(Uri.parse(
+                                                      "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${controller.kegiatan.value.data?[index].id}"));
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

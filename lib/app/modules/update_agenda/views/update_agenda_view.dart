@@ -266,6 +266,20 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                                 controller.isParticiationLimit.value = value,
                           );
                         }),
+                        CText("Pesan Verifikasi (Opsional)"),
+                        CSizedBox.h5(),
+                        CTextField(
+                          controller: controller.controllerMessage,
+                          hintText: "Masukkan Pesan Verifikasi",
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.newline,
+                          validator: (value) {
+                            return null;
+                          },
+                          suffixIcon: suffixIconClear(() {
+                            controller.controllerMessage.clear();
+                          }),
+                        ),
                         CSizedBox.h20(),
                         CButton(() {
                           FocusManager.instance.primaryFocus?.unfocus();

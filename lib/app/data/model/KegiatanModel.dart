@@ -12,6 +12,7 @@ class KegiatanModel {
     this.time,
     this.location,
     this.information,
+    this.messageVerifivation,
     this.dateEnd,
     this.isLimitParticipant,
     this.codeUrl,
@@ -28,6 +29,7 @@ class KegiatanModel {
   String? time;
   String? location;
   String? information;
+  String? messageVerifivation;
   DateTime? dateEnd;
   bool? isLimitParticipant = false;
   int? createdBy;
@@ -44,6 +46,7 @@ class KegiatanModel {
     String? time,
     String? location,
     String? information,
+    String? messageVerification,
     DateTime? dateEnd,
     bool? isLimitParticipant,
     String? codeUrl,
@@ -60,6 +63,7 @@ class KegiatanModel {
         time: time ?? this.time,
         location: location ?? this.location,
         information: information ?? this.information,
+        messageVerifivation: messageVerifivation ?? this.messageVerifivation,
         dateEnd: dateEnd ?? this.dateEnd,
         isLimitParticipant: isLimitParticipant ?? this.isLimitParticipant,
         codeUrl: codeUrl ?? this.codeUrl,
@@ -82,6 +86,9 @@ class KegiatanModel {
         time: json["time"] == null ? null : json["time"],
         location: json["location"] == null ? null : json["location"],
         information: json["information"] == null ? null : json["information"],
+        messageVerifivation: json["verification_message"] == null
+            ? null
+            : json["verification_message"],
         dateEnd:
             json["max_date"] == null ? null : DateTime.parse(json["max_date"]),
         isLimitParticipant:
@@ -111,6 +118,7 @@ class KegiatanModel {
         "time": time == null ? null : time,
         "location": location == null ? null : location,
         "information": information == null ? null : information,
+        "verification_message": messageVerifivation == null ? null : messageVerifivation,
         "max_date": dateEnd == null ? null : dateEnd?.toIso8601String(),
         "limit_participant":
             isLimitParticipant == null ? false : isLimitParticipant,

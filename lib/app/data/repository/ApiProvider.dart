@@ -13,8 +13,8 @@ import '../model/repository/StatusRequestModel.dart';
 class ApiProvider extends GetConnect {
   // static const String BASE_URL = "http://172.100.31.25:8000";
   static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
-  // static const String LOCAL_URL = "http://127.0.0.1:8000";
-  static const String LOCAL_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String LOCAL_URL = "http://127.0.0.1:8001";
+  // static const String LOCAL_URL = "https://cs.saturnalia.jatengprov.go.id";
 
   static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
 
@@ -38,7 +38,7 @@ class ApiProvider extends GetConnect {
         '╟ Headers: ${request.headers}\n'
         // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
         '╟ Status Code: ${response.statusCode}\n'
-        // '╟ Data: ${response.bodyString?.toString() ?? ''}'
+        '╟ Data: ${response.bodyString?.toString() ?? ''}'
         '\n╚══════════════════════════ Response ══════════════════════════\n',
         wrapWidth: 1024,
       );

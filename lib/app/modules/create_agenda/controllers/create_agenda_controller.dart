@@ -20,6 +20,7 @@ class CreateAgendaController extends GetxController {
   final TextEditingController controllerTime = TextEditingController();
   final TextEditingController controllerLocation = TextEditingController();
   final TextEditingController controllerInformation = TextEditingController();
+  final TextEditingController controllerMessage = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
@@ -44,6 +45,7 @@ class CreateAgendaController extends GetxController {
       "time": controllerTime.text,
       "location": controllerLocation.text,
       "information": controllerInformation.text,
+      "verification_message": controllerMessage.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
       "limit_participant": isParticiationLimit.value,
       "type": controllerType.text == TYPE_ABSENSI

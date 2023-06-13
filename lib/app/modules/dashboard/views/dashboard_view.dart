@@ -274,7 +274,7 @@ class DashboardView extends GetView<DashboardController> {
                                                   maxWidth: context.width / 2),
                                               child: InkWell(
                                                 child: CText(
-                                                  "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}/0",
+                                                  "${ApiProvider.BASE_URL}/#/form/${controller.kegiatan.value.data?[index].codeUrl}",
                                                   style: CText.textStyleBody
                                                       .copyWith(fontSize: 16),
                                                   // overflow: TextOverflow.ellipsis,
@@ -282,7 +282,7 @@ class DashboardView extends GetView<DashboardController> {
                                                 ),
                                                 onTap: () {
                                                   Get.toNamed(
-                                                          "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}/0")
+                                                          "${Routes.FORM}/${controller.kegiatan.value.data?[index].codeUrl}")
                                                       ?.then((value) {
                                                     controller.getKegiatan();
                                                   });

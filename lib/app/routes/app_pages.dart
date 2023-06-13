@@ -56,7 +56,7 @@ class AppPages {
       binding: CreateAgendaBinding(),
     ),
     GetPage(
-      name: _Paths.FORM + "/:code/:id",
+      name: _Paths.FORM + "/:code/",
       page: () => FormView(),
       binding: FormBinding(),
     ),

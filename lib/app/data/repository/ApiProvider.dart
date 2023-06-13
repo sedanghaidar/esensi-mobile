@@ -11,12 +11,11 @@ import 'package:get/get_connect/connect.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  // static const String BASE_URL = "http://172.100.31.25:8000";
   static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
-  static const String LOCAL_URL = "http://127.0.0.1:8001";
-  // static const String LOCAL_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String LOCAL_URL = "http://127.0.0.1:8000";
 
   static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+  // static String BASE_URL = kReleaseMode ? SERVER_URL : SERVER_URL;
 
   HiveProvider hive = HiveProvider();
 

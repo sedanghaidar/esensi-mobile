@@ -266,6 +266,45 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                                 controller.isParticiationLimit.value = value,
                           );
                         }),
+                        Divider(
+                          height: 10,
+                        ),
+                        CSizedBox.h5(),
+                        CText(
+                          "Notifikasi / Pesan Pendaftaran Via WA",
+                          style: CText.textStyleBodyBold,
+                        ),
+                        CSizedBox.h10(),
+                        CText("Pesan Verifikasi (Opsional)"),
+                        CSizedBox.h5(),
+                        Container(
+                          height: 50,
+                          child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    controller.controllerMessage.text =
+                                    "${controller.controllerMessage.text} ${controller.tagging[index]}";
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    margin: EdgeInsets.all(4),
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: basicWhite,
+                                        border:
+                                        Border.all(width: 1, color: basicBlack)),
+                                    child: Center(
+                                        child: CText(controller.tagging[index])),
+                                  ),
+                                );
+                              },
+                              itemCount: controller.tagging.length,
+                              scrollDirection: Axis.horizontal),
+                        ),
                         CText("Pesan Verifikasi (Opsional)"),
                         CSizedBox.h5(),
                         CTextField(

@@ -31,6 +31,17 @@ class UpdateAgendaController extends GetxController {
   RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
 
+  List<String> tagging = [
+    "#nama_peserta",
+    "jabatan_peserta",
+    "instansi_peserta",
+    "nama_agenda",
+    "tanggal_agenda",
+    "waktu_agenda",
+    "lokasi_agenda",
+    "informasi_tambahan",
+  ];
+
   @override
   void onInit() {
     id = Get.parameters["id"];

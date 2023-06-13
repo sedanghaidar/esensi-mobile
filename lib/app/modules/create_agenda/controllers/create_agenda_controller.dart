@@ -25,6 +25,19 @@ class CreateAgendaController extends GetxController {
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
 
+  final TextEditingController controllerTypeNotif = TextEditingController();
+
+  List<String> tagging = [
+    "#nama_peserta",
+    "jabatan_peserta",
+    "instansi_peserta",
+    "nama_agenda",
+    "tanggal_agenda",
+    "waktu_agenda",
+    "lokasi_agenda",
+    "informasi_tambahan",
+  ];
+
   final types = [].obs;
   RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>();
@@ -80,6 +93,10 @@ class CreateAgendaController extends GetxController {
 
   @override
   void onInit() {
+    controllerTypeNotif.text =
+        notification_types_map[TYPE_NOTIFICATION_NONE_CODE] ?? "-";
+    controllerMessage.text =
+        "Terimakasih Bp/Ibu #nama_peserta, #jabatan_peserta dari #instansi_peserta telah mendaftar pada kegiatan *#nama_agenda* .\nKegiatan akan dilaksanakan pada :\nTanggal : #tanggal_agenda\nWaktu : #waktu_agenda WIB - selesai\nTempat : #lokasi_agenda\nCatatan : #informasi_tambahan";
     super.onInit();
   }
 }

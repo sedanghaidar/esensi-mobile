@@ -63,11 +63,13 @@ class FormView extends GetView<FormController> {
                 return loading(context);
               case StatusRequest.SUCCESS:
                 {
-                  if (checkOutDate(
-                      controller.kegiatan.value.data?.date ?? DateTime.now(),
-                      controller.kegiatan.value.data?.dateEnd)) {
-                    return warning(context,
-                        "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+                  if("${controller.kegiatan.value.data?.id}" != "${controller.id}"){
+                    if (checkOutDate(
+                        controller.kegiatan.value.data?.date ?? DateTime.now(),
+                        controller.kegiatan.value.data?.dateEnd)) {
+                      return warning(context,
+                          "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+                    }
                   }
                   return successBody(context);
                 }

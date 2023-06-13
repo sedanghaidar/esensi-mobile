@@ -20,6 +20,7 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 
 class FormController extends GetxController {
+  String? id = "0";   //kode khusus untuk membuka formulir walaupun sudah outdated
   ApiProvider repository = Get.find();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -188,6 +189,7 @@ class FormController extends GetxController {
   @override
   void onInit() {
     String code = Get.parameters['code'].toString();
+    id = Get.parameters['id'].toString();
     getKegiatan(code);
     super.onInit();
   }

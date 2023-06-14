@@ -33,13 +33,13 @@ class UpdateAgendaController extends GetxController {
 
   List<String> tagging = [
     "#nama_peserta",
-    "jabatan_peserta",
-    "instansi_peserta",
-    "nama_agenda",
-    "tanggal_agenda",
-    "waktu_agenda",
-    "lokasi_agenda",
-    "informasi_tambahan",
+    "#jabatan_peserta",
+    "#instansi_peserta",
+    "#nama_agenda",
+    "#tanggal_agenda",
+    "#waktu_agenda",
+    "#lokasi_agenda",
+    "#informasi_tambahan",
   ];
 
   @override

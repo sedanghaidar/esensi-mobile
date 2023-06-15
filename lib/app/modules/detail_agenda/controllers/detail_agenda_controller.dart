@@ -1,5 +1,6 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/NotulenModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequestModel.dart';
@@ -22,11 +23,12 @@ class DetailAgendaController extends GetxController {
   String? id = "0";
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
   final peserta = StatusRequestModel<List<PesertaModel>>().obs;
+  final notulen = StatusRequestModel<NotulenModel>().obs;
   RxList<PesertaModel> pesertaFilter = <PesertaModel>[].obs;
 
   final controllerSearch = TextEditingController();
   RxString filter = "".obs;
-  RxString status = "1".obs;        //filter status scanned
+  RxString status = "1".obs; //filter status scanned
   RxInt totalInstansi = 0.obs;
   RxInt totalScanned = 0.obs;
   RxInt totalUnScanned = 0.obs;
@@ -100,12 +102,14 @@ class DetailAgendaController extends GetxController {
           buttonColor: basicPrimary,
           onConfirm: () {
             Get.back();
-            int? index = peserta.value.data?.indexWhere((element) => element.name == value.data?.name);
+            int? index = peserta.value.data
+                ?.indexWhere((element) => element.name == value.data?.name);
             if (index != null) {
-              totalScanned.value = totalScanned.value+1;
-              totalUnScanned.value = totalUnScanned.value-1;
+              totalScanned.value = totalScanned.value + 1;
+              totalUnScanned.value = totalUnScanned.value - 1;
               peserta.value.data?[index] = value.data!;
-              peserta.value = StatusRequestModel.success(peserta.value.data ?? []);
+              peserta.value =
+                  StatusRequestModel.success(peserta.value.data ?? []);
             }
           },
         );
@@ -205,15 +209,19 @@ class DetailAgendaController extends GetxController {
               peserta.value.data?.groupListsBy((element) => element.instansi);
 
           for (InstansiPartipantModel data in value.data!) {
-            if (groups?.containsKey(data.organization?.name?.toUpperCase()) == true) {
+            if (groups?.containsKey(data.organization?.name?.toUpperCase()) ==
+                true) {
               sudahTerdaftarNumber++;
-              sudahTerdaftar += "$sudahTerdaftarNumber. *${data.organization?.name}* (jumlah : ${groups?[data.organization?.name]?.length})\n";
-              for(PesertaModel psrta in groups![data.organization?.name?.toUpperCase()]!){
+              sudahTerdaftar +=
+                  "$sudahTerdaftarNumber. *${data.organization?.name}* (jumlah : ${groups?[data.organization?.name]?.length})\n";
+              for (PesertaModel psrta
+                  in groups![data.organization?.name?.toUpperCase()]!) {
                 sudahTerdaftar += "\t- ${psrta.name}\n";
               }
             } else {
               belumTerdaftarNumber++;
-              belumTerdaftar += "$belumTerdaftarNumber. *${data.organization?.name}* (jumlah: ${groups?[data.organization?.name]?.length??0})\n";
+              belumTerdaftar +=
+                  "$belumTerdaftarNumber. *${data.organization?.name}* (jumlah: ${groups?[data.organization?.name]?.length ?? 0})\n";
             }
           }
           await Clipboard.setData(ClipboardData(
@@ -231,9 +239,20 @@ class DetailAgendaController extends GetxController {
     });
   }
 
+  getNotulen() {
+    notulen.value = StatusRequestModel.loading();
+    repository.getNotulen(id ?? "").then((value) {
+      notulen.value = value;
+    }, onError: (e) {
+      final err = repository.handleError<NotulenModel>(e);
+      notulen.value = err;
+    });
+  }
+
   @override
   void onReady() {
     getDetailKegiatan();
+    getNotulen();
     super.onReady();
   }
 }

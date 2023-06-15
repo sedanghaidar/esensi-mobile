@@ -16,6 +16,7 @@ abstract class Routes {
   static const UPDATE_AGENDA = _Paths.UPDATE_AGENDA;
   static const MANAGE_INSTANSI = _Paths.MANAGE_INSTANSI;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
+  static const FORM_NOTULEN = _Paths.FORM_NOTULEN;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const UPDATE_AGENDA = '/update-agenda';
   static const MANAGE_INSTANSI = '/manage-instansi';
   static const PRIVACY_POLICY = '/privacy-policy';
+  static const FORM_NOTULEN = '/form-notulen';
 }

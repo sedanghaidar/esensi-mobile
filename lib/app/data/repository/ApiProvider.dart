@@ -1,6 +1,7 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/NotulenModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
@@ -8,6 +9,7 @@ import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_connect/connect.dart';
 
+import '../model/repository/FailureModel.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
@@ -15,6 +17,7 @@ class ApiProvider extends GetConnect {
   static const String LOCAL_URL = "http://127.0.0.1:8000";
 
   static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+
   // static String BASE_URL = kReleaseMode ? SERVER_URL : SERVER_URL;
 
   HiveProvider hive = HiveProvider();
@@ -47,6 +50,16 @@ class ApiProvider extends GetConnect {
       return response;
     });
     super.onInit();
+  }
+
+  StatusRequestModel<T> handleError<T>(dynamic e) {
+    if (e is StatusRequestModel<T>) {
+      debugPrint("OITTTTT");
+      return e;
+    } else {
+      debugPrint("disini?");
+      return StatusRequestModel.error(FailureModel(400, "$e", "$e"));
+    }
   }
 
   /// Api login ke dalam aplikasi
@@ -303,6 +316,38 @@ class ApiProvider extends GetConnect {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> postNewNotulen(FormData data) async {
+    final response = await post("/api/notulen", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> updateNewNotulen(FormData data, String activityId) async {
+    final response = await post("/api/notulen/$activityId", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> getNotulen(
+      String activityId) async {
+    final response = await get("/api/notulen/$activityId");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      debugPrint("error ${model.message}");
+      throw StatusRequestModel<NotulenModel>.error(failure(response.statusCode, model));
     }
   }
 }

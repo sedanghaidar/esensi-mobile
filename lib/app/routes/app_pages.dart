@@ -10,6 +10,8 @@ import '../modules/detail_peserta/bindings/detail_peserta_binding.dart';
 import '../modules/detail_peserta/views/detail_peserta_view.dart';
 import '../modules/form/bindings/form_binding.dart';
 import '../modules/form/views/form_view.dart';
+import '../modules/form_notulen/bindings/form_notulen_binding.dart';
+import '../modules/form_notulen/views/form_notulen_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -99,6 +101,11 @@ class AppPages {
       name: _Paths.PRIVACY_POLICY,
       page: () => PrivacyPolicyView(),
       binding: PrivacyPolicyBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORM_NOTULEN,
+      page: () => const FormNotulenView(),
+      binding: FormNotulenBinding(),
     ),
   ];
 }

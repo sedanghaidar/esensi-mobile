@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 
 import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/button/CButton.dart';
@@ -72,14 +73,19 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icParticipant,
-                                        "${controller.peserta.value.data?.length ?? 0}", action: (){
-                                          controller.status.value = "1";
-                                        })),
+                                        "${controller.peserta.value.data?.length ?? 0}",
+                                        action: () {
+                                      controller.status.value = "1";
+                                    })),
                                 Expanded(
                                     flex: 1,
-                                    child: columnCard(icOffice, "${controller.totalInstansi}", action: (){
-                                      if(controller.kegiatan.value.data?.isLimitParticipant==true){
-                                          controller.getInstansiParticipant();
+                                    child: columnCard(
+                                        icOffice, "${controller.totalInstansi}",
+                                        action: () {
+                                      if (controller.kegiatan.value.data
+                                              ?.isLimitParticipant ==
+                                          true) {
+                                        controller.getInstansiParticipant();
                                       }
                                     })),
                               ],
@@ -90,15 +96,17 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icQrSuccess,
-                                        "${controller.totalScanned}", action: (){
-                                            controller.status.value = "2";
-                                        })),
+                                        "${controller.totalScanned}",
+                                        action: () {
+                                      controller.status.value = "2";
+                                    })),
                                 Expanded(
                                     flex: 1,
                                     child: columnCard(icQrError,
-                                        "${controller.totalUnScanned}", action: (){
-                                            controller.status.value = "3";
-                                        })),
+                                        "${controller.totalUnScanned}",
+                                        action: () {
+                                      controller.status.value = "3";
+                                    })),
                               ],
                             ),
                           ],
@@ -134,15 +142,21 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                         itemBuilder: (context, index) {
                           List<PesertaModel> peserta =
                               controller.peserta.value.data ?? [];
-                          if (!(peserta[index].name ?? "").toLowerCase().contains(filter) && !(peserta[index].instansi ?? "").toLowerCase().contains(filter)) {
+                          if (!(peserta[index].name ?? "")
+                                  .toLowerCase()
+                                  .contains(filter) &&
+                              !(peserta[index].instansi ?? "")
+                                  .toLowerCase()
+                                  .contains(filter)) {
                             return Container();
                           }
-                          if(status=="1"){
-
-                          }else if(status=="2"){
-                            if(peserta[index].scannedAt==null) return Container();
-                          }else{
-                            if(peserta[index].scannedAt!=null) return Container();
+                          if (status == "1") {
+                          } else if (status == "2") {
+                            if (peserta[index].scannedAt == null)
+                              return Container();
+                          } else {
+                            if (peserta[index].scannedAt != null)
+                              return Container();
                           }
                           ui.platformViewRegistry.registerViewFactory(
                               "images/$index",
@@ -371,6 +385,58 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                   controller.kegiatan.value.data?.isLimitParticipant == true
                       ? "Ya"
                       : "Tidak"),
+              const CSizedBox.h10(),
+              Obx(() {
+                switch (controller.notulen.value.statusRequest) {
+                  case StatusRequest.LOADING:
+                    return loading(context);
+                  case StatusRequest.SUCCESS:
+                    return Column(
+                      children: [
+                        rowDetail2(
+                          icUserLimit,
+                          "Notulen",
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CButton(() {
+                          Get.back();
+                          Get.toNamed(Routes.FORM_NOTULEN, parameters: {
+                            "activity_id": "${controller.id}"
+                          });
+                        }, "BUAT NOTULEN")
+                      ],
+                    );
+                  case StatusRequest.ERROR:
+                    if (controller.notulen.value.failure?.code == 405) {
+                      return Column(
+                        children: [
+                          rowDetail(
+                            icUserLimit,
+                            "Notulen",
+                            "-",
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CButton(() {
+                            Get.back();
+                            Get.toNamed(Routes.FORM_NOTULEN, parameters: {
+                              "activity_id": "${controller.id}"
+                            });
+                          }, "BUAT NOTULEN")
+                        ],
+                      );
+                    }
+                    return error(
+                        context,
+                        controller.notulen.value.failure?.msgShow,
+                        () => controller.getNotulen());
+                  default:
+                    return Container();
+                }
+              }),
             ],
           ),
         ),
@@ -384,6 +450,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
   ///[value] isi dari konten
   Widget rowDetail(String icon, String title, String value) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: [
         Expanded(
             flex: 0,
@@ -394,7 +461,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             )),
         const CSizedBox.w10(),
         Expanded(
-            flex: 0,
+            flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -403,6 +470,45 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                   style: CText.textStyleBody.copyWith(color: basicGrey2),
                 ),
                 CText(value)
+              ],
+            )),
+      ],
+    );
+  }
+
+  Widget rowDetail2(String icon, String title) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+            flex: 0,
+            child: Image.asset(
+              icon,
+              width: 24,
+              height: 24,
+            )),
+        const CSizedBox.w10(),
+        Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CText(
+                  title,
+                  style: CText.textStyleBody.copyWith(color: basicGrey2),
+                ),
+                QuillHtmlEditor(
+                  text: controller.notulen.value.data?.hasil,
+                  minHeight: 200,
+                  isEnabled: false,
+                  padding: EdgeInsets.all(8),
+                  hintTextPadding: EdgeInsets.all(8),
+                  textStyle: CText.textStyleBody,
+                  hintTextStyle: CText.textStyleBody,
+                  hintText: "Masukkan isi notulensi disini",
+                  controller: QuillEditorController(),
+                ),
               ],
             )),
       ],

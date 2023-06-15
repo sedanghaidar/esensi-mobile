@@ -19,6 +19,7 @@ Widget formAgendaDefault(
   TextInputType? keyboardType,
   TextInputAction? textInputAction,
   String? Function(String?)? validator,
+  int? minLines,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,6 +32,7 @@ Widget formAgendaDefault(
         keyboardType: keyboardType,
         textInputAction: textInputAction,
         validator: validator,
+        minLines: minLines,
         suffixIcon: suffixIconClear(() {
           controller.clear();
         }),

@@ -13,12 +13,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 import '../../../global_widgets/button/CButton.dart';
 import '../../../global_widgets/other/toast.dart';
 import '../../../global_widgets/text/CText.dart';
-
 // import 'dart:ui' as ui;
 import '../../../global_widgets/ui.dart' if (dart.library.html) 'dart:ui' as ui;
 import '../../../routes/app_pages.dart';
@@ -402,10 +402,13 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                         ),
                         CButton(() {
                           Get.back();
-                          Get.toNamed(Routes.FORM_NOTULEN, parameters: {
-                            "activity_id": "${controller.id}"
-                          });
-                        }, "BUAT NOTULEN")
+                          Get.toNamed(Routes.FORM_NOTULEN,
+                              parameters: {"activity_id": "${controller.id}"});
+                        }, "BUAT NOTULEN"),
+                        CButton(() {
+                          launchUrl(Uri.parse(
+                              "${ApiProvider.BASE_URL}/api/notulen/download/pdf?kegiatan_id=${controller.id}"));
+                        }, "DOWNLOAD NOTULEN")
                       ],
                     );
                   case StatusRequest.ERROR:
@@ -425,7 +428,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                             Get.toNamed(Routes.FORM_NOTULEN, parameters: {
                               "activity_id": "${controller.id}"
                             });
-                          }, "BUAT NOTULEN")
+                          }, "BUAT NOTULEN"),
                         ],
                       );
                     }

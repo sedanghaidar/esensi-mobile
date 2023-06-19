@@ -239,7 +239,9 @@ class FormView extends GetView<FormController> {
                           controller.instansi.value.data ?? List.empty();
                       return Autocomplete<InstansiModel>(
                         onSelected: (data) {
-                          controller.controllerInstansi.text = data.name ?? "";
+                          final name1 = data.name;
+                          final name2 = data.parent?.name;
+                          controller.controllerInstansi.text = "$name1 ${name2 ?? ""}";
                           controller.controllerInstansi.selection =
                               TextSelection.fromPosition(TextPosition(
                                   offset: controller
@@ -254,14 +256,20 @@ class FormView extends GetView<FormController> {
                           if (text.text.isEmpty) {
                             return result;
                           } else {
-                            return (result).where((element) =>
-                                (element.name ?? "")
-                                    .toLowerCase()
-                                    .contains(text.text.toLowerCase()));
+                            return (result).where((element){
+                              final name1 = element.name;
+                              final name2 = element.parent?.name;
+                              final data = "$name1 ${name2 ?? ""}";
+                              return (data)
+                                  .toLowerCase()
+                                  .contains(text.text.toLowerCase());
+                            });
                           }
                         },
-                        displayStringForOption: (value) {
-                          return value.name ?? "";
+                        displayStringForOption: (data) {
+                          final name1 = data.name;
+                          final name2 = data.parent?.name;
+                          return "$name1 ${name2 ?? ""}";
                         },
                         optionsViewBuilder: (context, onSelected, options) {
                           return Align(
@@ -274,11 +282,12 @@ class FormView extends GetView<FormController> {
                                     itemBuilder: (context, index) {
                                       try {
                                         final data = options.elementAt(index);
+                                        final name1 = data.name;
+                                        final name2 = data.parent?.name;
                                         return ListTile(
                                           title: SubstringHighlight(
-                                            text: data.name ?? "",
-                                            term: controller
-                                                .controllerInstansi.text,
+                                            text: "$name1 ${name2 ?? ""}",
+                                            term: controller.controllerInstansi.text,
                                             textStyleHighlight: TextStyle(
                                                 fontWeight: FontWeight.w700),
                                           ),

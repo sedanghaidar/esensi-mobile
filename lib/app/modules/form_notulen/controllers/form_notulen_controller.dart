@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 class FormNotulenController extends GetxController {
   ApiProvider repository = Get.find();
@@ -115,7 +116,7 @@ class FormNotulenController extends GetxController {
   initData() {
     if (notulen != null) {
       controllerNoSurat.text = notulen?.nosurat ?? "";
-      controllerNotulenQuil.insertText(notulen?.hasil ?? "");
+      controllerNotulenQuil.insertText(notulen?.delta ?? "");
       controllerJabatan.text = notulen?.jabatan ?? "";
       controllerNama.text = notulen?.nama ?? "";
       controllerNIP.text = notulen?.nip ?? "";
@@ -132,7 +133,16 @@ class FormNotulenController extends GetxController {
     data["pangkat"] = controllerPangkat.text;
     data["nip"] = controllerNIP.text;
     data["nosurat"] = controllerNoSurat.text;
-    data["hasil"] = await controllerNotulenQuil.getText();
+
+    final result2 = await controllerNotulenQuil.getDelta();
+    List<dynamic> ops = result2["ops"];
+    final converter = QuillDeltaToHtmlConverter(
+      List.castFrom(ops),
+      ConverterOptions.forEmail(),
+    );
+
+    data["hasil"] = "${converter.convert()}";
+    data["delta"] = await controllerNotulenQuil.getText();
     debugPrint("$data");
     if (image1 != null) {
       data["image1"] = await getMultipartFromFile(image1);

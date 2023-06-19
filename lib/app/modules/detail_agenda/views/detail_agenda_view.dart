@@ -502,7 +502,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                   style: CText.textStyleBody.copyWith(color: basicGrey2),
                 ),
                 QuillHtmlEditor(
-                  text: controller.notulen.value.data?.hasil,
+                  text: controller.notulen.value.data?.delta,
                   minHeight: 200,
                   isEnabled: false,
                   padding: EdgeInsets.all(8),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/appBar.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 import '../../../global_widgets/dialog/CImagePicker.dart';
 import '../controllers/form_notulen_controller.dart';
@@ -55,10 +58,16 @@ class FormNotulenView extends GetView<FormNotulenController> {
                       customButtons: [
                         InkWell(
                           onTap: () async {
-                            String result2 = await controller
+                            final result2 = await controller
                                 .controllerNotulenQuil
-                                .getText();
-                            debugPrint(result2);
+                                .getDelta();
+                            List<dynamic> ops = result2["ops"];
+                            final converter = QuillDeltaToHtmlConverter(
+                              List.castFrom(ops),
+                              ConverterOptions.forEmail(),
+                            );
+                            // debugPrint("RESULT ${result2}");
+                            debugPrint("OPS ${converter.convert()}");
                           },
                           child: Icon(Icons.save),
                         )
@@ -78,7 +87,7 @@ class FormNotulenView extends GetView<FormNotulenController> {
                     ),
                     QuillHtmlEditor(
                       controller: controller.controllerNotulenQuil,
-                      text: controller.notulen?.hasil,
+                      text: controller.notulen?.delta,
                       minHeight: 200,
                       padding: EdgeInsets.all(8),
                       hintTextPadding: EdgeInsets.all(8),

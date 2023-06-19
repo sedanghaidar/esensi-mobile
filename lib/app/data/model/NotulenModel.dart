@@ -12,6 +12,7 @@ class NotulenModel {
     this.nip,
     this.nama,
     this.hasil,
+    this.delta,
     this.nosurat,
     this.image1,
     this.image2,
@@ -25,6 +26,7 @@ class NotulenModel {
   String? nama;
   String? nosurat;
   String? hasil;
+  String? delta;
   String? image1;
   String? image2;
   String? image3;
@@ -39,6 +41,7 @@ class NotulenModel {
         pangkat: json["pangkat"] == null ? null : json["pangkat"],
         nip: json["nip"] == null ? null : json["nip"],
         hasil: json["hasil"] == null ? null : json["hasil"],
+        delta: json["delta"] == null ? null : json["delta"],
         nosurat: json["nosurat"] == null ? null : json["nosurat"],
         image1: json["image1"] == null ? null : json["image1"],
         image2: json["image2"] == null ? null : json["image2"],

@@ -184,9 +184,7 @@ class FormNotulenView extends GetView<FormNotulenController> {
         (file.path ?? ""),
       );
     } else {
-      return Image.network(
-        "${ApiProvider.BASE_URL}/storage/images/$url",
-      );
+      return Image.network("${ApiProvider.BASE_URL}/storage/images/$url",);
     }
   }
 
@@ -194,8 +192,12 @@ class FormNotulenView extends GetView<FormNotulenController> {
     return LayoutBuilder(builder: (context, constraints) {
       return InkWell(
         onTap: () {
-          openDialogPicker((p0) {
-            controller.settingImage(p0, index);
+          openDialogPicker((p0, error) {
+            if(p0!=null){
+              controller.settingImage(p0, index);
+            }else{
+              debugPrint("$error");
+            }
           });
         },
         child: Column(
@@ -204,8 +206,7 @@ class FormNotulenView extends GetView<FormNotulenController> {
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 width: constraints.maxWidth - 10,
                 height: constraints.maxWidth - 10,
-                child: image2(
-                    controller.getImage(index), controller.getImageUrl(index))),
+                child: image2(controller.getImage(index), controller.getImageUrl(index))),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               width: constraints.maxWidth,

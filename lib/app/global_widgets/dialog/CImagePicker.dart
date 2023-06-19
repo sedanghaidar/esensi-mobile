@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-openDialogPicker(Function(XFile?) onValue) async {
+openDialogPicker(Function(XFile?, dynamic) onValue) async {
   Get.defaultDialog(
       title: "Ambil Gambar",
       middleText: "Silahkan Pilih Salah Satu",
@@ -17,19 +17,18 @@ openDialogPicker(Function(XFile?) onValue) async {
       });
 }
 
-openImagePickerCamera(Function(XFile?) onValue) async {
+openImagePickerCamera(Function(XFile?, dynamic) onValue) async {
   await ImagePicker().pickImage(source: ImageSource.camera).then((value) {
-    onValue(value);
+    onValue(value, null);
   }, onError: (e) {
-    debugPrint("PICK IMAGE ERROR $e");
-    onValue(null);
+    onValue(null, e);
   });
 }
 
-openImagePickerGallery(Function(XFile?) onValue) async {
+openImagePickerGallery(Function(XFile?, dynamic) onValue) async {
   await ImagePicker().pickImage(source: ImageSource.gallery).then((value) {
-    onValue(value);
+    onValue(value, null);
   }, onError: (e) {
-    onValue(null);
+    onValue(null, e);
   });
 }

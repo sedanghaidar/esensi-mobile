@@ -32,7 +32,13 @@ class FormView extends GetView<FormController> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: basicPrimary,
-          title: const Text('Formulir'),
+          title: MagicText(
+            'FORMULIR',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: basicWhite,
+            letterSpacing: 2.5,
+          ),
           automaticallyImplyLeading: false,
           centerTitle: true,
           elevation: 0,
@@ -75,9 +81,17 @@ class FormView extends GetView<FormController> {
   body() {
     return GetBuilder<FormController>(
       builder: (_) => Container(
-        padding: const EdgeInsets.all(20),
+        padding: ResponsiveLayout.isSmallScreen(Get.context!)
+            ? const EdgeInsets.all(24)
+            : const EdgeInsets.all(36),
         alignment: Alignment.topLeft,
-        color: basicWhite,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          color: basicWhite,
+        ),
         child: Form(
           key: controller.formKey,
           child: Column(
@@ -233,9 +247,10 @@ class FormView extends GetView<FormController> {
   widgetAdditionalInformation() {
     return controller.kegiatan.value.data?.information != null
         ? Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.all(10),
-            color: basicPrimary,
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: basicPrimary, borderRadius: BorderRadius.circular(10)),
             child: Row(
               children: [
                 const Icon(
@@ -434,7 +449,6 @@ class FormView extends GetView<FormController> {
                 );
               }
               return MagicAutoComplete<RegionModel>(
-                initial: controller.controllerWilayah.text,
                 controller: controller.controllerWilayah,
                 list: list,
                 onSelected: (selected) {

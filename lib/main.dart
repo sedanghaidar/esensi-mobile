@@ -1,5 +1,6 @@
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
+import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
       getPages: AppPages.routes,
       initialBinding: BindingsBuilder(() {
         Get.put(ApiProvider());
+        Get.put(LaporgubProvider());
       }),
     ),
   );

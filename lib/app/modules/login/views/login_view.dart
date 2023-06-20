@@ -111,7 +111,7 @@ class LoginView extends GetView<LoginController> {
                           login();
                         },
                         text: "Masuk",
-                        width: true,
+                        widthInfinity: true,
                         padding: EdgeInsets.all(16),
                         textStyle: MagicFactory.magicTextStyle
                             .copyWith(color: basicWhite),

@@ -3,13 +3,16 @@ import 'dart:ui' as ui;
 
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/RegionModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 import '../../../data/model/repository/StatusRequestModel.dart';
@@ -22,12 +25,18 @@ import '../../../utils/colors.dart';
 class FormController extends GetxController {
   String? id = "0";   //kode khusus untuk membuka formulir walaupun sudah outdated
   ApiProvider repository = Get.find();
+  LaporgubProvider repositoryLaporgub = Get.find();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerPhone = TextEditingController();
+
+  AutoCompleteData<InstansiModel>? selectedInstansi;
   TextEditingController controllerInstansi = TextEditingController();
   TextEditingController controllerInstansiManual = TextEditingController();
+  AutoCompleteData<RegionModel>? selectedWilayah;
+  RxBool enableWilayah = false.obs;
+  TextEditingController controllerWilayah = TextEditingController();
   final TextEditingController controllerJabatan = TextEditingController();
   final TextEditingController controllerGender = TextEditingController();
   final GlobalKey<SfSignaturePadState> signaturePadKey = GlobalKey();
@@ -39,6 +48,7 @@ class FormController extends GetxController {
 
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
+  final regions = StatusRequestModel<List<RegionModel>>().obs;
 
   Uint8List? fileBytes;
   RxBool isSigned = false.obs;
@@ -73,6 +83,19 @@ class FormController extends GetxController {
       }
     }, onError: (e) {
       kegiatan.value = StatusRequestModel.error(failure2(e));
+    });
+  }
+
+  getRegion() {
+    repositoryLaporgub.getRegion().then((value) {
+      if (value.data?.isEmpty == true) {
+        regions.value = StatusRequestModel.empty();
+      } else {
+        regions.value = value;
+      }
+    }, onError: (e) {
+      final err = repository.handleError<List<RegionModel>>(e);
+      regions.value = err;
     });
   }
 
@@ -137,6 +160,8 @@ class FormController extends GetxController {
         "instansi": i.toUpperCase(),
         "nohp": controllerPhone.text,
         "gender": controllerGender.text,
+        "region_id": selectedWilayah?.data?.id,
+        "region_name": selectedWilayah?.data?.name,
         "signature": MultipartFile(fileBytes,
             filename: "${controllerName.text}_${kegiatan.value.data?.id}.jpeg")
       };
@@ -191,6 +216,7 @@ class FormController extends GetxController {
     String code = Get.parameters['code'].toString();
     id = Get.parameters['id'].toString();
     getKegiatan(code);
+    getRegion();
     super.onInit();
   }
 }

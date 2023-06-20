@@ -16,9 +16,9 @@ class ApiProvider extends GetConnect {
   static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
   static const String LOCAL_URL = "http://127.0.0.1:8000";
 
-  // static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+  static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
 
-  static String BASE_URL = kReleaseMode ? SERVER_URL : local;
+  // static String BASE_URL = kReleaseMode ? SERVER_URL : local;
 
   static String local = "http://172.100.32.169:8000";
 
@@ -35,17 +35,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      debugPrint(
-        '\n╔══════════════════════════ Response ══════════════════════════\n'
-        '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-        '╟ url: ${request.url}\n'
-        '╟ Headers: ${request.headers}\n'
-        // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-        '╟ Status Code: ${response.statusCode}\n'
-        '╟ Data: ${response.bodyString?.toString() ?? ''}'
-        '\n╚══════════════════════════ Response ══════════════════════════\n',
-        wrapWidth: 1024,
-      );
+    //   debugPrint(
+    //     '\n╔══════════════════════════ Response ══════════════════════════\n'
+    //     '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+    //     '╟ url: ${request.url}\n'
+    //     '╟ Headers: ${request.headers}\n'
+    //     // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+    //     '╟ Status Code: ${response.statusCode}\n'
+    //     '╟ Data: ${response.bodyString?.toString() ?? ''}'
+    //     '\n╚══════════════════════════ Response ══════════════════════════\n',
+    //     wrapWidth: 1024,
+    //   );
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -56,10 +56,8 @@ class ApiProvider extends GetConnect {
 
   StatusRequestModel<T> handleError<T>(dynamic e) {
     if (e is StatusRequestModel<T>) {
-      debugPrint("OITTTTT");
       return e;
     } else {
-      debugPrint("disini?");
       return StatusRequestModel.error(FailureModel(400, "$e", "$e"));
     }
   }

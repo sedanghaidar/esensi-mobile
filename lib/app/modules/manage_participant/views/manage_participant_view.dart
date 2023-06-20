@@ -1,4 +1,5 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
+import 'package:absensi_kegiatan/app/data/model/RegionModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
@@ -9,7 +10,11 @@ import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:substring_highlight/substring_highlight.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
+import 'package:magic_view/style/MagicTextFieldStyle.dart';
+import 'package:magic_view/widget/text/MagicText.dart';
+import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
+import 'package:magic_view/widget/textfield/MagicTextField.dart';
 
 import '../../../data/model/InstansiModel.dart';
 import '../../../routes/app_pages.dart';
@@ -225,10 +230,9 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: basicWhite, border: Border.all(
-          color: basicPrimary,
-          width: 2.0
-        )),
+            borderRadius: BorderRadius.circular(10),
+            color: basicWhite,
+            border: Border.all(color: basicPrimary, width: 2.0)),
         child: Column(
           children: [
             CText(
@@ -277,12 +281,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
               itemBuilder: (context, index) {
                 List<InstansiPartipantModel> instansi =
                     controller.participants.value.data ?? [];
-                if (instansi[index]
-                        .organization
-                        ?.name
-                        ?.toLowerCase()
-                        .contains(filter) ==
-                    false) {
+                if (controller.getNameInstansiPartisipan(instansi[index]).toLowerCase().contains(filter) == false) {
                   return Container();
                 }
                 return Card(
@@ -296,8 +295,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CText(
-                                controller.participants.value.data?[index]
-                                        .organization?.name ??
+                                "${controller.participants.value.data?[index].organization?.name} ${controller.participants.value.data?[index].wilayahName}" ??
                                     "",
                                 style: CText.textStyleBodyBold,
                               ),
@@ -357,7 +355,14 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
 
   openDialog(BuildContext context, int action,
       {InstansiPartipantModel? initial}) {
+
+    controller.selectedInstansi = null;
     controller.controllerInstansi = TextEditingController();
+    controller.selectedRegion = initial == null ? null : RegionModel(
+      name: initial.wilayahName,
+      id: "${initial.wilayahId}"
+    );
+    controller.controllerRegion = TextEditingController();
     controller.controllerMax.text =
         initial == null ? "0" : "${initial.maxParticipant}";
 
@@ -375,21 +380,22 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                 CText("Nama Instansi"),
                 CSizedBox.h5(),
                 widgetInstansi(context, action, initial: initial),
+                widgetRegion(context, action, initial: initial),
                 CSizedBox.h10(),
                 CText("Maksimal Partisipan"),
                 CSizedBox.h5(),
-                CTextField(
-                  controller: controller.controllerMax,
-                  hintText: "Masukkan jumlah maksimal partisipan",
+                MagicTextField.border(
+                  controller.controllerMax,
+                  hint: "Masukkan jumlah maksimal partisipan",
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (GetUtils.isNullOrBlank(value) == true) {
                       return msgBlank;
                     }
-                    if (!GetUtils.isNumericOnly(value)) {
+                    if (!GetUtils.isNumericOnly(value ?? "")) {
                       return "Hanya boleh berupa angka";
                     }
-                    if (int.parse(value) == 0) {
+                    if (int.parse(value ?? "") == 0) {
                       return "Minimal 1";
                     }
                     return null;
@@ -411,89 +417,37 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
   Widget widgetInstansi(BuildContext context, int action,
       {InstansiPartipantModel? initial}) {
     if (action == 1) {
-      return Autocomplete<InstansiModel>(
-        onSelected: (data) {
-          controller.controllerInstansi.text = data.name ?? "";
-          controller.controllerInstansi.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.controllerInstansi.text.length));
-        },
-        optionsBuilder: (text) {
-          if (text.text.isEmpty) {
-            return controller.instansi.value.data ?? List.empty();
-          } else {
-            return (controller.instansi.value.data ?? List.empty()).where(
-                (element) => (element.name ?? "")
-                    .toLowerCase()
-                    .contains(text.text.toLowerCase()));
-          }
-        },
-        displayStringForOption: (value) {
-          return value.name ?? "";
-        },
-        optionsViewBuilder: (context, onSelected, options) {
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Material(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 200, maxWidth: 275),
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      try {
-                        final data = options.elementAt(index);
-                        bool isEnabled = true;
-                        Iterable<InstansiPartipantModel>? checkData = controller
-                            .participants.value.data
-                            ?.where((element) =>
-                                element.organization?.name == data.name);
-                        if (checkData?.isNotEmpty == true) isEnabled = false;
-                        return ListTile(
-                          title: SubstringHighlight(
-                            text: data.name ?? "",
-                            textStyle: CText.textStyleBody.copyWith(
-                                color: isEnabled ? basicBlack : basicGrey2),
-                            term: controller.controllerInstansi.text,
-                            textStyleHighlight:
-                                TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                          enabled: isEnabled,
-                          hoverColor:
-                              isEnabled ? basicGrey2 : Colors.transparent,
-                          onTap: () {
-                            onSelected(data);
-                          },
-                        );
-                      } catch (e) {
-                        return SizedBox();
-                      }
-                    },
-                    separatorBuilder: (context, index) => Divider(),
-                    itemCount: options.length),
-              ),
-            ),
-          );
-        },
-        fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-          this.controller.controllerInstansi = controller;
-          return CTextField(
-            controller: controller,
-            focusNode: focusNode,
-            hintText: "Pilih salah satu dari pilihan yang ada",
-            onEditingComplete: onEditingComplete,
+      final list = controller.instansi.value.data?.map((e) {
+        String parent = e.parent?.name == null ? "" : " ${e.parent?.name}";
+        return AutoCompleteData<InstansiModel>("${e.name}$parent", e);
+      }).toList();
+      return MagicAutoComplete<InstansiModel>(
+          controller: controller.controllerInstansi,
+          list: list ?? [],
+          maxWidthOption: 275,
+          textFieldStyle: MagicTextFieldStyle(
             validator: (value) {
               if (GetUtils.isBlank(value) == true) {
                 return msgBlank;
               }
-              Iterable<InstansiModel> data =
-                  (this.controller.instansi.value.data ?? List.empty())
-                      .where((element) => element.name == value);
-              if (data.isEmpty) {
+              String name = controller.selectedInstansi?.name ?? "";
+              String parent = controller.selectedInstansi?.parent?.name == null
+                  ? ""
+                  : " ${controller.selectedInstansi?.parent?.name}";
+              if (value != "$name$parent") {
                 return "Silahkan pilih salah satu dari pilihan yang ada";
               }
               return null;
             },
-          );
-        },
-      );
+          ),
+          onSelected: (value) {
+            controller.controllerInstansi.text = value.data?.name ?? "";
+            controller.controllerInstansi.selection =
+                TextSelection.fromPosition(TextPosition(
+                    offset: controller.controllerInstansi.text.length));
+            controller.selectedInstansi = value.data;
+            controller.update(['region']);
+          });
     } else {
       controller.controllerInstansi.text = initial?.organization?.name ?? "";
       return CTextField(
@@ -502,5 +456,72 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
         enabled: false,
       );
     }
+  }
+
+  Widget widgetRegion(BuildContext context, int action,
+      {InstansiPartipantModel? initial}) {
+    return GetBuilder<ManageParticipantController>(
+        id: 'region',
+        builder: (controller) {
+          if (action == 1) {
+            if (controller.selectedInstansi == null) {
+              return Container();
+            } else {
+              final list = controller.regions.value.data?.map((e) {
+                final check =
+                    (controller.participants.value.data ?? []).where((element) {
+                  return element.organization?.id ==
+                          controller.selectedInstansi?.id &&
+                      "${element.wilayahId}" == "${e.id}";
+                });
+                return AutoCompleteData<RegionModel>("${e.name}", e,
+                    enable: check.isEmpty);
+              }).toList();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MagicText("Nama Wilayah"),
+                  CSizedBox.h5(),
+                  MagicAutoComplete<RegionModel>(
+                      controller: controller.controllerRegion,
+                      list: list ?? [],
+                      maxWidthOption: 275,
+                      textFieldStyle: MagicTextFieldStyle(
+                        validator: (value) {
+                          if (GetUtils.isBlank(value) == true) {
+                            return msgBlank;
+                          }
+                          Iterable<RegionModel> data =
+                              (this.controller.regions.value.data ??
+                                      List.empty())
+                                  .where((element) => element.name == value);
+                          if (data.isEmpty) {
+                            return "Silahkan pilih salah satu dari pilihan yang ada";
+                          }
+                          return null;
+                        },
+                      ),
+                      onSelected: (value) {
+                        controller.selectedRegion = value.data;
+                      })
+                ],
+              );
+            }
+          } else {
+            controller.controllerRegion.text = initial?.wilayahName ?? "";
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MagicText("Nama Wilayah"),
+                CSizedBox.h5(),
+                MagicTextField(
+                  controller.controllerRegion,
+                  hint: "Nama Wilayah",
+                  enabled: false,
+                )
+              ],
+            );
+          }
+        });
   }
 }

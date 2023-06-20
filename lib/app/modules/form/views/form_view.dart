@@ -1,3 +1,4 @@
+import 'package:absensi_kegiatan/app/data/model/RegionModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
@@ -5,6 +6,10 @@ import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
+import 'package:magic_view/style/MagicTextFieldStyle.dart';
+import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
+import 'package:magic_view/widget/textfield/MagicTextField.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
@@ -41,15 +46,17 @@ class FormView extends GetView<FormController> {
         title: const Text('Formulir'),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        leading: controller.repository.hive.isLoggedIn()==true?InkWell(
-          onTap: () {
-            Get.offAllNamed(Routes.DASHBOARD);
-          },
-          child: Icon(
-            Icons.home,
-            color: basicWhite,
-          ),
-        ):Container(),
+        leading: controller.repository.hive.isLoggedIn() == true
+            ? InkWell(
+                onTap: () {
+                  Get.offAllNamed(Routes.DASHBOARD);
+                },
+                child: Icon(
+                  Icons.home,
+                  color: basicWhite,
+                ),
+              )
+            : Container(),
       ),
       backgroundColor: basicGrey4,
       body: SingleChildScrollView(
@@ -63,7 +70,8 @@ class FormView extends GetView<FormController> {
                 return loading(context);
               case StatusRequest.SUCCESS:
                 {
-                  if("${controller.kegiatan.value.data?.id}" != "${controller.id}"){
+                  if ("${controller.kegiatan.value.data?.id}" !=
+                      "${controller.id}") {
                     if (checkOutDate(
                         controller.kegiatan.value.data?.date ?? DateTime.now(),
                         controller.kegiatan.value.data?.dateEnd)) {
@@ -237,101 +245,73 @@ class FormView extends GetView<FormController> {
                     case StatusRequest.SUCCESS:
                       List<InstansiModel> result =
                           controller.instansi.value.data ?? List.empty();
-                      return Autocomplete<InstansiModel>(
-                        onSelected: (data) {
-                          final name1 = data.name;
-                          final name2 = data.parent?.name;
-                          controller.controllerInstansi.text = "$name1 ${name2 ?? ""}";
+                      final list = result.map((e) {
+                        if (controller
+                                .kegiatan.value.data?.isLimitParticipant ==
+                            false) {
+                          final name1 = e.name;
+                          final name2 = e.parent?.name == null
+                              ? ""
+                              : " ${e.parent?.name}";
+                          return AutoCompleteData("$name1$name2", e);
+                        } else {
+                          final name1 = e.name;
+                          final name2 = e.parent?.name == null
+                              ? ""
+                              : " ${e.parent?.name}";
+                          final name3 =
+                              e.wilayahName == null ? "" : " ${e.wilayahName}";
+                          return AutoCompleteData("$name1$name2$name3", e);
+                        }
+                      }).toList();
+                      return MagicAutoComplete<InstansiModel>(
+                        controller: controller.controllerInstansi,
+                        list: list,
+                        onSelected: (selected) {
+                          final name1 = selected.data?.name;
+                          final name2 = selected.data?.parent?.name;
+                          controller.selectedInstansi = selected;
+                          controller.controllerInstansi.text =
+                              "$name1 ${name2 ?? ""}";
                           controller.controllerInstansi.selection =
                               TextSelection.fromPosition(TextPosition(
                                   offset: controller
                                       .controllerInstansi.text.length));
-                          if (data.name == "LAINNYA") {
+                          if (selected.data?.name == "LAINNYA") {
                             controller.setIsOpenInstansi(true);
                           } else {
                             controller.setIsOpenInstansi(false);
                           }
-                        },
-                        optionsBuilder: (text) {
-                          if (text.text.isEmpty) {
-                            return result;
-                          } else {
-                            return (result).where((element){
-                              final name1 = element.name;
-                              final name2 = element.parent?.name;
-                              final data = "$name1 ${name2 ?? ""}";
-                              return (data)
-                                  .toLowerCase()
-                                  .contains(text.text.toLowerCase());
-                            });
+
+                          if(controller.kegiatan.value.data?.isLimitParticipant==true){
+                            controller.selectedWilayah = AutoCompleteData(selected.data?.wilayahName, RegionModel(
+                              name: selected.data?.wilayahName,
+                              id: "${selected.data?.wilayahId}",
+                            ));
+                            controller.controllerWilayah.text = selected.data?.wilayahName ?? "";
+                            controller.enableWilayah.value = false;
+                          }else{
+                            controller.selectedWilayah = null;
+                            controller.enableWilayah.value = true;
                           }
                         },
-                        displayStringForOption: (data) {
-                          final name1 = data.name;
-                          final name2 = data.parent?.name;
-                          return "$name1 ${name2 ?? ""}";
-                        },
-                        optionsViewBuilder: (context, onSelected, options) {
-                          return Align(
-                            alignment: Alignment.topLeft,
-                            child: Material(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    maxHeight: 200, maxWidth: width - 40),
-                                child: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      try {
-                                        final data = options.elementAt(index);
-                                        final name1 = data.name;
-                                        final name2 = data.parent?.name;
-                                        return ListTile(
-                                          title: SubstringHighlight(
-                                            text: "$name1 ${name2 ?? ""}",
-                                            term: controller.controllerInstansi.text,
-                                            textStyleHighlight: TextStyle(
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                          onTap: () {
-                                            onSelected(data);
-                                          },
-                                        );
-                                      } catch (e) {
-                                        return SizedBox();
-                                      }
-                                    },
-                                    separatorBuilder: (context, index) =>
-                                        Divider(),
-                                    itemCount: options.length),
-                              ),
-                            ),
-                          );
-                        },
-                        fieldViewBuilder: (context, controller, focusNode,
-                            onEditingComplete) {
-                          this.controller.controllerInstansi = controller;
-                          String hint = "Ketikkan instansi anda atau pilih dari daftar yang tersedia";
-                          if(this.controller.kegiatan.value.data?.isLimitParticipant==true){
-                            hint = "Pilih salah satu dari pilihan yang ada";
-                          }
-                          return CTextField(
-                            controller: controller,
-                            focusNode: focusNode,
-                            hintText: hint,
-                            onEditingComplete: onEditingComplete,
-                            validator: (value) {
-                              if (GetUtils.isBlank(value) == true) {
-                                return msgBlank;
+                        maxWidthOption: width - 40,
+                        textFieldStyle: MagicTextFieldStyle(
+                          validator: (value) {
+                            if (GetUtils.isBlank(value) == true) {
+                              return msgBlank;
+                            }
+                            if (controller
+                                    .kegiatan.value.data?.isLimitParticipant ==
+                                true) {
+                              if (value !=
+                                  controller.selectedInstansi?.option) {
+                                return "Silahkan pilih salah satu dari pilihan yang ada";
                               }
-                              if(this.controller.kegiatan.value.data?.isLimitParticipant==true){
-                                Iterable<InstansiModel> data = result.where((element) => element.name == value);
-                                if (data.isEmpty) {
-                                  return "Silahkan pilih salah satu dari pilihan yang ada";
-                                }
-                              }
-                              return null;
-                            },
-                          );
-                        },
+                            }
+                            return null;
+                          },
+                        ),
                       );
                     case StatusRequest.ERROR:
                       return error(
@@ -359,6 +339,54 @@ class FormView extends GetView<FormController> {
                       },
                     ),
                   );
+                }),
+                const CSizedBox.h10(),
+                const CText("Wilayah"),
+                const CSizedBox.h5(),
+                Obx(() {
+                  switch (controller.regions.value.statusRequest) {
+                    case StatusRequest.LOADING:
+                      return loading(context);
+                    case StatusRequest.SUCCESS:
+                      List<RegionModel> result =
+                          controller.regions.value.data ?? List.empty();
+                      final list = result.map((e) {
+                        return AutoCompleteData(e.name, e);
+                      }).toList();
+                      if(controller.kegiatan.value.data?.isLimitParticipant == true){
+                        return MagicTextField.border(controller.controllerWilayah, enabled: false,);
+                      }
+                      return MagicAutoComplete<RegionModel>(
+                        initial: controller.controllerWilayah.text,
+                        controller: controller.controllerWilayah,
+                        list: list,
+                        onSelected: (selected) {
+                          controller.selectedWilayah = selected;
+                          controller.controllerWilayah.text =
+                          "${selected.data?.name}";
+                        },
+                        maxWidthOption: width - 40,
+                        textFieldStyle: MagicTextFieldStyle(
+                          enabled: controller.enableWilayah.value,
+                          validator: (value) {
+                            if (GetUtils.isBlank(value) == true) {
+                              return msgBlank;
+                            }
+                            if (value != controller.selectedWilayah?.option) {
+                              return "Silahkan pilih salah satu dari pilihan yang ada";
+                            }
+                            return null;
+                          },
+                        ),
+                      );
+                    case StatusRequest.ERROR:
+                      return error(
+                          context,
+                          controller.instansi.value.failure?.msgShow,
+                          () => controller.getInstansi());
+                    default:
+                      return SizedBox();
+                  }
                 }),
                 const CSizedBox.h10(),
                 const CText("Jabatan"),

@@ -34,3 +34,12 @@ DefaultModel toDefaultModel(dynamic response) {
     return DefaultModel.fromJson(response);
   }
 }
+
+DefaultModel toDefaultLaporgubModel(dynamic response) {
+  if (response == null) {
+    return DefaultModel(
+        success: false, message: response["message"], error: response["error"]);
+  } else {
+    return DefaultModel.fromJson(response);
+  }
+}

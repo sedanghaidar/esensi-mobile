@@ -3,9 +3,11 @@ import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButtonStyle.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/factory.dart';
 import 'package:magic_view/style/AutoCompleteData.dart';
 import 'package:magic_view/style/MagicTextFieldStyle.dart';
 import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
@@ -46,6 +48,7 @@ class FormView extends GetView<FormController> {
         title: const Text('Formulir'),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        elevation: 0,
         leading: controller.repository.hive.isLoggedIn() == true
             ? InkWell(
                 onTap: () {
@@ -58,35 +61,36 @@ class FormView extends GetView<FormController> {
               )
             : Container(),
       ),
-      backgroundColor: basicGrey4,
+      backgroundColor: basicPrimary,
       body: SingleChildScrollView(
         primary: true,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        child: Container(
-          child: Obx(() {
-            switch (controller.kegiatan.value.statusRequest) {
-              case StatusRequest.LOADING:
-                return loading(context);
-              case StatusRequest.SUCCESS:
-                {
-                  if ("${controller.kegiatan.value.data?.id}" !=
-                      "${controller.id}") {
-                    if (checkOutDate(
-                        controller.kegiatan.value.data?.date ?? DateTime.now(),
-                        controller.kegiatan.value.data?.dateEnd)) {
-                      return warning(context,
-                          "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+        child: ResponsiveLayout(
+          Container(
+            child: Obx(() {
+              switch (controller.kegiatan.value.statusRequest) {
+                case StatusRequest.LOADING:
+                  return loading(context);
+                case StatusRequest.SUCCESS:
+                  {
+                    if ("${controller.kegiatan.value.data?.id}" !=
+                        "${controller.id}") {
+                      if (checkOutDate(
+                          controller.kegiatan.value.data?.date ?? DateTime.now(),
+                          controller.kegiatan.value.data?.dateEnd)) {
+                        return warning(context,
+                            "Formulir sudah ditutup atau tanggal kegiatan sudah lewat");
+                      }
                     }
+                    return successBody(context);
                   }
-                  return successBody(context);
-                }
-              default:
-                return const SizedBox();
-            }
-          }),
-        ),
-      ),
+                default:
+                  return const SizedBox();
+              }
+            }),
+          ),),
+      )
     );
   }
 
@@ -148,21 +152,20 @@ class FormView extends GetView<FormController> {
                 controller.kegiatan.value.data?.information != null
                     ? Container(
                         margin: const EdgeInsets.only(top: 10),
+                        padding: const EdgeInsets.all(10),
+                        color: basicPrimary,
                         child: Row(
                           children: [
                             Icon(
                               Icons.info,
-                              color: basicPrimary,
+                              color: basicWhite,
                             ),
                             CSizedBox.w10(),
                             Expanded(
                               flex: 1,
-                              child: CText(
-                                "${controller.kegiatan.value.data?.information}",
-                                style: CText.textStyleBodyBold.copyWith(
-                                    color: basicPrimary,
-                                    fontStyle: FontStyle.italic),
-                              ),
+                              child: SelectableText.rich(TextSpan(
+                                children: extractText("${controller.kegiatan.value.data?.information}"),
+                              )),
                             )
                           ],
                         ),

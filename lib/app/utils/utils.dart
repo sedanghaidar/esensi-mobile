@@ -1,10 +1,15 @@
 import 'dart:convert';
 
+import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:absensi_kegiatan/app/utils/constant.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/factory.dart';
+import 'package:magic_view/style/MagicTextStyle.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 
 /// Mendeteksi aplikasi dibuka dimana
@@ -86,4 +91,47 @@ downloadQrcode(GlobalKey qrKey, String filename) {
   });
 }
 
+List<TextSpan> extractText(String rawString) {
+  List<TextSpan> textSpan = [];
 
+  final urlRegExp = new RegExp(
+      r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
+
+  getLink(String linkString) {
+    textSpan.add(
+      TextSpan(
+        text: linkString,
+        style: MagicFactory.magicTextStyle.copyWith(
+          color: basicBlack,
+          fontWeight: FontWeight.bold,
+        ).toGoogleTextStyle(),
+        recognizer: new TapGestureRecognizer()
+          ..onTap = () {
+            launchUrlString(linkString);
+            debugPrint(linkString);
+          },
+      ),
+    );
+    return linkString;
+  }
+
+  getNormalText(String normalText) {
+    textSpan.add(
+      TextSpan(
+        text: normalText,
+        style: MagicFactory.magicTextStyle.copyWith(
+          color: basicWhite
+        ).toGoogleTextStyle(),
+      ),
+    );
+    return normalText;
+  }
+
+  rawString.splitMapJoin(
+    urlRegExp,
+    onMatch: (m) => getLink("${m.group(0)}"),
+    onNonMatch: (n) => getNormalText("${n.substring(0)}"),
+  );
+
+  return textSpan;
+}

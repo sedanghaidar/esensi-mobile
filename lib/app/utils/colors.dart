@@ -24,4 +24,5 @@ const basicRedGradient1 = Color(0xFFffdce7);
 const basicRedGradient2 = Color(0xFFfeadc7);
 
 const basicOrange = Color(0xffff7535);
+const basicOrangeLight = Color(0xffffb18d);
 const basicGreen = Color(0xff20d238);

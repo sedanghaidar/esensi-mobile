@@ -16,9 +16,11 @@ class ApiProvider extends GetConnect {
   static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
   static const String LOCAL_URL = "http://127.0.0.1:8000";
 
-  static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+  // static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
 
-  // static String BASE_URL = kReleaseMode ? SERVER_URL : SERVER_URL;
+  static String BASE_URL = kReleaseMode ? SERVER_URL : local;
+
+  static String local = "http://172.100.32.169:8000";
 
   HiveProvider hive = HiveProvider();
 

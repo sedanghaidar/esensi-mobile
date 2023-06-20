@@ -26,13 +26,22 @@ class ResponsiveLayout extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 1200) {
-          return largeScreen;
+          return defaultLargeScreen();
         } else if (constraints.maxWidth < 1200 && constraints.maxWidth > 800) {
-          return mediumScreen ?? largeScreen;
+          return mediumScreen ?? defaultLargeScreen();
         } else {
-          return smallScreen ?? largeScreen;
+          return smallScreen ?? defaultLargeScreen();
         }
       },
+    );
+  }
+
+  Widget defaultLargeScreen(){
+    return Center(
+      child: Container(
+        width: 800,
+        child: largeScreen,
+      ),
     );
   }
 }

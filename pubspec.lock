@@ -393,13 +393,13 @@ packages:
     source: hosted
     version: "2.1.2"
   google_fonts:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_fonts
-      sha256: "8f099045e2f2a30e4d4d0a35f40c6bc941a8f2ca0e10ad9d214ee9edd3f37483"
+      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.0.4"
   graphs:
     dependency: transitive
     description:
@@ -584,6 +584,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  magic_view:
+    dependency: "direct main"
+    description:
+      path: "../magic_view"
+      relative: true
+    source: path
+    version: "1.0.0+1"
   markdown:
     dependency: transitive
     description:
@@ -1126,5 +1133,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.0 <3.0.0"
+  dart: ">=2.19.4 <3.0.0"
   flutter: ">=3.3.0"

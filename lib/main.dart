@@ -1,8 +1,11 @@
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
+import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:magic_view/factory.dart';
+import 'package:magic_view/property/font/font.dart';
 
 import 'app/data/repository/ApiProvider.dart';
 import 'app/data/repository/HiveUserAdapter.dart';
@@ -12,6 +15,9 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<UserModel>(HiveUserAdapter());
   await Hive.openBox<dynamic>(HiveHelper.HIVE_APPNAME);
+
+  MagicFactory.fontFamily = FontFamily.poppins;
+  MagicFactory.colorBrand = basicPrimary;
 
   runApp(
     GetMaterialApp(

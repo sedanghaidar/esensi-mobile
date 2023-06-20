@@ -189,7 +189,6 @@ class FormController extends GetxController {
       if (kegiatan.value.data?.isLimitParticipant == true) {
         getInstansi();
       } else {
-        getRegion();
         getInstansiAll();
       }
     }, onError: (e) {
@@ -310,6 +309,7 @@ class FormController extends GetxController {
     String code = Get.parameters['code'].toString();
     id = Get.parameters['id'].toString();
     getKegiatan(code);
+    getRegion();
     super.onInit();
   }
 }

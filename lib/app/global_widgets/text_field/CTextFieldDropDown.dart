@@ -1,6 +1,9 @@
 import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_view/factory.dart';
+import 'package:magic_view/style/MagicTextFieldBorder.dart';
+import 'package:magic_view/style/MagicTextStyle.dart';
 
 class CTextFieldDropDown<T> extends StatefulWidget {
   final hintText;
@@ -28,36 +31,30 @@ class CTextFieldDropDownState<T> extends State<CTextFieldDropDown<T>> {
     InputDecoration decoration;
     TextAlignVertical align;
 
-    OutlineInputBorder errorBorder = OutlineInputBorder(
-      borderSide: const BorderSide(color: basicRed1, width: 2.0),
-      borderRadius: BorderRadius.circular(5),
-    );
-
-    OutlineInputBorder focusBorder = OutlineInputBorder(
-      borderSide: const BorderSide(color: basicPrimary2, width: 2.0),
-      borderRadius: BorderRadius.circular(5),
-    );
-
-    OutlineInputBorder border = OutlineInputBorder(
-      borderSide: const BorderSide(color: basicGrey2, width: 2.0),
-      borderRadius: BorderRadius.circular(5),
-    );
-
     decoration = InputDecoration(
-        hintStyle: CText.textStyleBody,
-        hintText: widget.hintText,
-        fillColor: basicWhite,
-        filled: true,
-        focusColor: basicWhite,
-        errorBorder: errorBorder,
-        focusedBorder: focusBorder,
-        border: border);
+      hintStyle: MagicFactory.magicTextStyle.toGoogleTextStyle(),
+      hintText: widget.hintText,
+      fillColor: basicWhite,
+      filled: true,
+      focusColor: basicWhite,
+      border: MagicFactory.border.border?.toBorder() ?? InputBorder.none,
+      enabledBorder:
+          MagicFactory.border.enableBorder?.toBorder() ?? InputBorder.none,
+      errorBorder:
+          MagicFactory.border.errorBorder?.toBorder() ?? InputBorder.none,
+      focusedErrorBorder: MagicFactory.border.focusedErrorBorder?.toBorder() ??
+          InputBorder.none,
+      focusedBorder:
+          MagicFactory.border.focusedBorder?.toBorder() ?? InputBorder.none,
+      disabledBorder:
+          MagicFactory.border.disableBorder?.toBorder() ?? InputBorder.none,
+    );
     align = TextAlignVertical.top;
 
     return DropdownButtonFormField<T>(
       decoration: decoration,
       items: widget.items,
-      style: CText.textStyleBody,
+      style: MagicFactory.magicTextStyle.toGoogleTextStyle(),
       onChanged: widget.onChange,
       validator: widget.validator,
       value: widget.value,

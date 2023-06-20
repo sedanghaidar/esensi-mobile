@@ -35,17 +35,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-    //   debugPrint(
-    //     '\n╔══════════════════════════ Response ══════════════════════════\n'
-    //     '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-    //     '╟ url: ${request.url}\n'
-    //     '╟ Headers: ${request.headers}\n'
-    //     // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-    //     '╟ Status Code: ${response.statusCode}\n'
-    //     '╟ Data: ${response.bodyString?.toString() ?? ''}'
-    //     '\n╚══════════════════════════ Response ══════════════════════════\n',
-    //     wrapWidth: 1024,
-    //   );
+        debugPrint(
+          '\n╔══════════════════════════ Response ══════════════════════════\n'
+          '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+          '╟ url: ${request.url}\n'
+          '╟ Headers: ${request.headers}\n'
+          // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+          '╟ Status Code: ${response.statusCode}\n'
+          '╟ Data: ${response.bodyString?.toString() ?? ''}'
+          '\n╚══════════════════════════ Response ══════════════════════════\n',
+          wrapWidth: 1024,
+        );
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -154,7 +154,8 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<PesertaModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -329,7 +330,8 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<StatusRequestModel<NotulenModel>> updateNewNotulen(FormData data, String activityId) async {
+  Future<StatusRequestModel<NotulenModel>> updateNewNotulen(
+      FormData data, String activityId) async {
     final response = await post("/api/notulen/$activityId", data);
     final model = toDefaultModel(response.body);
     if (response.isOk) {
@@ -339,15 +341,15 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<StatusRequestModel<NotulenModel>> getNotulen(
-      String activityId) async {
+  Future<StatusRequestModel<NotulenModel>> getNotulen(String activityId) async {
     final response = await get("/api/notulen/$activityId");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(NotulenModel.fromJson(model.data));
     } else {
       debugPrint("error ${model.message}");
-      throw StatusRequestModel<NotulenModel>.error(failure(response.statusCode, model));
+      throw StatusRequestModel<NotulenModel>.error(
+          failure(response.statusCode, model));
     }
   }
 }

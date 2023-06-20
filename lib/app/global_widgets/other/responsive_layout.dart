@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:absensi_kegiatan/app/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class ResponsiveLayout extends StatelessWidget {
@@ -21,10 +24,20 @@ class ResponsiveLayout extends StatelessWidget {
     return MediaQuery.of(context).size.width > 1200;
   }
 
+  static getWidth(BuildContext context){
+    if(isLargeScreen(context) || isMediumScreen(context)){
+      return 800;
+    }
+    return width;
+  }
+
+  static double width = 0;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        width = constraints.maxWidth;
         if (constraints.maxWidth > 1200) {
           return defaultLargeScreen();
         } else if (constraints.maxWidth < 1200 && constraints.maxWidth > 800) {

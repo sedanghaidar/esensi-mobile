@@ -21,6 +21,8 @@ String dateToString(DateTime? date, {String? format}) {
   }
 }
 
+/// Fungsi untuk mengecek apakah tanggal saat ini sudah melewati tanggal
+/// kegiatan [dateaActivity] atau tanggal kadaluarsa formulir [dateEnd]
 bool checkOutDate(DateTime dateActivity, DateTime? dateEnd) {
   DateTime dateActivityEnd = DateTime(
       dateActivity.year, dateActivity.month, dateActivity.day, 23, 59, 59);

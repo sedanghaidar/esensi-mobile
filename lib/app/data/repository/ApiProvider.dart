@@ -289,7 +289,7 @@ class ApiProvider extends GetConnect {
   Future<StatusRequestModel<InstansiModel>> postInstansi(
       InstansiModel data) async {
     final response = await post("/api/organisasi/tambah",
-        {"name": data.name, "short_name": data.shortName});
+        {"name": data.name, "short_name": data.shortName, "internal": "1"});
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));

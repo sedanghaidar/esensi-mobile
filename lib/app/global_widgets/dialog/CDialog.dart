@@ -61,6 +61,27 @@ Widget cardDialog(Widget child) {
   );
 }
 
+Widget cardDialog2(Widget child, double width) {
+  return Center(
+    child: SingleChildScrollView(
+      child: Wrap(
+        children: [
+          Container(
+            width: width,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              color: Colors.white,
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 class CDialogMessage extends StatelessWidget {
   String type = "DEFAULT";
 

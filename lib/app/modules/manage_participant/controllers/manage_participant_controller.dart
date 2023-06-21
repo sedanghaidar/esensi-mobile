@@ -91,9 +91,10 @@ class ManageParticipantController extends GetxController {
 
   createOrUpdateParticipant(int action) {
     showLoading();
+    debugPrint("${selectedInstansi?.name} ${selectedInstansi?.parent?.name}");
     repository.createOrUpdatePartisipanInstansi({
       "activity_id": id,
-      "organization_name": controllerInstansi.text,
+      "organization_name": selectedInstansi?.name,
       "max_participant": controllerMax.text,
       "region_id": selectedRegion?.id,
       "region_name": selectedRegion?.name
@@ -103,11 +104,8 @@ class ManageParticipantController extends GetxController {
       if (value.data != null) {
         if (action == 1) {
           debugPrint(value.data?.toJson().toString());
-          InstansiPartipantModel newData = value.data!.copyWith(
-              organization: InstansiModel(
-            id: value.data?.organizationId,
-            name: controllerInstansi.text,
-          ));
+          InstansiPartipantModel newData =
+              value.data!.copyWith(organization: selectedInstansi);
           addParticipantToList(newData);
         } else {
           updateParticipantToList(value.data!);
@@ -181,7 +179,10 @@ class ManageParticipantController extends GetxController {
 
   String getNameInstansiPartisipan(InstansiPartipantModel? model) {
     String? name = model?.organization?.name ?? "";
+    String? name2 = model?.organization?.parent?.name == null
+        ? ""
+        : " ${model?.organization?.parent?.name}";
     String? wilayah = model?.wilayahName ?? "";
-    return "$name $wilayah";
+    return "$name$name2 $wilayah";
   }
 }

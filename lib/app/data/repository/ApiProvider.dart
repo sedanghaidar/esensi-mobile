@@ -35,17 +35,17 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-        debugPrint(
-          '\n╔══════════════════════════ Response ══════════════════════════\n'
-          '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-          '╟ url: ${request.url}\n'
-          '╟ Headers: ${request.headers}\n'
-          // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-          '╟ Status Code: ${response.statusCode}\n'
-          '╟ Data: ${response.bodyString?.toString() ?? ''}'
-          '\n╚══════════════════════════ Response ══════════════════════════\n',
-          wrapWidth: 1024,
-        );
+        // debugPrint(
+        //   '\n╔══════════════════════════ Response ══════════════════════════\n'
+        //   '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+        //   '╟ url: ${request.url}\n'
+        //   '╟ Headers: ${request.headers}\n'
+        //   // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
+        //   '╟ Status Code: ${response.statusCode}\n'
+        //   '╟ Data: ${response.bodyString?.toString() ?? ''}'
+        //   '\n╚══════════════════════════ Response ══════════════════════════\n',
+        //   wrapWidth: 1024,
+        // );
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -117,7 +117,7 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<KegiatanModel>.error(failure(response.statusCode, model));
     }
   }
 

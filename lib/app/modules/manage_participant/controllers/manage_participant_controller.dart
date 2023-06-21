@@ -11,6 +11,7 @@ import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
 
 class ManageParticipantController extends GetxController {
   ApiProvider repository = Get.find();
@@ -24,7 +25,7 @@ class ManageParticipantController extends GetxController {
 
   InstansiModel? selectedInstansi;
   TextEditingController controllerInstansi = TextEditingController();
-  RegionModel? selectedRegion;
+  List<RegionModel?> selectedRegions = [];
   TextEditingController controllerRegion = TextEditingController();
   TextEditingController controllerMax = TextEditingController();
   final controllerSearch = TextEditingController();
@@ -89,32 +90,50 @@ class ManageParticipantController extends GetxController {
     });
   }
 
-  createOrUpdateParticipant(int action) {
-    showLoading();
-    debugPrint("${selectedInstansi?.name} ${selectedInstansi?.parent?.name}");
+  postParticipant(RegionModel? regionModel, int action) {
     repository.createOrUpdatePartisipanInstansi({
       "activity_id": id,
       "organization_name": selectedInstansi?.name,
       "max_participant": controllerMax.text,
-      "region_id": selectedRegion?.id,
-      "region_name": selectedRegion?.name
+      "region_id": regionModel?.id,
+      "region_name": regionModel?.name
     }).then((value) {
-      hideLoading();
-      showToast("Berhasil menambah/mengubah data");
       if (value.data != null) {
         if (action == 1) {
-          debugPrint(value.data?.toJson().toString());
           InstansiPartipantModel newData =
               value.data!.copyWith(organization: selectedInstansi);
           addParticipantToList(newData);
         } else {
+          hideLoading();
+          showToast(
+              "Berhasil menambah/mengubah data ${selectedInstansi?.name}");
           updateParticipantToList(value.data!);
         }
       }
     }, onError: (e) {
-      hideLoading();
       showToast("Gagal menambah/mengubah data. ${failure2(e).msgShow}");
     });
+  }
+
+  createOrUpdateParticipant(int action,
+      {InstansiPartipantModel? instansiPartipantModel}) {
+    showLoading();
+    if (action == 1) {
+      for (int i = 0; i < (selectedRegions.length); i++) {
+        postParticipant(
+            RegionModel(
+                id: "${selectedRegions[i]?.id}",
+                name: "${selectedRegions[i]?.name}"),
+            action);
+      }
+      hideLoading();
+    } else {
+      postParticipant(
+          RegionModel(
+              id: "${instansiPartipantModel?.wilayahId}",
+              name: instansiPartipantModel?.wilayahName),
+          action);
+    }
   }
 
   addParticipantToList(InstansiPartipantModel data) {
@@ -184,5 +203,16 @@ class ManageParticipantController extends GetxController {
         : " ${model?.organization?.parent?.name}";
     String? wilayah = model?.wilayahName ?? "";
     return "$name$name2 $wilayah";
+  }
+
+  List<AutoCompleteData<RegionModel>>? convertListRegionToAutoCompleteData() {
+    return regions.value.data?.map((e) {
+      final check = (participants.value.data ?? []).where((element) {
+        return element.organization?.id == selectedInstansi?.id &&
+            "${element.wilayahId}" == "${e.id}";
+      });
+      return AutoCompleteData<RegionModel>("${e.name}", e,
+          enable: check.isEmpty);
+    }).toList();
   }
 }

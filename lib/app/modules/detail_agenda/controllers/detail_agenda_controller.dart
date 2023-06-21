@@ -33,6 +33,8 @@ class DetailAgendaController extends GetxController {
   RxInt totalScanned = 0.obs;
   RxInt totalUnScanned = 0.obs;
 
+  bool showDetailAgenda = true;
+
   @override
   void onInit() {
     id = Get.parameters["id"];
@@ -41,21 +43,15 @@ class DetailAgendaController extends GetxController {
   }
 
   getDetailKegiatan() {
-    showLoading();
+    kegiatan.value = StatusRequestModel.loading();
+    update(['detail-kegiatan']);
     repository.getKegiatanById(id).then((value) {
-      hideLoading();
-      if (value.statusRequest == StatusRequest.SUCCESS) {
-        kegiatan.value = value;
-      } else {
-        dialogError(
-            Get.context!,
-            "Terjadi Kesalahan. ${value.failure?.msgShow}",
-            () => getDetailKegiatan());
-      }
+      kegiatan.value = value;
+      update(['detail-kegiatan']);
     }, onError: (e) {
-      hideLoading();
-      dialogError(
-          Get.context!, "Terjadi Kesalahan. $e", () => getDetailKegiatan());
+      final err = repository.handleError<KegiatanModel>(e);
+      kegiatan.value = err;
+      update(['detail-kegiatan']);
     });
   }
 

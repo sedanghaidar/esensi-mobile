@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 
 class PesertaModel {
@@ -13,6 +14,9 @@ class PesertaModel {
     this.nip,
     this.jabatan,
     this.instansi,
+    this.instansiDetail,
+    this.wilayahId,
+    this.wilayahName,
     this.nohp,
     this.signature,
     this.qrCode,
@@ -28,6 +32,9 @@ class PesertaModel {
   String? nip;
   String? jabatan;
   String? instansi;
+  InstansiModel? instansiDetail;
+  int? wilayahId;
+  String? wilayahName;
   String? nohp;
   String? signature;
   String? qrCode;
@@ -43,6 +50,9 @@ class PesertaModel {
     String? nip,
     String? jabatan,
     String? instansi,
+    InstansiModel? instansiDetail,
+    int? wilayahId,
+    String? wilayahName,
     String? nohp,
     String? signature,
     String? qrCode,
@@ -58,6 +68,9 @@ class PesertaModel {
         nip: nip ?? this.nip,
         jabatan: jabatan ?? this.jabatan,
         instansi: instansi ?? this.instansi,
+        instansiDetail: instansiDetail ?? this.instansiDetail,
+        wilayahId: wilayahId ?? this.wilayahId,
+        wilayahName: wilayahName ?? this.wilayahName,
         nohp: nohp ?? this.nohp,
         signature: signature ?? this.signature,
         qrCode: qrCode ?? this.qrCode,
@@ -81,6 +94,13 @@ class PesertaModel {
         nip: json["nip"],
         jabatan: json["jabatan"] == null ? null : json["jabatan"],
         instansi: json["instansi"] == null ? null : json["instansi"],
+        instansiDetail: json["parent"] == null
+            ? null
+            : InstansiModel.fromJson(json["parent"]),
+        wilayahId: json["region_id"] == null
+            ? null
+            : int.parse(json["region_id"].toString()),
+        wilayahName: json["region_name"] == null ? null : json["region_name"],
         nohp: json["nohp"] == null ? null : json["nohp"],
         signature: json["signature"] == null ? null : json["signature"],
         qrCode: json["qr_code"] == null ? null : json["qr_code"],

@@ -14,9 +14,11 @@ import 'package:magic_view/factory.dart';
 import 'package:magic_view/style/AutoCompleteData.dart';
 import 'package:magic_view/style/MagicTextFieldStyle.dart';
 import 'package:magic_view/style/MagicTextStyle.dart';
+import 'package:magic_view/widget/button/MagicButton.dart';
 import 'package:magic_view/widget/text/MagicText.dart';
 import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
 import 'package:magic_view/widget/textfield/MagicTextField.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../data/model/InstansiModel.dart';
 import '../../../global_widgets/other/responsive_layout.dart';
@@ -253,9 +255,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
     /// Reset data
     controller.selectedInstansi = null;
     controller.controllerInstansi = TextEditingController();
-    controller.selectedRegion = initial == null
-        ? null
-        : RegionModel(name: initial.wilayahName, id: "${initial.wilayahId}");
+    controller.selectedRegions = [];
     controller.controllerRegion = TextEditingController();
     controller.controllerMax.text =
         initial == null ? "0" : "${initial.maxParticipant}";
@@ -384,45 +384,32 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
             if (controller.selectedInstansi == null) {
               return Container();
             } else {
-              final list = controller.regions.value.data?.map((e) {
-                final check =
-                    (controller.participants.value.data ?? []).where((element) {
-                  return element.organization?.id ==
-                          controller.selectedInstansi?.id &&
-                      "${element.wilayahId}" == "${e.id}";
-                });
-                return AutoCompleteData<RegionModel>("${e.name}", e,
-                    enable: check.isEmpty);
-              }).toList();
+              final list = controller.convertListRegionToAutoCompleteData();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CSizedBox.h10(),
                   MagicText("Nama Wilayah"),
+                  MagicButton(
+                    () {
+                      for (int i = 0; i < (list?.length ?? 0); i++) {
+                        if (list?[i].enable == true) {
+                          controller.selectedRegions.add(list?[i].data);
+                        }
+                      }
+                      controller.update(['regions']);
+                    },
+                    text: "Pilih Semua",
+                  ),
                   CSizedBox.h5(),
-                  MagicAutoComplete<RegionModel>(
-                      controller: controller.controllerRegion,
-                      list: list ?? [],
-                      maxWidthOption: ResponsiveLayout.getWidth(Get.context!),
-                      textFieldStyle: MagicTextFieldStyle(
-                        hint: "Pilih Wilayah",
-                        validator: (value) {
-                          if (GetUtils.isBlank(value) == true) {
-                            return msgBlank;
-                          }
-                          Iterable<RegionModel> data =
-                              (this.controller.regions.value.data ??
-                                      List.empty())
-                                  .where((element) => element.name == value);
-                          if (data.isEmpty) {
-                            return "Silahkan pilih salah satu dari pilihan yang ada";
-                          }
-                          return null;
-                        },
-                      ),
-                      onSelected: (value) {
-                        controller.selectedRegion = value.data;
-                      })
+                  widgetCheckboxRegion(list, (item, value) {
+                    if (value == false) {
+                      controller.selectedRegions.remove(item);
+                    } else {
+                      controller.selectedRegions.add(item);
+                    }
+                    controller.update(['regions']);
+                  })
                 ],
               );
             }
@@ -443,5 +430,35 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
             );
           }
         });
+  }
+
+  Widget widgetCheckboxRegion(List<AutoCompleteData<RegionModel>>? list,
+      Function(RegionModel?, bool?) onChange) {
+    return GetBuilder<ManageParticipantController>(
+      id: 'regions',
+      builder: (controller) {
+        return ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return CheckboxListTile(
+              value: (list?[index].enable == true
+                  ? controller.selectedRegions.contains(list?[index].data)
+                  : true),
+              onChanged: (value) {
+                onChange(list?[index].data, value);
+              },
+              title: MagicText(
+                list?[index].option ?? "",
+                color: list?[index].enable == true
+                    ? null
+                    : MagicFactory.colorDisable,
+              ),
+              enabled: list?[index].enable,
+            );
+          },
+          itemCount: controller.regions.value.data?.length ?? 0,
+        );
+      },
+    );
   }
 }

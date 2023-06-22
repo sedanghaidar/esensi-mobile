@@ -239,11 +239,20 @@ class DashboardView extends GetView<DashboardController> {
                     children: [
                       Flexible(
                         flex: 1,
-                        child: MagicText(
-                          agenda?.name ?? "",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          textOverflow: TextOverflow.ellipsis,
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed("${Routes.FORM}/${agenda?.codeUrl}")
+                                ?.then((value) {
+                              controller.getKegiatan();
+                            });
+                          },
+                          child: MagicText(
+                            agenda?.name ?? "",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            textOverflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                       const SizedBox(

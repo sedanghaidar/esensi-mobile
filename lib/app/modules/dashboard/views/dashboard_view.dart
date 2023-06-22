@@ -224,7 +224,7 @@ class DashboardView extends GetView<DashboardController> {
                                     "${Routes.MANAGE_PARTICIPANT}/${agenda?.id}");
                               },
                               child: Image.asset(
-                                "ic_participant.png",
+                                "assets/ic_participant.png",
                                 width: 24,
                               ),
                             )

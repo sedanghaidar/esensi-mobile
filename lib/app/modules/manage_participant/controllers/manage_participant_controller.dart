@@ -90,10 +90,11 @@ class ManageParticipantController extends GetxController {
     });
   }
 
-  postParticipant(RegionModel? regionModel, int action) {
+  postParticipant(
+      RegionModel? regionModel, InstansiModel? instansi, int action) {
     repository.createOrUpdatePartisipanInstansi({
       "activity_id": id,
-      "organization_name": selectedInstansi?.name,
+      "organization_name": instansi?.name,
       "max_participant": controllerMax.text,
       "region_id": regionModel?.id,
       "region_name": regionModel?.name
@@ -124,14 +125,19 @@ class ManageParticipantController extends GetxController {
             RegionModel(
                 id: "${selectedRegions[i]?.id}",
                 name: "${selectedRegions[i]?.name}"),
+            selectedInstansi,
             action);
       }
       hideLoading();
     } else {
+      debugPrint("${instansiPartipantModel?.toJson()}");
       postParticipant(
           RegionModel(
               id: "${instansiPartipantModel?.wilayahId}",
               name: instansiPartipantModel?.wilayahName),
+          InstansiModel(
+              name: instansiPartipantModel?.organization?.name,
+              id: instansiPartipantModel?.organization?.id),
           action);
     }
   }

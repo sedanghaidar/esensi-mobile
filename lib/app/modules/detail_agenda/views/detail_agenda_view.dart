@@ -5,7 +5,6 @@ import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
-import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:magic_view/factory.dart';
+import 'package:magic_view/style/MagicTextStyle.dart';
 import 'package:magic_view/widget/text/MagicText.dart';
 import 'package:magic_view/widget/textfield/MagicTextField.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -78,17 +78,21 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 topRight: Radius.circular(40),
               )),
           padding: const EdgeInsets.all(24),
-          constraints: BoxConstraints(
-            minHeight: Get.context!.height
-          ),
+          constraints: BoxConstraints(minHeight: Get.context!.height),
           child: Column(
             children: [
               widgetDetailAgenda(),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               widgetIconResume(),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               widgetSearchPeserta(),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               widgetListPeserta()
             ],
           ),
@@ -250,17 +254,13 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     );
   }
 
-  widgetIconResume(){
+  widgetIconResume() {
     return Obx(() {
       return Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: basicPrimary,
-            width: 1
-          )
-        ),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: basicPrimary, width: 1)),
         child: Row(
           children: [
             Expanded(
@@ -268,37 +268,35 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 child: columnCard(icParticipant,
                     "${controller.peserta.value.data?.length ?? 0}",
                     action: () {
-                      controller.status.value = "1";
-                    })),
+                  controller.status.value = "1";
+                })),
             Expanded(
                 flex: 1,
-                child: columnCard(
-                    icOffice, "${controller.totalInstansi}",
+                child: columnCard(icOffice, "${controller.totalInstansi}",
                     action: () {
-                      if (controller.kegiatan.value.data
-                          ?.isLimitParticipant ==
-                          true) {
-                        controller.getInstansiParticipant();
-                      }
-                    })),
+                  if (controller.kegiatan.value.data?.isLimitParticipant ==
+                      true) {
+                    controller.getInstansiParticipant();
+                  }
+                })),
             Visibility(
-              visible: controller.kegiatan.value.data?.type==2,
-                child: Expanded(
-                flex: 1,
-                child: columnCard(
-                    icQrSuccess, "${controller.totalScanned}",
-                    action: () {
-                      controller.status.value = "2";
-                    })),),
+              visible: controller.kegiatan.value.data?.type == 2,
+              child: Expanded(
+                  flex: 1,
+                  child: columnCard(icQrSuccess, "${controller.totalScanned}",
+                      action: () {
+                    controller.status.value = "2";
+                  })),
+            ),
             Visibility(
-                visible: controller.kegiatan.value.data?.type==2,
-                child: Expanded(
-                    flex: 1,
-                    child: columnCard(
-                        icQrError, "${controller.totalUnScanned}",
-                        action: () {
-                          controller.status.value = "3";
-                        })),),
+              visible: controller.kegiatan.value.data?.type == 2,
+              child: Expanded(
+                  flex: 1,
+                  child: columnCard(icQrError, "${controller.totalUnScanned}",
+                      action: () {
+                    controller.status.value = "3";
+                  })),
+            ),
           ],
         ),
       );
@@ -306,7 +304,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
   }
 
   /// Widget untuk mencari data peserta
-  widgetSearchPeserta(){
+  widgetSearchPeserta() {
     return MagicTextField.border(
       controller.controllerSearch,
       hint: "Cari Nama / Instansi",
@@ -317,7 +315,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     );
   }
 
-  widgetListPeserta(){
+  widgetListPeserta() {
     return Obx(() {
       String filter = controller.filter.value
           .toLowerCase(); // jangan dihapus buat trigger search!
@@ -330,11 +328,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              List<PesertaModel> peserta =
-                  controller.peserta.value.data ?? [];
-              if (!(peserta[index].name ?? "")
-                      .toLowerCase()
-                      .contains(filter) &&
+              List<PesertaModel> peserta = controller.peserta.value.data ?? [];
+              if (!(peserta[index].name ?? "").toLowerCase().contains(filter) &&
                   !(peserta[index].instansi ?? "")
                       .toLowerCase()
                       .contains(filter)) {
@@ -342,17 +337,98 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
               }
               if (status == "1") {
               } else if (status == "2") {
-                if (peserta[index].scannedAt == null)
-                  return Container();
+                if (peserta[index].scannedAt == null) return Container();
               } else {
-                if (peserta[index].scannedAt != null)
-                  return Container();
+                if (peserta[index].scannedAt != null) return Container();
               }
               ui.platformViewRegistry.registerViewFactory(
                   "images/$index",
                   (int viewId) => ImageElement(
                       src:
                           "${ApiProvider.BASE_URL}/storage/signature/${peserta[index].signature}"));
+
+              return Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.all(10),
+                clipBehavior: Clip.antiAlias,
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: basicPrimaryLight,
+                      blurRadius: 5,
+                      offset: Offset(0, 0),
+                      spreadRadius: 3,
+                    )
+                  ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MagicText(
+                              peserta[index].name ?? "",
+                              fontSize: 16,
+                            ),
+                            RichText(
+                                text: TextSpan(children: [
+                              TextSpan(
+                                  text: controller
+                                      .getStringInstansi(peserta[index]),
+                                  style: MagicFactory.magicTextStyle
+                                      .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16)
+                                      .toGoogleTextStyle()),
+                              TextSpan(
+                                  text: " ${peserta[index].wilayahName ?? ""}",
+                                  style: MagicFactory.magicTextStyle
+                                      .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          color: basicPrimaryLight)
+                                      .toGoogleTextStyle())
+                            ])),
+                            MagicText(peserta[index].jabatan ?? ""),
+                          ],
+                        )),
+                    Expanded(
+                        flex: 0,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset("assets/ic_qrcode.png", width: 24, height: 24,),
+                            InkWell(
+                              onTap: () {
+                                Get.defaultDialog(
+                                    title: "Perhatian",
+                                    middleText:
+                                        "Apakah anda yakin ingin menghapus data?",
+                                    textConfirm: "Ya",
+                                    textCancel: "Tidak",
+                                    confirmTextColor: basicWhite,
+                                    cancelTextColor: basicPrimary,
+                                    buttonColor: basicPrimary,
+                                    onConfirm: () {
+                                      controller
+                                          .deletePeserta(peserta[index].id);
+                                    });
+                              },
+                              child: Image.asset(icDelete, color: basicRed1, width: 24, height: 24,),
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+              );
 
               return Card(
                 color: basicPrimary,
@@ -374,12 +450,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                           child: Container(
                             margin: const EdgeInsets.all(10),
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CText(
-                                  dateToString(
-                                      peserta[index].createdAt),
+                                  dateToString(peserta[index].createdAt),
                                   style: CText.textStyleHint,
                                 ),
                                 const Divider(),
@@ -389,12 +463,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                             text:
                                                 "${peserta[index].name}, ${peserta[index].instansi}"))
                                         .whenComplete(() {
-                                      showToast(
-                                          "Berhasil menyalin nama!");
+                                      showToast("Berhasil menyalin nama!");
                                     });
                                   },
-                                  child: CText(
-                                      peserta[index].name ?? ""),
+                                  child: CText(peserta[index].name ?? ""),
                                 ),
                                 CText(
                                   "${peserta[index].instansiDetail?.name}${peserta[index].instansiDetail?.parent?.name == null ? "" : " ${peserta[index].instansiDetail?.parent?.name}"} ${peserta[index].wilayahName}",
@@ -409,17 +481,13 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 peserta[index].scannedAt == null
                                     ? CText(
                                         "Belum discan",
-                                        style: CText.textStyleHint
-                                            .copyWith(
-                                                fontSize: 12,
-                                                color: basicRed1),
+                                        style: CText.textStyleHint.copyWith(
+                                            fontSize: 12, color: basicRed1),
                                       )
                                     : CText(
                                         "Discan pada ${dateToString(peserta[index].scannedAt)}",
-                                        style: CText.textStyleHint
-                                            .copyWith(
-                                                fontSize: 12,
-                                                color: Colors.green),
+                                        style: CText.textStyleHint.copyWith(
+                                            fontSize: 12, color: Colors.green),
                                       )
                               ],
                             ),
@@ -440,31 +508,27 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                       cancelTextColor: basicPrimary,
                                       buttonColor: basicPrimary,
                                       onConfirm: () {
-                                        controller.deletePeserta(
-                                            peserta[index].id);
+                                        controller
+                                            .deletePeserta(peserta[index].id);
                                       });
                                 },
-                                child:
-                                    iconButton(icDelete, basicRed1),
+                                child: iconButton(icDelete, basicRed1),
                               ),
                               const CSizedBox.h5(),
                               InkWell(
                                 onTap: () {
                                   openDialogSignature(context, index);
                                 },
-                                child: iconButton(
-                                    icSignature, basicPrimary),
+                                child: iconButton(icSignature, basicPrimary),
                               ),
                               const CSizedBox.h5(),
                               InkWell(
                                 onTap: () {
-                                  openDialogQrcode(
-                                      context, peserta[index]);
+                                  openDialogQrcode(context, peserta[index]);
                                   // Get.toNamed(
                                   //     "${Routes.DETAIL_PESERTA}/${peserta[index].id}");
                                 },
-                                child: iconButton(
-                                    icQrcode, basicPrimary2),
+                                child: iconButton(icQrcode, basicPrimary2),
                               ),
                             ],
                           ))

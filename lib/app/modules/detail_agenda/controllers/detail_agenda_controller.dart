@@ -245,6 +245,13 @@ class DetailAgendaController extends GetxController {
     });
   }
 
+  getStringInstansi(PesertaModel peserta){
+    final name = peserta.instansiDetail?.name;
+    final name2 = peserta.instansiDetail?.parent?.name;
+
+    return "$name${name2!=null?" $name2":""}";
+  }
+
   @override
   void onReady() {
     getDetailKegiatan();

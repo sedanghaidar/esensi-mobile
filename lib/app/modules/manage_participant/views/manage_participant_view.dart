@@ -321,7 +321,8 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.keyForm.currentState!.validate()) return;
                   Get.back();
-                  controller.createOrUpdateParticipant(action);
+                  controller.createOrUpdateParticipant(action,
+                      instansiPartipantModel: initial);
                 }, action == 1 ? "Tambah" : "Ubah")
               ],
             ),

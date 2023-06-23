@@ -56,7 +56,7 @@ Widget error(BuildContext context, String? message, Function() reload,
               height: height ?? 200,
             ),
             CSizedBox.h5(),
-            CText(message ?? "Terjadi Kesalahan", maxLines: 1,),
+            CText(message ?? "Terjadi Kesalahan", maxLines: 5,),
             CSizedBox.h5(),
             CButton.small(
               reload,

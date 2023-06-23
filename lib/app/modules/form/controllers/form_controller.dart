@@ -271,9 +271,10 @@ class FormController extends GetxController {
       }, onError: (e) {
         hideLoading();
         final err = repository.handleError<PesertaModel>(e);
+        debugPrint("${err.statusRequest} ${err.failure?.msgShow}");
         dialogError(
           Get.context!,
-          "Terjadi Kesalahan.\n${err.failure?.msgShow}",
+          err.failure?.msgShow ?? "Terjadi Kesalahan",
           () {
             Get.back();
           },

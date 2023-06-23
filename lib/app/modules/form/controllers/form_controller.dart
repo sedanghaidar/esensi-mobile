@@ -211,6 +211,7 @@ class FormController extends GetxController {
   }
 
   /// Mendapatkan daftar instansi yang sudah dipilih
+  /// Jika isLimitParticipnat = true
   getInstansi() {
     instansi.value = StatusRequestModel.loading();
     repository.getInstansi("${kegiatan.value.data?.id}").then((value) {

@@ -190,7 +190,7 @@ class ApiProvider extends GetConnect {
       return StatusRequestModel.success(List<PesertaModel>.from(
           (model.data).map((u) => PesertaModel.fromJson(u))));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<List<PesertaModel>>.error(failure(response.statusCode, model));
     }
   }
 
@@ -202,7 +202,7 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<PesertaModel>.error(failure(response.statusCode, model));
     }
   }
 
@@ -347,7 +347,9 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(NotulenModel.fromJson(model.data));
     } else {
-      debugPrint("error ${model.message}");
+      if(response.statusCode == 405){
+        return StatusRequestModel.empty();
+      }
       throw StatusRequestModel<NotulenModel>.error(
           failure(response.statusCode, model));
     }

@@ -47,6 +47,7 @@ Widget formAgendaDate(
   String title,
   String hint, {
   String? Function(String?)? validator,
+  String? year,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +59,9 @@ Widget formAgendaDate(
           hintText: hint,
           readOnly: true,
           onTap: () {
-            CDatePicker(Get.context!, timeSelected: controller.text)
+            CDatePicker(Get.context!,
+                    timeSelected: controller.text,
+                    firstDate: year != null ? DateTime(int.parse(year)) : DateTime.now())
                 .then((value) {
               if (value != null) {
                 controller.text = DateFormat("yyyy-MM-dd").format(value);

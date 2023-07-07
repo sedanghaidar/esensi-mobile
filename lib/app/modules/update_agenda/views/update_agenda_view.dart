@@ -71,6 +71,7 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           controller.controllerDate,
                           "Tanggal Agenda",
                           "Pilih Tanggal Agenda",
+                          year: controller.year,
                           validator: (value) {
                             if (GetUtils.isBlank(value) == true) {
                               return msgBlank;
@@ -107,9 +108,11 @@ class UpdateAgendaView extends GetView<UpdateAgendaController> {
                           textInputAction: TextInputAction.newline,
                         ),
                         formAgendaDate(
-                            controller.controllerDateEnd,
-                            "Tanggal Formulir Berakhir (Opsional)",
-                            "Pilih Tanggal Formulir Berakhir"),
+                          controller.controllerDateEnd,
+                          "Tanggal Formulir Berakhir (Opsional)",
+                          "Pilih Tanggal Formulir Berakhir",
+                          year: controller.year,
+                        ),
                         formAgendaTime(
                           controller.controllerTimeEnd,
                           "Waktu Formulir Berakhir (Opsional)",

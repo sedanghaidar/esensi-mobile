@@ -14,6 +14,8 @@ import '../../../data/model/repository/StatusRequestModel.dart';
 class CreateAgendaController extends GetxController {
   ApiProvider repository = Get.find();
 
+  String? year; //digunakan untuk menjebol batasan tahun pada formulir
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerDate = TextEditingController();
@@ -97,6 +99,7 @@ class CreateAgendaController extends GetxController {
         notification_types_map[TYPE_NOTIFICATION_NONE_CODE] ?? "-";
     controllerMessage.text =
         "Terimakasih Bp/Ibu #nama_peserta, #jabatan_peserta dari #instansi_peserta telah mendaftar pada kegiatan *#nama_agenda* .\nKegiatan akan dilaksanakan pada :\nTanggal : #tanggal_agenda\nWaktu : #waktu_agenda WIB - selesai\nTempat : #lokasi_agenda\nCatatan : #informasi_tambahan";
+    year = Get.parameters['tahun'].toString();
     super.onInit();
   }
 }

@@ -28,6 +28,7 @@ class UpdateAgendaController extends GetxController {
   final TextEditingController controllerType = TextEditingController();
 
   String? id = null;
+  String? year; //digunakan untuk menjebol batasan tahun pada formulir
   RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
 
@@ -45,6 +46,7 @@ class UpdateAgendaController extends GetxController {
   @override
   void onInit() {
     id = Get.parameters["id"];
+    year = Get.parameters['tahun'].toString();
     getKegiatan();
     super.onInit();
   }

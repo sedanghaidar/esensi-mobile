@@ -9,6 +9,7 @@ import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:magic_view/factory.dart';
 import 'package:magic_view/style/AutoCompleteData.dart';
@@ -16,6 +17,7 @@ import 'package:magic_view/style/MagicTextFieldStyle.dart';
 import 'package:magic_view/style/MagicTextStyle.dart';
 import 'package:magic_view/widget/button/MagicButton.dart';
 import 'package:magic_view/widget/text/MagicText.dart';
+import 'package:magic_view/widget/text/MagicTextIcon.dart';
 import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
 import 'package:magic_view/widget/textfield/MagicTextField.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
@@ -472,7 +474,11 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            widgetScanPeserta(peserta[index]),
+                            Visibility(
+                              child: widgetScanPeserta(peserta[index]),
+                              visible:
+                                  controller.kegiatan.value.data?.type == 2,
+                            ),
                             const SizedBox(
                               height: 16,
                             ),
@@ -530,17 +536,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
   widgetDeleteParticipant(PesertaModel peserta) {
     return InkWell(
       onTap: () {
-        Get.defaultDialog(
-            title: "Perhatian",
-            middleText: "Apakah anda yakin ingin menghapus data?",
-            textConfirm: "Ya",
-            textCancel: "Tidak",
-            confirmTextColor: basicWhite,
-            cancelTextColor: basicPrimary,
-            buttonColor: basicPrimary,
-            onConfirm: () {
-              controller.deletePeserta(peserta);
-            });
+        openDialogDeleteConfirmation(peserta);
       },
       child: Image.asset(
         icDelete,
@@ -551,14 +547,27 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
     );
   }
 
+  openDialogDeleteConfirmation(PesertaModel peserta) {
+    Get.defaultDialog(
+        title: "Perhatian",
+        middleText: "Apakah anda yakin ingin menghapus data?",
+        textConfirm: "Ya",
+        textCancel: "Tidak",
+        confirmTextColor: basicWhite,
+        cancelTextColor: basicPrimary,
+        buttonColor: basicPrimary,
+        onConfirm: () {
+          controller.deletePeserta(peserta);
+        });
+  }
+
   widgetDialogDetailParticipant(PesertaModel peserta) {
     Get.dialog(cardDialog2(
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              flex: 0,
-              child: Container(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Container(
                 color: basicWhite,
                 width: 150,
                 height: 150,
@@ -566,21 +575,62 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 child: Image.network(
                     "${ApiProvider.BASE_URL}/storage/signature/${peserta.signature}"),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MagicText(peserta.name ?? ""),
-                  MagicText(controller.getStringInstansi(peserta)),
-                  MagicText(peserta.wilayahName ?? ""),
-                  MagicText(peserta.jabatan ?? ""),
-                ],
+              MagicText.subhead(peserta.name ?? ""),
+              MagicText(
+                controller.getStringInstansi(peserta),
+                textAlign: TextAlign.center,
               ),
-            )
-          ],
+              MagicText(peserta.wilayahName ?? "-"),
+              MagicText(peserta.jabatan ?? ""),
+              MagicText(peserta.nohp ?? ""),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: MagicButton(
+                      () {
+                        Get.back();
+                        Clipboard.setData(ClipboardData(
+                            text:
+                                "Nama : ${peserta.name}\nInstansi : ${controller.getStringInstansi(peserta)} ${peserta.wilayahName}\nJabatan : ${peserta.jabatan}\nNo. HP : ${peserta.nohp}"));
+                        Get.snackbar("Berhasil", "Data berhasil disalin!");
+                      },
+                      padding: EdgeInsets.all(12),
+                      child: MagicTextIcon.icon(
+                        "Copy",
+                        icon: Icons.copy,
+                        size: 16,
+                        textStyle: MagicFactory.magicTextStyle
+                            .copyWith(color: basicWhite),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: MagicButton(
+                      () {
+                        Get.back();
+                        openDialogDeleteConfirmation(peserta);
+                      },
+                      padding: EdgeInsets.all(12),
+                      child: MagicTextIcon.asset(
+                        "Hapus",
+                        asset: icDelete,
+                        height: 16,
+                        width: 16,
+                        color: basicWhite,
+                        textStyle: MagicFactory.magicTextStyle
+                            .copyWith(color: basicWhite),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
         ResponsiveLayout.getWidth(Get.context!) - 100));
   }

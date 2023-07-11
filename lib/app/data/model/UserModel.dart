@@ -20,6 +20,10 @@ class UserModel {
     this.createdAt,
     this.updatedAt,
     this.token,
+    this.roleId,
+    this.dinasId,
+    this.bidangId,
+    this.phone
   });
 
   @HiveField(0, defaultValue: null)
@@ -43,6 +47,18 @@ class UserModel {
   @HiveField(6, defaultValue: null)
   String? token;
 
+  @HiveField(7, defaultValue: null)
+  int? roleId;
+
+  @HiveField(8, defaultValue: null)
+  int? dinasId;
+
+  @HiveField(9, defaultValue: null)
+  int? bidangId;
+
+  @HiveField(10, defaultValue: null)
+  String? phone;
+
   UserModel copyWith({
     int? id,
     String? name,
@@ -51,6 +67,10 @@ class UserModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? token,
+    int? roleId,
+    int? bidangId,
+    int? dinasId,
+    String? phone
   }) =>
       UserModel(
         id: id ?? this.id,
@@ -60,6 +80,10 @@ class UserModel {
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         token: token ?? this.token,
+        roleId: roleId ?? this.roleId,
+        bidangId: bidangId ?? this.bidangId,
+        dinasId: dinasId ?? this.dinasId,
+        phone: phone ?? this.phone,
       );
 
   factory UserModel.fromRawJson(String str) =>
@@ -79,6 +103,10 @@ class UserModel {
             ? null
             : DateTime.parse(json["updated_at"]),
         token: json["token"] == null ? null : json["token"],
+        roleId: json["role_id"] == null ? null : json["role_id"],
+        bidangId: json["bidang_id"] == null ? null : json["bidang_id"],
+        dinasId: json["dinas_id"] == null ? null : json["dinas_id"],
+        phone: json["phone"] == null ? null : json["phone"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -89,10 +117,14 @@ class UserModel {
         "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
         "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
         "token": token == null ? null : token,
+        "role_id": roleId == null ? null : roleId,
+        "bidang_id": bidangId == null ? null : bidangId,
+        "dinas_id": dinasId == null ? null : dinasId,
+        "phone": phone == null ? null : phone,
       };
 
   @override
   String toString() {
-    return "id=${id}, name:${name}, username:${username}, email:${email}, token:${token}";
+    return "id=${id}, name:${name}, username:${username}, email:${email}, token:${token}, roleId:$roleId, bidangId:$bidangId, dinasId:$dinasId, phone:$phone";
   }
 }

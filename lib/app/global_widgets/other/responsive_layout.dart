@@ -31,6 +31,16 @@ class ResponsiveLayout extends StatelessWidget {
     return width;
   }
 
+  static getWidthForDialog(BuildContext context){
+    if(isLargeScreen(context) || isMediumScreen(context)){
+      return 800/1.75;
+    }
+    if(width >= 800){
+      return width/1.75;
+    }
+    return width;
+  }
+
   static double width = 0;
 
   @override

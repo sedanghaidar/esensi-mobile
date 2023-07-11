@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/widget/button/MagicButton.dart';
+import 'package:magic_view/widget/text/MagicText.dart';
 
+import '../../utils/colors.dart';
 import '../button/CButton.dart';
 import '../button/CButtonStyle.dart';
 import '../text/CText.dart';
@@ -79,6 +82,98 @@ Widget cardDialog2(Widget child, double width) {
         ],
       ),
     ),
+  );
+}
+
+Widget cardDialog3(Widget child, double width) {
+  return Center(
+    child: SingleChildScrollView(
+      child: Wrap(
+        children: [
+          Container(
+            margin: EdgeInsets.all(16),
+            width: width,
+            child: Stack(
+              children: [
+                Container(
+                  width: width,
+                  height: (width * 186) / 286,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: basicPrimary, width: 2),
+                      borderRadius: BorderRadius.circular(40)),
+                ),
+                RotationTransition(
+                  turns: AlwaysStoppedAnimation(355 / 360),
+                  child: Container(
+                    width: width,
+                    height: (width * 186) / 286,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(24),
+                  width: width,
+                  height: (width * 186) / 286,
+                  child: Material(child: Center(child: child)),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget defaultDialog(String title, String message, Function() onConfirm,
+    {Function()? onCancel}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      MagicText.head(
+        title,
+        color: basicPrimary,
+      ),
+      SizedBox(
+        height: 16,
+      ),
+      MagicText(
+        message,
+        maxLines: 2,
+      ),
+      SizedBox(
+        height: 16,
+      ),
+      Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: MagicButton(
+                () {
+                  Get.back();
+                  onConfirm();
+                },
+                text: "Ya",
+                textColor: basicWhite,
+              )),
+          Expanded(
+              flex: 1,
+              child: MagicButton(
+                () {
+                  Get.back();
+                  if (onCancel != null) onCancel();
+                },
+                text: "Tidak",
+                textColor: basicWhite,
+              )),
+        ],
+      )
+    ],
   );
 }
 

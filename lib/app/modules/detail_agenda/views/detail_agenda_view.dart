@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
@@ -548,17 +550,11 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
   }
 
   openDialogDeleteConfirmation(PesertaModel peserta) {
-    Get.defaultDialog(
-        title: "Perhatian",
-        middleText: "Apakah anda yakin ingin menghapus data?",
-        textConfirm: "Ya",
-        textCancel: "Tidak",
-        confirmTextColor: basicWhite,
-        cancelTextColor: basicPrimary,
-        buttonColor: basicPrimary,
-        onConfirm: () {
+    Get.dialog(cardDialog3(
+        defaultDialog("Hapus", "Apakah anda yakin ingin menghapus?", () {
           controller.deletePeserta(peserta);
-        });
+        }),
+        ResponsiveLayout.getWidthForDialog(Get.context!)));
   }
 
   widgetDialogDetailParticipant(PesertaModel peserta) {

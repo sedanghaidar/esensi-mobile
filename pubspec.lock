@@ -587,9 +587,11 @@ packages:
   magic_view:
     dependency: "direct main"
     description:
-      path: "../magic_view"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "6e3d8c08daabbc71cfb83d055ba709f38ace3337"
+      url: "https://github.com/hanifabdullah21/MagicView"
+    source: git
     version: "1.0.0+1"
   markdown:
     dependency: transitive

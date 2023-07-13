@@ -49,6 +49,16 @@ Widget formAgendaDate(
   String? Function(String?)? validator,
   String? year,
 }) {
+
+  DateTime dateTime = DateTime.now();
+  if(year!=null){
+    try{
+      dateTime = DateTime(int.parse(year));
+    }catch(e){
+      debugPrint("form.dart $e");
+    }
+  }
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -59,9 +69,10 @@ Widget formAgendaDate(
           hintText: hint,
           readOnly: true,
           onTap: () {
+            debugPrint("YEAR $year");
             CDatePicker(Get.context!,
                     timeSelected: controller.text,
-                    firstDate: year != null ? DateTime(int.parse(year)) : DateTime.now())
+                    firstDate: dateTime)
                 .then((value) {
               if (value != null) {
                 controller.text = DateFormat("yyyy-MM-dd").format(value);

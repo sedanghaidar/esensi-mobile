@@ -5,6 +5,7 @@ import '../../utils/colors.dart';
 
 Future<DateTime?> CDatePicker(BuildContext context,
     {String? timeSelected, DateTime? firstDate}) async {
+  debugPrint("${firstDate}");
   DateTime initialDate = DateTime.now();
   if (timeSelected != null && timeSelected != "") {
     initialDate = DateFormat("yyyy-MM-dd").parse(timeSelected);

@@ -8,6 +8,7 @@ import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
+import 'package:absensi_kegiatan/app/utils/string.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -73,38 +74,13 @@ class FormController extends GetxController {
     return false;
   }
 
-  /// Mendapatkan teks yang akan ditampilkan di pilihan instansi
-  /// [model] bertipe [InstansiModel] yang merupakan sumber data
-  ///
-  /// Jika [kegiatan] pesertanya tidak dibatasi akan menampilkan
-  /// `nama-instansi` + `nama-parent-instansi` (jika ada)
-  /// contoh :
-  ///   - Dinas Komunikasi dan Informatika
-  ///   - Bidang E-Government Dinas Komunikasi dan Informatika
-  ///
-  /// Jika [kegiatan] pesertanya dibatasi akan menampilkan
-  /// `nama-instansi` + `nama-parent-instansi` (jika ada) + `wilayah-instansi`
-  /// contoh :
-  ///   - Dinas Komunikasi dan Informatika Provinsi Jawa Tengah
-  ///   - Bidang E-Government Dinas Komunikasi dan Informatika Kota Semarang
-  ///
-  AutoCompleteData<InstansiModel> getOption(InstansiModel model) {
-    final name1 = model.name;
-    final name2 = model.parent?.name == null ? "" : " ${model.parent?.name}";
-    if (kegiatan.value.data?.isLimitParticipant == false) {
-      return AutoCompleteData("$name1$name2", model);
-    } else {
-      final name3 = model.wilayahName == null ? "" : " ${model.wilayahName}";
-      return AutoCompleteData("$name1$name2$name3", model);
-    }
-  }
-
   /// Mendapatkan daftar instansi yang sudah diproses atau dikonversi
   /// dari List [InstansiModel] menjadi List [AutoCompleteData]
   /// sehingga dapat dipakai di [MagicAutoComplete]
   List<AutoCompleteData<InstansiModel>> getListInstansi() {
     return (instansi.value.data ?? []).map((e) {
-      return getOption(e);
+      return getOption(e,
+          isLimitParticipant: kegiatan.value.data?.isLimitParticipant ?? false);
     }).toList();
   }
 

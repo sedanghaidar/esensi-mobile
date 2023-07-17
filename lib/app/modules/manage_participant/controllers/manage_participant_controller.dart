@@ -9,6 +9,7 @@ import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
+import 'package:absensi_kegiatan/app/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:magic_view/style/AutoCompleteData.dart';
@@ -203,12 +204,9 @@ class ManageParticipantController extends GetxController {
   }
 
   String getNameInstansiPartisipan(InstansiPartipantModel? model) {
-    String? name = model?.organization?.name ?? "";
-    String? name2 = model?.organization?.parent?.name == null
-        ? ""
-        : " ${model?.organization?.parent?.name}";
+    String name = getOptionString(model?.organization);
     String? wilayah = model?.wilayahName ?? "";
-    return "$name$name2 $wilayah";
+    return "$name $wilayah";
   }
 
   List<AutoCompleteData<RegionModel>>? convertListRegionToAutoCompleteData() {

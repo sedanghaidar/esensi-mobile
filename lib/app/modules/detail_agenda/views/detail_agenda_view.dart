@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
@@ -10,6 +8,7 @@ import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
+import 'package:absensi_kegiatan/app/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -446,8 +445,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                               RichText(
                                   text: TextSpan(children: [
                                 TextSpan(
-                                    text: controller
-                                        .getStringInstansi(peserta[index]),
+                                    text: getOptionString(
+                                        peserta[index].instansiDetail),
                                     style: MagicFactory.magicTextStyle
                                         .copyWith(
                                             fontWeight: FontWeight.w600,
@@ -573,7 +572,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
               ),
               MagicText.subhead(peserta.name ?? ""),
               MagicText(
-                controller.getStringInstansi(peserta),
+                getOptionString(peserta.instansiDetail),
                 textAlign: TextAlign.center,
               ),
               MagicText(peserta.wilayahName ?? "-"),
@@ -591,7 +590,7 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                         Get.back();
                         Clipboard.setData(ClipboardData(
                             text:
-                                "Nama : ${peserta.name}\nInstansi : ${controller.getStringInstansi(peserta)} ${peserta.wilayahName}\nJabatan : ${peserta.jabatan}\nNo. HP : ${peserta.nohp}"));
+                                "Nama : ${peserta.name}\nInstansi : ${getOptionString(peserta.instansiDetail)} ${peserta.wilayahName}\nJabatan : ${peserta.jabatan}\nNo. HP : ${peserta.nohp}"));
                         Get.snackbar("Berhasil", "Data berhasil disalin!");
                       },
                       padding: EdgeInsets.all(12),

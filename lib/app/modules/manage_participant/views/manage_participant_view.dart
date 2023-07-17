@@ -335,8 +335,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
       {InstansiPartipantModel? initial}) {
     if (action == 1) {
       final list = controller.instansi.value.data?.map((e) {
-        String parent = e.parent?.name == null ? "" : " ${e.parent?.name}";
-        return AutoCompleteData<InstansiModel>("${e.name}$parent", e);
+        return getOption(e);
       }).toList();
       return MagicAutoComplete<InstansiModel>(
           controller: controller.controllerInstansi,
@@ -348,11 +347,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
               if (GetUtils.isBlank(value) == true) {
                 return msgBlank;
               }
-              String name = controller.selectedInstansi?.name ?? "";
-              String parent = controller.selectedInstansi?.parent?.name == null
-                  ? ""
-                  : " ${controller.selectedInstansi?.parent?.name}";
-              if (value != "$name$parent") {
+              if (value != getOptionString(controller.selectedInstansi)) {
                 return "Silahkan pilih salah satu dari pilihan yang ada";
               }
               return null;

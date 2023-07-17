@@ -368,8 +368,7 @@ class FormView extends GetView<FormController> {
                 list: list,
                 onSelected: (selected) {
                   controller.selectedInstansi = selected;
-                  controller.controllerInstansi.text =
-                      selected.data?.name ?? "";
+                  controller.controllerInstansi.text = selected.data?.name ?? "";
                   controller.settingTextFieldCustomInstansi();
                   controller.settingWilayahWhenSelectedInstansi();
                 },

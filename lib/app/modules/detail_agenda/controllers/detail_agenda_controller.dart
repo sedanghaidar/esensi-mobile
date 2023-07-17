@@ -19,6 +19,7 @@ import '../../../data/model/InstansiModel.dart';
 import '../../../data/model/RegionModel.dart';
 import '../../../global_widgets/other/toast.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/string.dart';
 
 class DetailAgendaController extends GetxController {
   ApiProvider repository = Get.find();
@@ -298,13 +299,6 @@ class DetailAgendaController extends GetxController {
     });
   }
 
-  getStringInstansi(PesertaModel peserta) {
-    final name = peserta.instansiDetail?.name;
-    final name2 = peserta.instansiDetail?.parent?.name;
-
-    return "$name${name2 != null ? " $name2" : ""}";
-  }
-
   getRegion() {
     repositoryLaporgub.getRegion().then((value) {
       if (value.data?.isEmpty == true) {
@@ -346,14 +340,6 @@ class DetailAgendaController extends GetxController {
     }, onError: (e) {
       instansi.value = StatusRequestModel.error(failure2(e));
     });
-  }
-
-  AutoCompleteData<InstansiModel> getOption(InstansiModel model) {
-    final name1 = model.parent?.name;
-    final name2 =
-        model.parent?.parent?.name == null ? "" : " ${model.parent?.parent?.name}";
-
-    return AutoCompleteData("$name1$name2", model);
   }
 
   List<AutoCompleteData<InstansiModel>> getListInstansi() {

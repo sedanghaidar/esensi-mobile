@@ -395,7 +395,10 @@ class FormView extends GetView<FormController> {
                   controller.instansi.value.failure?.msgShow,
                   () => controller.getInstansi());
             default:
-              return SizedBox();
+              return error(
+                  Get.context!,
+                  controller.instansi.value.failure?.msgShow,
+                      () => controller.getInstansi());
           }
         }),
         SizedBox(
@@ -475,7 +478,10 @@ class FormView extends GetView<FormController> {
                   controller.instansi.value.failure?.msgShow,
                   () => controller.getRegion());
             default:
-              return SizedBox();
+              return error(
+                  Get.context!,
+                  controller.instansi.value.failure?.msgShow,
+                      () => controller.getRegion());
           }
         }),
       ],

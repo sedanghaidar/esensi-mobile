@@ -65,7 +65,12 @@ class DetailAgendaController extends GetxController {
 
     //Filter nama
     list = list.where((element) {
-      return (element.name ?? "").toLowerCase().contains(filterTeks ?? "");
+      final nameLower = (element.name ?? "").toLowerCase();
+      final instansiLower = (element.instansi ?? "").toLowerCase();
+      final filterTeksLower = (filterTeks ?? "").toLowerCase();
+
+      return nameLower.contains(filterTeksLower) ||
+          instansiLower.contains(filterTeksLower);
     }).toList();
 
     //Filter status
@@ -350,8 +355,9 @@ class DetailAgendaController extends GetxController {
 
   AutoCompleteData<InstansiModel> getOption(InstansiModel model) {
     final name1 = model.parent?.name;
-    final name2 =
-        model.parent?.parent?.name == null ? "" : " ${model.parent?.parent?.name}";
+    final name2 = model.parent?.parent?.name == null
+        ? ""
+        : " ${model.parent?.parent?.name}";
 
     return AutoCompleteData("$name1$name2", model);
   }

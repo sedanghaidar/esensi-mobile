@@ -271,6 +271,10 @@ class FormController extends GetxController {
           controllerInstansiManual.clear();
           controllerPhone.clear();
           controllerJabatan.clear();
+          selectedInstansi = null;
+          controllerInstansi.clear();
+          selectedWilayah = null;
+          controllerWilayah.clear();
           isSigned.value = false;
           signaturePadKey.currentState?.clear();
           fileBytes = null;

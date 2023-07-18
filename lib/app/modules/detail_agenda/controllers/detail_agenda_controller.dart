@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/NotulenModel.dart';
@@ -66,7 +68,12 @@ class DetailAgendaController extends GetxController {
 
     //Filter nama
     list = list.where((element) {
-      return (element.name ?? "").toLowerCase().contains(filterTeks ?? "");
+      final nameLower = (element.name ?? "").toLowerCase();
+      final instansiLower = getOptionString(element.instansiDetail).toLowerCase();
+      final filterTeksLower = (filterTeks ?? "").toLowerCase();
+
+      return nameLower.contains(filterTeksLower) ||
+          instansiLower.contains(filterTeksLower);
     }).toList();
 
     //Filter status

@@ -35,17 +35,19 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
+      if("${request.url}".contains("/api/organisasi/update/")){
         debugPrint(
           '\n╔══════════════════════════ Response ══════════════════════════\n'
-          '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-          '╟ url: ${request.url}\n'
-          '╟ Headers: ${request.headers}\n'
-          // // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-          '╟ Status Code: ${response.statusCode}\n'
-          '╟ Data: ${response.bodyString?.toString() ?? ''}'
-          '\n╚══════════════════════════ Response ══════════════════════════\n',
+              '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+              '╟ url: ${request.url}\n'
+              '╟ Headers: ${request.headers}\n'
+              // '╟ Body: ${request.bodyBytes.toString() ?? ''}\n'
+              '╟ Status Code: ${response.statusCode}\n'
+              '╟ Data: ${response.bodyString?.toString() ?? ''}'
+              '\n╚══════════════════════════ Response ══════════════════════════\n',
           wrapWidth: 1024,
         );
+      }
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -117,7 +119,8 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
     } else {
-      throw StatusRequestModel<KegiatanModel>.error(failure(response.statusCode, model));
+      throw StatusRequestModel<KegiatanModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -190,7 +193,8 @@ class ApiProvider extends GetConnect {
       return StatusRequestModel.success(List<PesertaModel>.from(
           (model.data).map((u) => PesertaModel.fromJson(u))));
     } else {
-      throw StatusRequestModel<List<PesertaModel>>.error(failure(response.statusCode, model));
+      throw StatusRequestModel<List<PesertaModel>>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -202,7 +206,8 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
-      throw StatusRequestModel<PesertaModel>.error(failure(response.statusCode, model));
+      throw StatusRequestModel<PesertaModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -288,8 +293,11 @@ class ApiProvider extends GetConnect {
   /// Menambah data Instansi
   Future<StatusRequestModel<InstansiModel>> postInstansi(
       InstansiModel data) async {
-    final response = await post("/api/organisasi/tambah",
-        {"name": data.name, "short_name": data.shortName, "internal": "1"});
+    final response = await post("/api/organisasi/tambah", {
+      "name": data.name,
+      "short_name": data.shortName,
+      "internal": data.internal
+    });
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));
@@ -310,13 +318,16 @@ class ApiProvider extends GetConnect {
 
   Future<StatusRequestModel<InstansiModel>> updateInstansi(
       String? id, InstansiModel instansi) async {
-    final response = await post("/api/organisasi/update/$id",
-        {"name": instansi.name, "short_name": instansi.shortName});
+    final response = await post("/api/organisasi/update/$id", {
+      "name": instansi.name,
+      "short_name": instansi.shortName,
+      "internal": instansi.internal == true ? 1 : 0
+    });
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel.error(failure(response.statusCode, model));
     }
   }
 
@@ -347,7 +358,7 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(NotulenModel.fromJson(model.data));
     } else {
-      if(response.statusCode == 405){
+      if (response.statusCode == 405) {
         return StatusRequestModel.empty();
       }
       throw StatusRequestModel<NotulenModel>.error(

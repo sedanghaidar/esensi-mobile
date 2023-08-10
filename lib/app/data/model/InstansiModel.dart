@@ -11,6 +11,7 @@ class InstansiModel {
       this.shortName,
       this.wilayahId,
       this.wilayahName,
+        this.internal,
       this.parent});
 
   int? id;
@@ -18,6 +19,7 @@ class InstansiModel {
   String? shortName;
   int? wilayahId;
   String? wilayahName;
+  bool? internal;
   InstansiModel? parent;
 
   InstansiModel copyWith({
@@ -26,6 +28,7 @@ class InstansiModel {
     String? shortName,
     int? wilayahId,
     String? wilayahName,
+    bool? internal,
     InstansiModel? parent,
   }) =>
       InstansiModel(
@@ -34,6 +37,7 @@ class InstansiModel {
           shortName: shortName ?? this.shortName,
           wilayahId: wilayahId ?? this.wilayahId,
           wilayahName: wilayahName ?? this.wilayahName,
+          internal: internal ?? this.internal,
           parent: parent ?? this.parent);
 
   factory InstansiModel.fromRawJson(String str) =>
@@ -49,6 +53,7 @@ class InstansiModel {
             ? null
             : int.parse(json["region_id"].toString()),
         wilayahName: json["region_name"] == null ? null : json["region_name"],
+        internal: json["internal"] == null ? null : (json["internal"] == 0 ? false : true),
         parent: json["parent"] == null
             ? null
             : InstansiModel.fromJson(json["parent"]),
@@ -59,7 +64,8 @@ class InstansiModel {
         "name": name == null ? null : name,
         "short_name": shortName == null ? null : shortName,
         "region_id": wilayahId == null ? null : wilayahId,
-        "rgion_name": wilayahName == null ? null : wilayahName,
+        "internal": internal == null ? null : internal,
+        "region_name": wilayahName == null ? null : wilayahName,
         "parent": parent == null ? null : parent
       };
 }

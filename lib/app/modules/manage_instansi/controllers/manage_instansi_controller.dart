@@ -17,6 +17,7 @@ class ManageInstansiController extends GetxController {
   GlobalKey<FormState> keyForm = GlobalKey<FormState>();
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerShortName = TextEditingController();
+  RxBool isInstansiPemerintah = false.obs;
 
   final controllerSearch = TextEditingController();
   RxString filter = "".obs;
@@ -44,7 +45,9 @@ class ManageInstansiController extends GetxController {
 
   addNewInstansi() {
     InstansiModel instansi = InstansiModel(
-        name: controllerName.text, shortName: controllerShortName.text);
+        name: controllerName.text,
+        shortName: controllerShortName.text,
+        internal: isInstansiPemerintah.value);
     showLoading();
     repository.postInstansi(instansi).then((value) {
       hideLoading();
@@ -60,28 +63,30 @@ class ManageInstansiController extends GetxController {
     });
   }
 
-  deleteInstansi(InstansiModel? instansi){
+  deleteInstansi(InstansiModel? instansi) {
     showLoading();
-    repository.deleteInstansi("${instansi?.id}").then((value){
+    repository.deleteInstansi("${instansi?.id}").then((value) {
       hideLoading();
       showToast("Berhasil menghapus instansi");
       getInstansiAll();
-    }, onError: (e){
+    }, onError: (e) {
       hideLoading();
       showToast("Gagal manghapus instansi. $e");
     });
   }
 
-  updateInstansi(InstansiModel? instansi){
+  updateInstansi(InstansiModel? instansi) {
     showLoading();
-    repository.updateInstansi("${instansi?.id}", InstansiModel(
-      name: controllerName.text,
-      shortName: controllerShortName.text
-    )).then((value){
+    repository
+        .updateInstansi(
+            "${instansi?.id}",
+            InstansiModel(
+                name: controllerName.text, shortName: controllerShortName.text, internal: isInstansiPemerintah.value))
+        .then((value) {
       hideLoading();
       showToast("Berhasil mengubah instansi");
       getInstansiAll();
-    }, onError: (e){
+    }, onError: (e) {
       hideLoading();
       showToast("Gagal mengubah instansi. $e");
     });

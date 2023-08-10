@@ -16,3 +16,5 @@ flutter [build or run] web --web-renderer canvaskit --dart-define=BROWSER_IMAGE_
   * Upgrade Flutter To 3.10.6
 * 10-08-2023 -- Version ...
   * Menambahkan fitur download pada halaman detail_agenda_view seperti pada halaman dashboard_view
+  * Menebalkan garis tanda tangan, menjadi 7.5-8.5
+  * Redesign dan memperbaiki halaman manage_instansi_view

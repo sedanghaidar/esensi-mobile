@@ -94,45 +94,28 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                     children: [
                       MagicText(
                           "Data ditemukan : ${controller.pesertaFilter.length}"),
-                      Row(
-                        children: [
-                          MagicButton(
-                            () {
-                              openDialogDownload(
-                                  controller.kegiatan.value.data);
-                            },
-                            text: "Download",
-                            background: controller.filterRegion != null ||
-                                    controller.filterInstansi != null
-                                ? basicGreen
-                                : basicPrimary,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          MagicButton(
-                            () {
-                              if (controller.regions.value.data == null) {
-                                controller.getRegion();
-                              }
-                              if (controller.instansi.value.data == null) {
-                                if (controller.kegiatan.value.data
-                                        ?.isLimitParticipant ==
-                                    true) {
-                                  controller.getInstansi();
-                                } else {
-                                  controller.getInstansiAll();
-                                }
-                              }
-                              widgetFilter();
-                            },
-                            text: "Filter",
-                            background: controller.filterRegion != null ||
-                                    controller.filterInstansi != null
-                                ? basicGreen
-                                : basicPrimary,
-                          )
-                        ],
+                      MagicButton(
+                        () {
+                          if (controller.regions.value.data == null) {
+                            controller.getRegion();
+                          }
+                          if (controller.instansi.value.data == null) {
+                            if (controller
+                                    .kegiatan.value.data?.isLimitParticipant ==
+                                true) {
+                              controller.getInstansi();
+                            } else {
+                              controller.getInstansiAll();
+                            }
+                          }
+                          widgetFilter();
+                        },
+                        text: "Filter",
+                        textColor: basicWhite,
+                        background: controller.filterRegion != null ||
+                                controller.filterInstansi != null
+                            ? basicGreen
+                            : basicPrimary,
                       )
                     ],
                   );
@@ -246,6 +229,28 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                       true
                                   ? "Ya"
                                   : "Tidak"),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: MagicButton(
+                                  () {
+                                    openDialogDownload(
+                                        controller.kegiatan.value.data);
+                                  },
+                                  text: "Download Daftar Hadir",
+                                  textColor: basicWhite,
+                                  background: controller.filterRegion != null ||
+                                          controller.filterInstansi != null
+                                      ? basicGreen
+                                      : basicPrimary,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ))
                 ],
@@ -581,6 +586,18 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                    onTap: () {
+                      Get.toNamed("${Routes.DETAIL_PESERTA}/${peserta.id}");
+                    },
+                    child: Image.asset(
+                      icQrcode,
+                      width: 24,
+                      height: 24,
+                    )),
+              ),
               Container(
                 color: basicWhite,
                 width: 150,

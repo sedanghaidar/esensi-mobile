@@ -18,3 +18,5 @@ flutter [build or run] web --web-renderer canvaskit --dart-define=BROWSER_IMAGE_
   * Menambahkan fitur download pada halaman detail_agenda_view seperti pada halaman dashboard_view
   * Menebalkan garis tanda tangan, menjadi 7.5-8.5
   * Redesign dan memperbaiki halaman manage_instansi_view
+  * Membuat fungsi download pdf, share dan print pada halaman detail peserta
+  * Menambah ikon dan fungsi membuka halaman detail peserta melalui detail kegiatan

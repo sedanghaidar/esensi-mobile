@@ -78,24 +78,6 @@ int getOrientation(BuildContext context) {
   }
 }
 
-///Melakukan download QRCode dengan [qrkey] adalah konten/qrcode dan [filename] adalah nama file hasil download
-downloadQrcode(GlobalKey qrKey, String filename) {
-  getWidgetToImage(qrKey).then((value) {
-    if (value != null) {
-      if (kIsWeb) {
-        final content = base64Encode(value);
-        AnchorElement(
-            href:
-                "data:application/octet-stream;charset=utf-16le;base64,$content")
-          ..setAttribute("download", "$filename.png")
-          ..click();
-      } else {
-        ///todo DOWNLOAD FOR MOBILE
-      }
-    }
-  });
-}
-
 List<TextSpan> extractText(String rawString) {
   List<TextSpan> textSpan = [];
 

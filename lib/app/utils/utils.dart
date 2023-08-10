@@ -9,7 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:magic_view/factory.dart';
 import 'package:magic_view/style/MagicTextStyle.dart';
+import 'package:magic_view/widget/button/MagicButton.dart';
+import 'package:magic_view/widget/text/MagicText.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import '../data/model/KegiatanModel.dart';
+import '../data/repository/ApiProvider.dart';
 import '../global_widgets/Html.dart' if (dart.library.html) 'dart:html';
 
 /// Mendeteksi aplikasi dibuka dimana
@@ -101,10 +106,12 @@ List<TextSpan> extractText(String rawString) {
     textSpan.add(
       TextSpan(
         text: linkString,
-        style: MagicFactory.magicTextStyle.copyWith(
-          color: basicBlack,
-          fontWeight: FontWeight.bold,
-        ).toGoogleTextStyle(),
+        style: MagicFactory.magicTextStyle
+            .copyWith(
+              color: basicBlack,
+              fontWeight: FontWeight.bold,
+            )
+            .toGoogleTextStyle(),
         recognizer: new TapGestureRecognizer()
           ..onTap = () {
             launchUrlString(linkString);
@@ -119,9 +126,9 @@ List<TextSpan> extractText(String rawString) {
     textSpan.add(
       TextSpan(
         text: normalText,
-        style: MagicFactory.magicTextStyle.copyWith(
-          color: basicWhite
-        ).toGoogleTextStyle(),
+        style: MagicFactory.magicTextStyle
+            .copyWith(color: basicWhite)
+            .toGoogleTextStyle(),
       ),
     );
     return normalText;
@@ -134,4 +141,50 @@ List<TextSpan> extractText(String rawString) {
   );
 
   return textSpan;
+}
+
+/// Membuka Dialog Download Daftar Hadir, menampilkan pilihan PDF dan Excel
+/// [agenda] merupakan detail agenda yang akan didownload
+openDialogDownload(KegiatanModel? agenda) {
+  Get.dialog(Center(
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: basicWhite, borderRadius: BorderRadius.circular(16)),
+      child: Material(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MagicText.subhead("Download Daftar Hadir"),
+            const SizedBox(
+              height: 8,
+            ),
+            MagicButton(
+              () {
+                Get.back();
+                launchUrl(Uri.parse(
+                    "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${agenda?.id}"));
+              },
+              text: "Download Excel",
+              textColor: basicWhite,
+              padding: const EdgeInsets.all(16),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            MagicButton(
+              () {
+                Get.back();
+                launchUrl(Uri.parse(
+                    "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${agenda?.id}"));
+              },
+              text: "Download PDF",
+              textColor: basicWhite,
+              padding: const EdgeInsets.all(16),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ));
 }

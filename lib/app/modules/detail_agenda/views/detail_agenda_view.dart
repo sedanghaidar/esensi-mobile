@@ -9,6 +9,7 @@ import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/utils/date.dart';
 import 'package:absensi_kegiatan/app/utils/images.dart';
 import 'package:absensi_kegiatan/app/utils/string.dart';
+import 'package:absensi_kegiatan/app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -93,27 +94,45 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                     children: [
                       MagicText(
                           "Data ditemukan : ${controller.pesertaFilter.length}"),
-                      MagicButton(
-                        () {
-                          if (controller.regions.value.data == null) {
-                            controller.getRegion();
-                          }
-                          if (controller.instansi.value.data == null) {
-                            if (controller
-                                    .kegiatan.value.data?.isLimitParticipant ==
-                                true) {
-                              controller.getInstansi();
-                            } else {
-                              controller.getInstansiAll();
-                            }
-                          }
-                          widgetFilter();
-                        },
-                        text: "Filter",
-                        background: controller.filterRegion != null ||
-                                controller.filterInstansi != null
-                            ? basicGreen
-                            : basicPrimary,
+                      Row(
+                        children: [
+                          MagicButton(
+                            () {
+                              openDialogDownload(
+                                  controller.kegiatan.value.data);
+                            },
+                            text: "Download",
+                            background: controller.filterRegion != null ||
+                                    controller.filterInstansi != null
+                                ? basicGreen
+                                : basicPrimary,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          MagicButton(
+                            () {
+                              if (controller.regions.value.data == null) {
+                                controller.getRegion();
+                              }
+                              if (controller.instansi.value.data == null) {
+                                if (controller.kegiatan.value.data
+                                        ?.isLimitParticipant ==
+                                    true) {
+                                  controller.getInstansi();
+                                } else {
+                                  controller.getInstansiAll();
+                                }
+                              }
+                              widgetFilter();
+                            },
+                            text: "Filter",
+                            background: controller.filterRegion != null ||
+                                    controller.filterInstansi != null
+                                ? basicGreen
+                                : basicPrimary,
+                          )
+                        ],
                       )
                     ],
                   );

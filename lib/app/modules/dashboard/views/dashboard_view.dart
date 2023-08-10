@@ -382,42 +382,4 @@ class DashboardView extends GetView<DashboardController> {
       ),
     );
   }
-
-  openDialogDownload(KegiatanModel? agenda) {
-    Get.dialog(Center(
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            color: basicWhite, borderRadius: BorderRadius.circular(16)),
-        child: Material(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MagicText.subhead("Download Daftar Hadir"),
-              const SizedBox(
-                height: 8,
-              ),
-              MagicButton(
-                () => launchUrl(Uri.parse(
-                    "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${agenda?.id}")),
-                text: "Download Excel",
-                textColor: basicWhite,
-                padding: const EdgeInsets.all(16),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              MagicButton(
-                () => launchUrl(Uri.parse(
-                    "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${agenda?.id}")),
-                text: "Download PDF",
-                textColor: basicWhite,
-                padding: const EdgeInsets.all(16),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
 }

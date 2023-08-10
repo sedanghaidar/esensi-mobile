@@ -1,9 +1,9 @@
 name: absensi_kegiatan
-version: 1.0.5+5
+version: 1.0.6+6
 publish_to: none
 description: Multiplatform Apps for Presensi Kegiatan by Diskominfo Jateng
 environment:
-  sdk: '>=2.17.6 <3.0.0'
+  sdk: '>=2.18.6 <3.0.0'
 
 dependencies:
   cupertino_icons: ^1.0.2
@@ -38,7 +38,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   hive_generator: ^1.0.0
-  build_runner: ^1.11.5
+  build_runner: ^2.4.6
 
 flutter_icons:
   android: 'launcher_icon'

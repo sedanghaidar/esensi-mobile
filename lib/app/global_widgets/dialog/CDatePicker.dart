@@ -20,7 +20,6 @@ Future<DateTime?> CDatePicker(BuildContext context,
       return Theme(
         data: ThemeData.light().copyWith(
           primaryColor: basicPrimary,
-          accentColor: basicPrimaryLight,
           colorScheme: ColorScheme.light(primary: basicPrimary),
           buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
         ),
@@ -47,7 +46,6 @@ Future<TimeOfDay?> CTimePicker(BuildContext context,
       return Theme(
         data: ThemeData.light().copyWith(
           primaryColor: basicPrimary,
-          accentColor: basicPrimaryLight,
           colorScheme: ColorScheme.light(primary: basicPrimary),
           buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
         ),

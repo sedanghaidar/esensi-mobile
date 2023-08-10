@@ -69,7 +69,8 @@ class DetailAgendaController extends GetxController {
     //Filter nama
     list = list.where((element) {
       final nameLower = (element.name ?? "").toLowerCase();
-      final instansiLower = getOptionString(element.instansiDetail).toLowerCase();
+      final instansiLower =
+          getOptionString(element.instansiDetail).toLowerCase();
       final filterTeksLower = (filterTeks ?? "").toLowerCase();
 
       return nameLower.contains(filterTeksLower) ||
@@ -113,10 +114,10 @@ class DetailAgendaController extends GetxController {
     totalScanned.value = (peserta.value.data ?? [])
         .where((element) => element.scannedAt != null)
         .length;
-    totalInstansi.value = groupBy<PesertaModel, Map<String, dynamic>?>(
-            (peserta.value.data ?? []),
-            (obj) => {"wilayah": obj.wilayahId, "instansi": obj.instansiDetail})
-        .length;
+    totalInstansi.value = groupBy<PesertaModel, String>(
+        (peserta.value.data ?? []),
+        (obj) => getOptionString(
+            obj.instansiDetail?.copyWith(wilayahName: obj.wilayahName))).length;
   }
 
   getDetailKegiatan() {
@@ -252,6 +253,11 @@ class DetailAgendaController extends GetxController {
   getInstansiParticipant() {
     showLoading();
     repository.getInstansiParticipant(id).then((value) async {
+      String data = "";
+      debugPrint("TOTAL INSTANSI = ${value.data?.length}");
+      for (int i = 0; i < (value.data?.length ?? 0); i++) {
+        data += "${getOptionString(value.data?[i].organization)}\n";
+      }
       if (value.statusRequest == StatusRequest.SUCCESS) {
         hideLoading();
         if (value.data == null || value.data?.isEmpty == true) {
@@ -270,7 +276,7 @@ class DetailAgendaController extends GetxController {
                 true) {
               sudahTerdaftarNumber++;
               sudahTerdaftar +=
-                  "$sudahTerdaftarNumber. *${data.organization?.name}* (jumlah : ${groups?[data.organization?.name]?.length})\n";
+                  "$sudahTerdaftarNumber. *${getOptionString(data.organization)}* (jumlah : ${groups?[data.organization?.name]?.length})\n";
               for (PesertaModel psrta
                   in groups![data.organization?.name?.toUpperCase()]!) {
                 sudahTerdaftar += "\t- ${psrta.name}\n";

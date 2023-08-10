@@ -1,3 +1,4 @@
+import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
@@ -90,6 +91,61 @@ Future<Uint8List> createPdfTicket(PesertaModel? peserta) async {
                         style:
                             pw.TextStyle(color: PdfColor.fromHex("#ffffff"))),
                   ]))
+            ]);
+      }));
+
+  return await pdf.save();
+}
+
+Future<Uint8List> createPdfQrAbsen(KegiatanModel? kegiatan, String shortUrl) async {
+  final logo = pw.MemoryImage(
+      (await rootBundle.load("assets/logo_jateng2.png")).buffer.asUint8List());
+
+  const format = PdfPageFormat(
+    8.5 * PdfPageFormat.inch,
+    13 * PdfPageFormat.inch,
+    marginAll: 1 * PdfPageFormat.cm,
+  );
+  final pdf = pw.Document();
+  pdf.addPage(pw.Page(
+      pageFormat: format,
+      build: (context) {
+        return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.Row(children: [
+                pw.Image(logo, width: 48, height: 48),
+                pw.Expanded(
+                  flex: 1,
+                  child: pw.Text("Pemerintah Provinsi Jawa Tengah",
+                      style: pw.TextStyle(
+                          fontSize: 24, fontWeight: pw.FontWeight.bold),
+                      textAlign: pw.TextAlign.center),
+                ),
+              ]),
+              pw.Divider(),
+              pw.Text("${kegiatan?.name}",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      color: PdfColor.fromHex("#b53471"),
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 16),
+              pw.BarcodeWidget(
+                  color: PdfColor.fromHex("#000000"),
+                  barcode: pw.Barcode.qrCode(),
+                  width: 180 * PdfPageFormat.mm,
+                  height: 180 * PdfPageFormat.mm,
+                  data: "${Uri.base.origin}/#/form/${kegiatan?.codeUrl}"),
+              pw.SizedBox(height: 16),
+              pw.Text(shortUrl,
+                  textAlign: pw.TextAlign.center,
+                  softWrap: true,
+                  overflow: pw.TextOverflow.clip,
+                  style: pw.TextStyle(
+                      color: PdfColor.fromHex("#b53471"),
+                      fontSize: 20,
+                      fontWeight: pw.FontWeight.bold)),
             ]);
       }));
 

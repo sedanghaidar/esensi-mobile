@@ -17,6 +17,7 @@ abstract class Routes {
   static const MANAGE_INSTANSI = _Paths.MANAGE_INSTANSI;
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
   static const FORM_NOTULEN = _Paths.FORM_NOTULEN;
+  static const QR_FORM_ABSEN = _Paths.QR_FORM_ABSEN;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const MANAGE_INSTANSI = '/manage-instansi';
   static const PRIVACY_POLICY = '/privacy-policy';
   static const FORM_NOTULEN = '/form-notulen';
+  static const QR_FORM_ABSEN = '/qr-form-absen';
 }

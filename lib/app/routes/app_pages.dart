@@ -24,6 +24,8 @@ import '../modules/privacy-policy/bindings/privacy_policy_binding.dart';
 import '../modules/privacy-policy/views/privacy_policy_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/qr_form_absen/bindings/qr_form_absen_binding.dart';
+import '../modules/qr_form_absen/views/qr_form_absen_view.dart';
 import '../modules/qr_scanner/bindings/qr_scanner_binding.dart';
 import '../modules/qr_scanner/views/qr_scanner_view.dart';
 import '../modules/update_agenda/bindings/update_agenda_binding.dart';
@@ -106,6 +108,11 @@ class AppPages {
       name: _Paths.FORM_NOTULEN,
       page: () => const FormNotulenView(),
       binding: FormNotulenBinding(),
+    ),
+    GetPage(
+      name: _Paths.QR_FORM_ABSEN + "/:id",
+      page: () => const QrFormAbsenView(),
+      binding: QrFormAbsenBinding(),
     ),
   ];
 }

@@ -249,6 +249,20 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                       : basicPrimary,
                                 ),
                               ),
+                              Expanded(
+                                flex: 1,
+                                child: MagicButton(
+                                  () {
+                                    Get.toNamed("${Routes.QR_FORM_ABSEN}/${controller.id}");
+                                  },
+                                  text: "QRCode Absen",
+                                  textColor: basicWhite,
+                                  background: controller.filterRegion != null ||
+                                          controller.filterInstansi != null
+                                      ? basicGreen
+                                      : basicPrimary,
+                                ),
+                              ),
                             ],
                           )
                         ],

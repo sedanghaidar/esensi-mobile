@@ -2,6 +2,7 @@ import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -19,6 +20,10 @@ Future<void> main() async {
 
   MagicFactory.fontFamily = FontFamily.poppins;
   MagicFactory.colorBrand = basicPrimary;
+
+  if(kReleaseMode){
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
 
   runApp(
     GetMaterialApp(

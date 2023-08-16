@@ -24,3 +24,4 @@ flutter [build or run] web --web-renderer canvaskit --dart-define=BROWSER_IMAGE_
   * Memperbaiki tampilan notulen
 * 10-08-2023 -- Version 1.0.8+8
   * Mengubah base url api server
+  * Mengatur kemunculan debugprint saat debug/release

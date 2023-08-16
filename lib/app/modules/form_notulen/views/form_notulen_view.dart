@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/appBar.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/custom_layout.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/form.dart';
+import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:absensi_kegiatan/app/utils/string.dart';
@@ -15,6 +14,7 @@ import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 import '../../../global_widgets/dialog/CImagePicker.dart';
+import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../controllers/form_notulen_controller.dart';
 
 class FormNotulenView extends GetView<FormNotulenController> {
@@ -24,26 +24,21 @@ class FormNotulenView extends GetView<FormNotulenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar("Form Notulen"),
-      body: SingleChildScrollView(
+      backgroundColor: basicPrimary,
+      body: ResponsiveLayout(SingleChildScrollView(
         child: CustomLayout(
             child: Form(
           key: controller.formKey,
           child: Column(
             children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: CText(
-                    "Isi Notulensi",
-                    style: CText.textStyleBodyBold.copyWith(fontSize: 16),
-                  )),
-              SizedBox(
-                height: 10,
-              ),
               formAgendaDefault(controller.controllerNoSurat, "Nomer Surat",
                   "Masukkan Nomer Surat", validator: (value) {
                 if (GetUtils.isBlank(value) == true) return msgBlank;
                 return null;
               }),
+              Align(
+                  alignment: Alignment.centerLeft, child: CText("Isi Notulen")),
+              CSizedBox.h5(),
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
@@ -81,14 +76,16 @@ class FormNotulenView extends GetView<FormNotulenController> {
                         ToolBarStyle.indentMinus,
                         ToolBarStyle.listOrdered,
                         ToolBarStyle.listBullet,
-                        ToolBarStyle.addTable,
-                        ToolBarStyle.editTable,
+                        //   ToolBarStyle.separator,
+                        //   // ToolBarStyle.addTable,
+                        //   // ToolBarStyle.editTable,
                       ],
                     ),
                     QuillHtmlEditor(
                       controller: controller.controllerNotulenQuil,
                       text: controller.notulen?.delta,
                       minHeight: 200,
+                      ensureVisible: true,
                       padding: EdgeInsets.all(8),
                       hintTextPadding: EdgeInsets.all(8),
                       textStyle: CText.textStyleBody,
@@ -166,16 +163,16 @@ class FormNotulenView extends GetView<FormNotulenController> {
                       middleText: "Dokumentasi pertama tidak boleh kosong");
                 }
 
-                if(controller.notulen==null){
+                if (controller.notulen == null) {
                   controller.postNewNotulen();
-                }else{
+                } else {
                   controller.updateNotulen();
                 }
               }, "SIMPAN")
             ],
           ),
         )),
-      ),
+      )),
     );
   }
 
@@ -193,7 +190,9 @@ class FormNotulenView extends GetView<FormNotulenController> {
         (file.path ?? ""),
       );
     } else {
-      return Image.network("${ApiProvider.BASE_URL}/storage/images/$url",);
+      return Image.network(
+        "${ApiProvider.BASE_URL}/storage/images/$url",
+      );
     }
   }
 
@@ -202,9 +201,9 @@ class FormNotulenView extends GetView<FormNotulenController> {
       return InkWell(
         onTap: () {
           openDialogPicker((p0, error) {
-            if(p0!=null){
+            if (p0 != null) {
               controller.settingImage(p0, index);
-            }else{
+            } else {
               debugPrint("$error");
             }
           });
@@ -215,7 +214,8 @@ class FormNotulenView extends GetView<FormNotulenController> {
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 width: constraints.maxWidth - 10,
                 height: constraints.maxWidth - 10,
-                child: image2(controller.getImage(index), controller.getImageUrl(index))),
+                child: image2(
+                    controller.getImage(index), controller.getImageUrl(index))),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               width: constraints.maxWidth,

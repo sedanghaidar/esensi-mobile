@@ -20,6 +20,8 @@ import '../modules/manage_instansi/bindings/manage_instansi_binding.dart';
 import '../modules/manage_instansi/views/manage_instansi_view.dart';
 import '../modules/manage_participant/bindings/manage_participant_binding.dart';
 import '../modules/manage_participant/views/manage_participant_view.dart';
+import '../modules/preview_notulen/bindings/preview_notulen_binding.dart';
+import '../modules/preview_notulen/views/preview_notulen_view.dart';
 import '../modules/privacy-policy/bindings/privacy_policy_binding.dart';
 import '../modules/privacy-policy/views/privacy_policy_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -113,6 +115,11 @@ class AppPages {
       name: _Paths.QR_FORM_ABSEN + "/:id",
       page: () => const QrFormAbsenView(),
       binding: QrFormAbsenBinding(),
+    ),
+    GetPage(
+      name: _Paths.PREVIEW_NOTULEN + "/:id",
+      page: () => const PreviewNotulenView(),
+      binding: PreviewNotulenBinding(),
     ),
   ];
 }

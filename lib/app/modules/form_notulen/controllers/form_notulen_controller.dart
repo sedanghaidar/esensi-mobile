@@ -138,10 +138,11 @@ class FormNotulenController extends GetxController {
     List<dynamic> ops = result2["ops"];
     final converter = QuillDeltaToHtmlConverter(
       List.castFrom(ops),
-      ConverterOptions.forEmail(),
+      ConverterOptions.forEmail(
+      ),
     );
 
-    data["hasil"] = "${converter.convert()}";
+    data["hasil"] = converter.convert().replaceAll("<ol>", '<ol style="line-height:1.5">');
     data["delta"] = await controllerNotulenQuil.getText();
     debugPrint("$data");
     if (image1 != null) {

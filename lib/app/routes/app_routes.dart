@@ -18,6 +18,7 @@ abstract class Routes {
   static const PRIVACY_POLICY = _Paths.PRIVACY_POLICY;
   static const FORM_NOTULEN = _Paths.FORM_NOTULEN;
   static const QR_FORM_ABSEN = _Paths.QR_FORM_ABSEN;
+  static const PREVIEW_NOTULEN = _Paths.PREVIEW_NOTULEN;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const PRIVACY_POLICY = '/privacy-policy';
   static const FORM_NOTULEN = '/form-notulen';
   static const QR_FORM_ABSEN = '/qr-form-absen';
+  static const PREVIEW_NOTULEN = '/preview-notulen';
 }

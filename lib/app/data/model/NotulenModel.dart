@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'KegiatanModel.dart';
+
 class NotulenModel {
   NotulenModel({
     this.id,
@@ -17,6 +19,8 @@ class NotulenModel {
     this.image1,
     this.image2,
     this.image3,
+    this.kegiatan,
+    this.peserta,
   });
 
   int? id;
@@ -30,6 +34,8 @@ class NotulenModel {
   String? image1;
   String? image2;
   String? image3;
+  KegiatanModel? kegiatan;
+  List<String>? peserta;
 
   factory NotulenModel.fromRawJson(String str) =>
       NotulenModel.fromJson(json.decode(str));
@@ -46,5 +52,10 @@ class NotulenModel {
         image1: json["image1"] == null ? null : json["image1"],
         image2: json["image2"] == null ? null : json["image2"],
         image3: json["image3"] == null ? null : json["image3"],
+        kegiatan: json["kegiatan"] == null
+            ? null
+            : KegiatanModel.fromJson(json["kegiatan"]),
+        peserta:
+            json["peserta"] == null ? null : List<String>.from(json["peserta"]),
       );
 }

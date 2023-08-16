@@ -63,7 +63,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
             Icons.note_add_outlined,
           ),
           onPressed: () {
-            widgetNotulen();
+            Get.toNamed("${Routes.PREVIEW_NOTULEN}/${controller.id}");
+            // widgetNotulen();
           }),
       body: SingleChildScrollView(
         child: ResponsiveLayout(Container(

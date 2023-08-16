@@ -35,7 +35,7 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      if("${request.url}".contains("/api/organisasi/update/")){
+      // if("${request.url}".contains("/api/organisasi/update/")){
         debugPrint(
           '\n╔══════════════════════════ Response ══════════════════════════\n'
               '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
@@ -47,7 +47,7 @@ class ApiProvider extends GetConnect {
               '\n╚══════════════════════════ Response ══════════════════════════\n',
           wrapWidth: 1024,
         );
-      }
+      // }
 
       httpClient.timeout = const Duration(minutes: 1);
 

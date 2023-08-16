@@ -13,14 +13,10 @@ import '../model/repository/FailureModel.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  static const String SERVER_URL = "https://cs.saturnalia.jatengprov.go.id";
+  static const String SERVER_URL = "http://103.9.227.50:8881";
   static const String LOCAL_URL = "http://127.0.0.1:8000";
 
   static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
-
-  // static String BASE_URL = SERVER_URL;
-
-  static String local = "http://172.100.32.169:8000";
 
   HiveProvider hive = HiveProvider();
 

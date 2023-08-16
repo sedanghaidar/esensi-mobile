@@ -21,3 +21,6 @@ flutter [build or run] web --web-renderer canvaskit --dart-define=BROWSER_IMAGE_
   * Membuat fungsi download pdf, share dan print pada halaman detail peserta
   * Menambah ikon dan fungsi membuka halaman detail peserta melalui detail kegiatan
   * Membuat halaman (qr_form_absen) untuk mendownload qrcode absen
+  * Memperbaiki tampilan notulen
+* 10-08-2023 -- Version 1.0.8+8
+  * Mengubah base url api server

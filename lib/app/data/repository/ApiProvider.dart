@@ -13,10 +13,13 @@ import '../model/repository/FailureModel.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  static const String SERVER_URL = "http://103.9.227.50:8881";
-  static const String LOCAL_URL = "http://127.0.0.1:8000";
+  static const String SERVER_URL = "https://esensi.saturnalia.jatengprov.go.id";
+  static const String LOCAL_URL = "https://esensi.saturnalia.jatengprov.go.id";
 
-  static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+  //url vps http://103.9.227.50:8881
+
+  // static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
+  static String BASE_URL = SERVER_URL;
 
   HiveProvider hive = HiveProvider();
 
@@ -31,7 +34,7 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      // if("${request.url}".contains("/api/organisasi/update/")){
+      if("${request.url}".contains("/api/peserta/daftar")){
         debugPrint(
           '\n╔══════════════════════════ Response ══════════════════════════\n'
               '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
@@ -43,7 +46,7 @@ class ApiProvider extends GetConnect {
               '\n╚══════════════════════════ Response ══════════════════════════\n',
           wrapWidth: 1024,
         );
-      // }
+      }
 
       httpClient.timeout = const Duration(minutes: 1);
 
@@ -148,11 +151,15 @@ class ApiProvider extends GetConnect {
   /// Input absen peserta dengan [peserta] adalah data peserta yang ditulis
   Future<StatusRequestModel<PesertaModel>> insertPeserta(
       Map<String, dynamic> peserta) async {
+    debugPrint("JALAN");
     final response = await post("/api/peserta/daftar", FormData(peserta));
+    debugPrint("${response.isOk}");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
+      debugPrint("SUKSES LHO NDESSSS");
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
+      debugPrint("GAGAL LHO NDESSSS ${model.message}");
       throw StatusRequestModel<PesertaModel>.error(
           failure(response.statusCode, model));
     }

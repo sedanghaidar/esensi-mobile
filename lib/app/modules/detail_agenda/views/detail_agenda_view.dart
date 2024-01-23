@@ -254,7 +254,8 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                                 flex: 1,
                                 child: MagicButton(
                                   () {
-                                    Get.toNamed("${Routes.QR_FORM_ABSEN}/${controller.id}");
+                                    Get.toNamed(
+                                        "${Routes.QR_FORM_ABSEN}/${controller.id}");
                                   },
                                   text: "QRCode Absen",
                                   textColor: basicWhite,
@@ -619,7 +620,10 @@ class DetailAgendaView extends GetView<DetailAgendaController> {
                 height: 150,
                 margin: const EdgeInsets.all(10),
                 child: Image.network(
-                    "${ApiProvider.BASE_URL}/storage/signature/${peserta.signature}"),
+                  "${ApiProvider.BASE_URL}/storage/signature/${peserta.signature}",
+                  headers: const {"Access-Control-Allow-Origin": "https://cs.saturnalia.jatengprov.go.id"},
+
+                ),
               ),
               MagicText.subhead(peserta.name ?? ""),
               MagicText(

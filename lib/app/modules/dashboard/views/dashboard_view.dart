@@ -1,6 +1,5 @@
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
-import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart';
@@ -13,7 +12,6 @@ import 'package:magic_view/factory.dart';
 import 'package:magic_view/widget/button/MagicButton.dart';
 import 'package:magic_view/widget/text/MagicText.dart';
 import 'package:magic_view/widget/textfield/MagicTextField.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../global_widgets/sized_box/CSizedBox.dart';
 import '../../../routes/app_pages.dart';
@@ -87,18 +85,33 @@ class DashboardView extends GetView<DashboardController> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(Routes.CREATE_AGENDA);
-        },
-        backgroundColor: basicPrimaryDark,
-        child: const Icon(
-          Icons.add,
-          color: basicWhite,
-        ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Get.toNamed(Routes.QR_SCANNER);
+            },
+            backgroundColor: basicPrimaryDark,
+            child: const Icon(
+              Icons.qr_code,
+              color: basicWhite,
+            ),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Get.toNamed(Routes.CREATE_AGENDA);
+            },
+            backgroundColor: basicPrimaryDark,
+            child: const Icon(
+              Icons.add,
+              color: basicWhite,
+            ),
+          ),
+        ],
       ),
       body: ResponsiveLayout(Container(
         padding: const EdgeInsets.all(16),
@@ -266,7 +279,7 @@ class DashboardView extends GetView<DashboardController> {
                                   onTap: () async {
                                     await Clipboard.setData(ClipboardData(
                                             text:
-                                                "${ApiProvider.BASE_URL}/#/form/${agenda?.codeUrl}"))
+                                                "${Uri.base.origin}/#/form/${agenda?.codeUrl}"))
                                         .whenComplete(() {
                                       showToast("Berhasil menyalin kode");
                                     });

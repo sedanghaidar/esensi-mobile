@@ -7,22 +7,14 @@ import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_connect/connect.dart';
 
 import '../model/repository/FailureModel.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  static const String SERVER_URL = "https://esensi.saturnalia.jatengprov.go.id";
-  // static const String LOCAL_URL = "https://esensi.saturnalia.jatengprov.go.id";
-  // static const String LOCAL_URL = "http://127.0.0.1:8000";
-  static const String LOCAL_URL = "http://10.0.2.2:8000";
-
-  //url vps http://103.9.227.50:8881
-
-  // static String BASE_URL = kReleaseMode ? SERVER_URL : LOCAL_URL;
-  // static String BASE_URL = SERVER_URL;
-  static String BASE_URL = LOCAL_URL;
+  static String BASE_URL = dotenv.env["BASE_URL"]??"";
 
   HiveProvider hive = HiveProvider();
 

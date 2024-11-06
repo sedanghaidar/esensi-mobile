@@ -4,6 +4,7 @@ import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/utils/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:magic_view/factory.dart';
@@ -17,6 +18,12 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<UserModel>(HiveUserAdapter());
   await Hive.openBox<dynamic>(HiveHelper.HIVE_APPNAME);
+
+  if(kDebugMode){
+    await dotenv.load(fileName: ".env.dev");
+  }else{
+    await dotenv.load(fileName: ".env");
+  }
 
   MagicFactory.fontFamily = FontFamily.poppins;
   MagicFactory.colorBrand = basicPrimary;

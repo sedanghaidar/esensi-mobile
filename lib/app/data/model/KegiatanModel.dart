@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 class KegiatanModel {
+
   KegiatanModel({
     this.id,
     this.name,

@@ -14,8 +14,9 @@ import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
   static const String SERVER_URL = "https://esensi.saturnalia.jatengprov.go.id";
-  // static const String LOCAL_URL = "http://10.1.193.67:8000";
-  static const String LOCAL_URL = "http://127.0.0.1:8000";
+  // static const String LOCAL_URL = "https://esensi.saturnalia.jatengprov.go.id";
+  // static const String LOCAL_URL = "http://127.0.0.1:8000";
+  static const String LOCAL_URL = "http://10.0.2.2:8000";
 
   //url vps http://103.9.227.50:8881
 

@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
@@ -16,15 +9,20 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_test/hive_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:magic_view/main.dart';
 import 'package:magic_view/widget/button/MagicButton.dart';
 import 'package:magic_view/widget/textfield/MagicTextField.dart';
 
 void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   group('Login Test', () {
     late LoginController controller;
 
     setUp(() async {
-      await setUpTestHive();
+      // await setUpTestHive();
+      await Hive.initFlutter();
       if (!Hive.isAdapterRegistered(0)) {
         Hive.registerAdapter<UserModel>(HiveUserAdapter());
       }
@@ -59,6 +57,11 @@ void main() {
       expect(email, findsOne);
       expect(password, findsOne);
       expect(button, findsOne);
+
+      await tester.tap(button);
+
+      await tester.pumpAndSettle();
+      await tester.pump(Duration(seconds: 5000));
     });
   });
 }

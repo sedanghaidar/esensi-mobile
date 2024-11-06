@@ -14,6 +14,10 @@ class LoginController extends GetxController {
 
   ApiProvider repository = Get.find();
 
+  validation(){
+    return formKey.currentState!.validate();
+  }
+
   login() {
     showLoading();
     repository

@@ -25,6 +25,7 @@ class PesertaModel {
     this.scannedAt,
     this.kegiatan,
     this.id,
+    this.gender,
   });
 
   int? activityId;
@@ -38,6 +39,7 @@ class PesertaModel {
   String? nohp;
   String? signature;
   String? qrCode;
+  String? gender;
   DateTime? updatedAt;
   DateTime? createdAt;
   DateTime? scannedAt;
@@ -56,6 +58,7 @@ class PesertaModel {
     String? nohp,
     String? signature,
     String? qrCode,
+    String? gender,
     DateTime? updatedAt,
     DateTime? createdAt,
     DateTime? scannedAt,
@@ -74,6 +77,7 @@ class PesertaModel {
         nohp: nohp ?? this.nohp,
         signature: signature ?? this.signature,
         qrCode: qrCode ?? this.qrCode,
+        gender: gender ?? this.gender,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
         scannedAt: createdAt ?? this.scannedAt,
@@ -104,6 +108,7 @@ class PesertaModel {
         nohp: json["nohp"] == null ? null : json["nohp"],
         signature: json["signature"] == null ? null : json["signature"],
         qrCode: json["qr_code"] == null ? null : json["qr_code"],
+        gender: json["gender"] == null ? null : json["gender"],
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -128,6 +133,7 @@ class PesertaModel {
         "nohp": nohp == null ? null : nohp,
         "signature": signature == null ? null : signature,
         "qr_code": qrCode == null ? null : qrCode,
+        "gender": gender == null ? null : gender,
         "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
         "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
         "scanned_at": scannedAt == null ? null : scannedAt?.toIso8601String(),

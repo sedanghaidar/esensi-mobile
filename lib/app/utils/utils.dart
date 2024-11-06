@@ -144,10 +144,12 @@ openDialogDownload(KegiatanModel? agenda) {
             MagicButton(
               () {
                 Get.back();
+                // launchUrl(Uri.parse(
+                //     "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${agenda?.id}"));
                 launchUrl(Uri.parse(
-                    "${ApiProvider.BASE_URL}/api/peserta/download/excel?kegiatan_id=${agenda?.id}"));
+                    "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${agenda?.id}&&wilayah=true"));
               },
-              text: "Download Excel",
+              text: "Download PDF (Dengan Wilayah)",
               textColor: basicWhite,
               padding: const EdgeInsets.all(16),
             ),
@@ -160,7 +162,7 @@ openDialogDownload(KegiatanModel? agenda) {
                 launchUrl(Uri.parse(
                     "${ApiProvider.BASE_URL}/api/peserta/download/pdf?kegiatan_id=${agenda?.id}"));
               },
-              text: "Download PDF",
+              text: "Download PDF (Tanpa Wilayah)",
               textColor: basicWhite,
               padding: const EdgeInsets.all(16),
             ),

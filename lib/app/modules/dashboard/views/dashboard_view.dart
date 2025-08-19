@@ -1,5 +1,6 @@
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
+import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/responsive_layout.dart';
@@ -279,7 +280,7 @@ class DashboardView extends GetView<DashboardController> {
                                   onTap: () async {
                                     await Clipboard.setData(ClipboardData(
                                             text:
-                                                "${Uri.base.origin}/#/form/${agenda?.codeUrl}"))
+                                                "${ApiProvider.BASE_URL}/#/form/${agenda?.codeUrl}"))
                                         .whenComplete(() {
                                       showToast("Berhasil menyalin kode");
                                     });

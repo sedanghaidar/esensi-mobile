@@ -1,21 +1,20 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
+import 'package:absensi_kegiatan/app/data/model/NotulenModel.dart';
 import 'package:absensi_kegiatan/app/data/model/PesertaModel.dart';
 import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/HiveProvider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_connect/connect.dart';
 
+import '../model/repository/FailureModel.dart';
 import '../model/repository/StatusRequestModel.dart';
 
 class ApiProvider extends GetConnect {
-  // static const String BASE_URL = "http://172.100.31.212:5000";
-  static const String BASE_URL = "https://cs.saturnalia.jatengprov.go.id";
-  // static const String BASE_URL = "http://127.0.0.1:8000";
-
-  // static const String BASE_URL = "http://10.99.1.171:8000";
+  static String BASE_URL = dotenv.env["BASE_URL"]??"";
 
   HiveProvider hive = HiveProvider();
 
@@ -30,25 +29,33 @@ class ApiProvider extends GetConnect {
     });
 
     httpClient.addResponseModifier((request, response) {
-      // if(request.url!="http://127.0.0.1:8000/api/organization-limit/byactid/16" && request.url!="http://127.0.0.1:8000/api/organisasi"){
-      //   debugPrint(
-      //     '\n╔══════════════════════════ Response ══════════════════════════\n'
-      //         '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
-      //         '╟ url: ${request.url}\n'
-      //         '╟ Headers: ${request.headers}\n'
-      //     // '╟ Body: ${request.bodyBytes.map((event) => event.asMap().toString()) ?? ''}\n'
-      //         '╟ Status Code: ${response.statusCode}\n'
-      //         '╟ Data: ${response.bodyString?.toString() ?? ''}'
-      //         '\n╚══════════════════════════ Response ══════════════════════════\n',
-      //     wrapWidth: 1024,
-      //   );
-      // }
+      if("${request.url}".contains("/api/peserta/daftar")){
+        debugPrint(
+          '\n╔══════════════════════════ Response ══════════════════════════\n'
+              '╟ REQUEST ║ ${request.method.toUpperCase()}\n'
+              '╟ url: ${request.url}\n'
+              '╟ Headers: ${request.headers}\n'
+              // '╟ Body: ${request.bodyBytes.toString() ?? ''}\n'
+              '╟ Status Code: ${response.statusCode}\n'
+              '╟ Data: ${response.bodyString?.toString() ?? ''}'
+              '\n╚══════════════════════════ Response ══════════════════════════\n',
+          wrapWidth: 1024,
+        );
+      }
 
       httpClient.timeout = const Duration(minutes: 1);
 
       return response;
     });
     super.onInit();
+  }
+
+  StatusRequestModel<T> handleError<T>(dynamic e) {
+    if (e is StatusRequestModel<T>) {
+      return e;
+    } else {
+      return StatusRequestModel.error(FailureModel(400, "$e", "$e"));
+    }
   }
 
   /// Api login ke dalam aplikasi
@@ -106,7 +113,8 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(KegiatanModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<KegiatanModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -138,12 +146,17 @@ class ApiProvider extends GetConnect {
   /// Input absen peserta dengan [peserta] adalah data peserta yang ditulis
   Future<StatusRequestModel<PesertaModel>> insertPeserta(
       Map<String, dynamic> peserta) async {
+    debugPrint("JALAN");
     final response = await post("/api/peserta/daftar", FormData(peserta));
+    debugPrint("${response.isOk}");
     final model = toDefaultModel(response.body);
     if (response.isOk) {
+      debugPrint("SUKSES LHO NDESSSS");
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      debugPrint("GAGAL LHO NDESSSS ${model.message}");
+      throw StatusRequestModel<PesertaModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -178,7 +191,8 @@ class ApiProvider extends GetConnect {
       return StatusRequestModel.success(List<PesertaModel>.from(
           (model.data).map((u) => PesertaModel.fromJson(u))));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<List<PesertaModel>>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -190,7 +204,8 @@ class ApiProvider extends GetConnect {
     if (response.isOk) {
       return StatusRequestModel.success(PesertaModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel<PesertaModel>.error(
+          failure(response.statusCode, model));
     }
   }
 
@@ -247,21 +262,24 @@ class ApiProvider extends GetConnect {
   }
 
   /// Menambah atau mengubah data partisipan instansi
-  Future<StatusRequestModel<InstansiPartipantModel>> createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
-    final response = await post("/api/organization-limit/", data);
+  Future<StatusRequestModel<InstansiPartipantModel>>
+      createOrUpdatePartisipanInstansi(Map<String, dynamic> data) async {
+    final response = await post("/api/organization-limit/createupdate", data);
     final model = toDefaultModel(response.body);
-    if (response.isOk && model.success==true) {
-      return StatusRequestModel.success(InstansiPartipantModel.fromJson(model.data));
+    if (response.isOk && model.success == true) {
+      return StatusRequestModel.success(
+          InstansiPartipantModel.fromJson(model.data));
     } else {
       return StatusRequestModel.error(failure(response.statusCode, model));
     }
   }
 
   /// Menghapus data partisipan instansi
-  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(String? id) async {
+  Future<StatusRequestModel<dynamic>> deletePartisipanInstansi(
+      String? id) async {
     final response = await post("/api/organization-limit/delete/$id", {});
     final model = toDefaultModel(response.body);
-    if (response.isOk && model.success==true) {
+    if (response.isOk && model.success == true) {
       return StatusRequestModel.success("Berhasil menghapus isntansi");
     } else {
       throw StatusRequestModel.error(failure(response.statusCode, model));
@@ -271,10 +289,12 @@ class ApiProvider extends GetConnect {
   /// ----------------------------------------------------------------------------------------
 
   /// Menambah data Instansi
-  Future<StatusRequestModel<InstansiModel>> postInstansi(InstansiModel data) async {
+  Future<StatusRequestModel<InstansiModel>> postInstansi(
+      InstansiModel data) async {
     final response = await post("/api/organisasi/tambah", {
       "name": data.name,
-      "short_name": data.shortName
+      "short_name": data.shortName,
+      "internal": data.internal
     });
     final model = toDefaultModel(response.body);
     if (response.isOk) {
@@ -294,16 +314,53 @@ class ApiProvider extends GetConnect {
     }
   }
 
-  Future<StatusRequestModel<InstansiModel>> updateInstansi(String? id, InstansiModel instansi) async {
+  Future<StatusRequestModel<InstansiModel>> updateInstansi(
+      String? id, InstansiModel instansi) async {
     final response = await post("/api/organisasi/update/$id", {
       "name": instansi.name,
-      "short_name": instansi.shortName
+      "short_name": instansi.shortName,
+      "internal": instansi.internal == true ? 1 : 0
     });
     final model = toDefaultModel(response.body);
     if (response.isOk) {
       return StatusRequestModel.success(InstansiModel.fromJson(model.data));
     } else {
-      return StatusRequestModel.error(failure(response.statusCode, model));
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> postNewNotulen(FormData data) async {
+    final response = await post("/api/notulen", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> updateNewNotulen(
+      FormData data, String activityId) async {
+    final response = await post("/api/notulen/$activityId", data);
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      throw StatusRequestModel.error(failure(response.statusCode, model));
+    }
+  }
+
+  Future<StatusRequestModel<NotulenModel>> getNotulen(String activityId) async {
+    final response = await get("/api/notulen/$activityId");
+    final model = toDefaultModel(response.body);
+    if (response.isOk) {
+      return StatusRequestModel.success(NotulenModel.fromJson(model.data));
+    } else {
+      if (response.statusCode == 405) {
+        return StatusRequestModel.empty();
+      }
+      throw StatusRequestModel<NotulenModel>.error(
+          failure(response.statusCode, model));
     }
   }
 }

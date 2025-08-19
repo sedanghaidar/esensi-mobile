@@ -12,7 +12,14 @@ import 'package:get/get.dart';
 class DashboardController extends GetxController {
   ApiProvider repository = Get.find();
 
+  TextEditingController controllerSearch = TextEditingController();
+
+  static String typePendaftaran = "Pendaftaran";
+  static String typeAbsensi = "Absensi";
+  RxString selectedType = typePendaftaran.obs;
+
   final kegiatan = StatusRequestModel<List<KegiatanModel>>().obs;
+  final kegiatanFilter = StatusRequestModel<List<KegiatanModel>>().obs;
   UserModel? user;
 
   init() {
@@ -21,7 +28,6 @@ class DashboardController extends GetxController {
   }
 
   getKegiatan() {
-    // debugPrint("GET KEGIATAN");
     kegiatan.value = StatusRequestModel.loading();
     repository.getKegiatan().then((value) {
       if (value.statusRequest == StatusRequest.SUCCESS) {
@@ -31,6 +37,7 @@ class DashboardController extends GetxController {
         }
       }
       kegiatan.value = value;
+      filterKegiatanByType();
     }, onError: (e) {
       kegiatan.value = StatusRequestModel.error(failure2(e));
     });
@@ -55,5 +62,29 @@ class DashboardController extends GetxController {
     }, onError: (e) {
       dialogWarning(Get.context!, "Gagal menghapus kegiatan. $e");
     });
+  }
+
+  filterKegiatanByType() {
+    kegiatanFilter.value = StatusRequestModel.success(
+        kegiatan.value.data?.where((element){
+          if(selectedType.value==typeAbsensi){
+            return element.type == 1 && (element.name??"").toLowerCase().contains(controllerSearch.text);
+          }else{
+            return element.type == 2 && (element.name??"").toLowerCase().contains(controllerSearch.text);
+          }
+        }).toList() ??
+            []);
+  }
+
+  @override
+  void onInit() {
+    init();
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    getKegiatan();
+    super.onReady();
   }
 }

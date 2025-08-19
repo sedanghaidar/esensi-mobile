@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import '../../utils/colors.dart';
 
 Future<DateTime?> CDatePicker(BuildContext context,
-    {String? timeSelected}) async {
+    {String? timeSelected, DateTime? firstDate}) async {
+  debugPrint("${firstDate}");
   DateTime initialDate = DateTime.now();
   if (timeSelected != null && timeSelected != "") {
     initialDate = DateFormat("yyyy-MM-dd").parse(timeSelected);
@@ -13,13 +14,12 @@ Future<DateTime?> CDatePicker(BuildContext context,
   DateTime? picker = await showDatePicker(
     context: context,
     initialDate: initialDate,
-    firstDate: DateTime.now(),
+    firstDate: firstDate ?? DateTime.now(),
     lastDate: DateTime(2050),
     builder: (context, child) {
       return Theme(
         data: ThemeData.light().copyWith(
           primaryColor: basicPrimary,
-          accentColor: basicPrimaryLight,
           colorScheme: ColorScheme.light(primary: basicPrimary),
           buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
         ),
@@ -46,7 +46,6 @@ Future<TimeOfDay?> CTimePicker(BuildContext context,
       return Theme(
         data: ThemeData.light().copyWith(
           primaryColor: basicPrimary,
-          accentColor: basicPrimaryLight,
           colorScheme: ColorScheme.light(primary: basicPrimary),
           buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
         ),

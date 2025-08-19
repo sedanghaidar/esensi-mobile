@@ -1,19 +1,17 @@
 name: absensi_kegiatan
-version: 1.0.0+1
+version: 1.0.10+10
 publish_to: none
 description: Multiplatform Apps for Presensi Kegiatan by Diskominfo Jateng
 environment:
-  sdk: '>=2.17.6 <3.0.0'
+  sdk: ^3.5.4
 
 dependencies:
   cupertino_icons: ^1.0.2
-  get: 4.6.5
+  get: ^4.6.6
   flutter:
     sdk: flutter
   flutter_svg: ^1.1.6
-  intl: ^0.17.0
   syncfusion_flutter_signaturepad: ^20.3.60
-  fluttertoast: ^8.1.1
   substring_highlight: ^1.0.33
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -22,17 +20,56 @@ dependencies:
   pretty_qr_code: ^2.0.2
   url_launcher: ^6.1.7
   qr_code_scanner: ^1.0.1
-  google_fonts: ^3.0.1
+  #  google_fonts: ^3.0.1
+  flutter_markdown: ^0.6.14
+  flutter_launcher_icons: ^0.12.0
+  image_picker: ^1.1.2
+  quill_html_editor: ^2.1.9
+  vsc_quill_delta_to_html: ^1.0.3
+  magic_view:
+    path: ../magic_view
+#    git:
+#      url: https://github.com/hanifabdullah21/MagicView
+#      ref: main
+  #  pdf: ^3.10.4
+  printing: ^5.13.4
+  file_saver: ^0.2.8
+  htmltopdfwidgets: ^0.0.8+1
+  flutter_tts: ^3.8.5
+  flutter_dotenv: 5.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   hive_generator: ^1.0.0
-  build_runner: ^1.11.5
+  build_runner: ^2.4.6
+  hive_test: ^1.0.1
+
+flutter_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/esensi/logo.png'
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: 'assets/esensi/logo.png'
+    background_color: '#0b53471'
+    # theme_color: '#hexcode'
+  windows:
+    generate: true
+    image_path: 'assets/esensi/logo.png'
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: 'assets/esensi/logo.png'
 
 flutter:
   uses-material-design: true
 
   assets:
+    - .env.dev
     - assets/
+    - assets/esensi/

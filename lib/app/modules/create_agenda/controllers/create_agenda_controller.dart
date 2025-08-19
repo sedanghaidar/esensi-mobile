@@ -14,15 +14,31 @@ import '../../../data/model/repository/StatusRequestModel.dart';
 class CreateAgendaController extends GetxController {
   ApiProvider repository = Get.find();
 
+  String? year; //digunakan untuk menjebol batasan tahun pada formulir
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController controllerName = TextEditingController();
   final TextEditingController controllerDate = TextEditingController();
   final TextEditingController controllerTime = TextEditingController();
   final TextEditingController controllerLocation = TextEditingController();
   final TextEditingController controllerInformation = TextEditingController();
+  final TextEditingController controllerMessage = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
+
+  final TextEditingController controllerTypeNotif = TextEditingController();
+
+  List<String> tagging = [
+    "#nama_peserta",
+    "jabatan_peserta",
+    "instansi_peserta",
+    "nama_agenda",
+    "tanggal_agenda",
+    "waktu_agenda",
+    "lokasi_agenda",
+    "informasi_tambahan",
+  ];
 
   final types = [].obs;
   RxBool isParticiationLimit = false.obs;
@@ -44,6 +60,7 @@ class CreateAgendaController extends GetxController {
       "time": controllerTime.text,
       "location": controllerLocation.text,
       "information": controllerInformation.text,
+      "verification_message": controllerMessage.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
       "limit_participant": isParticiationLimit.value,
       "type": controllerType.text == TYPE_ABSENSI
@@ -78,6 +95,11 @@ class CreateAgendaController extends GetxController {
 
   @override
   void onInit() {
+    controllerTypeNotif.text =
+        notification_types_map[TYPE_NOTIFICATION_NONE_CODE] ?? "-";
+    controllerMessage.text =
+        "Terimakasih Bp/Ibu #nama_peserta, #jabatan_peserta dari #instansi_peserta telah mendaftar pada kegiatan *#nama_agenda* .\nKegiatan akan dilaksanakan pada :\nTanggal : #tanggal_agenda\nWaktu : #waktu_agenda WIB - selesai\nTempat : #lokasi_agenda\nCatatan : #informasi_tambahan";
+    year = Get.parameters['tahun'].toString();
     super.onInit();
   }
 }

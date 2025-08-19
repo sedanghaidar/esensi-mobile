@@ -5,26 +5,60 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:absensi_kegiatan/app/data/model/UserModel.dart';
+import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/data/repository/HiveHelper.dart';
+import 'package:absensi_kegiatan/app/data/repository/HiveUserAdapter.dart';
+import 'package:absensi_kegiatan/app/modules/login/controllers/login_controller.dart';
+import 'package:absensi_kegiatan/app/modules/login/views/login_view.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:absensi_kegiatan/main.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_test/hive_test.dart';
+import 'package:magic_view/widget/button/MagicButton.dart';
+import 'package:magic_view/widget/textfield/MagicTextField.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    // await tester.pumpWidget(const MyApp());
+  group('Login Test', () {
+    late LoginController controller;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    setUp(() async {
+      await setUpTestHive();
+      if (!Hive.isAdapterRegistered(0)) {
+        Hive.registerAdapter<UserModel>(HiveUserAdapter());
+      }
+      await Hive.openBox<dynamic>(HiveHelper.HIVE_APPNAME);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      Get.put(ApiProvider());
+      controller = Get.put(LoginController());
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    tearDown(() {
+      Get.delete<LoginController>();
+    });
+
+    test('Memastikan nilai awal kosong', () {
+      expect(controller.controllerEmail.text.isEmpty, true);
+      expect(controller.controllerPassword.text.isEmpty, true);
+    });
+
+    testWidgets(
+        'Memastikan bahwa terdapat 2 Widget untuk input teks dan 1 Widget berupa tombol',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(GetMaterialApp(
+        home: LoginView(),
+      ));
+      final email = find.byWidgetPredicate((widget) =>
+          widget is MagicTextField && widget.hint == "Masukkan email");
+      final password = find.byWidgetPredicate((widget) =>
+          widget is MagicTextField && widget.hint == "Masukkan Kata Sandi");
+      final button = find.byWidgetPredicate(
+          (widget) => widget is MagicButton && widget.text == "Masuk");
+
+      expect(email, findsOne);
+      expect(password, findsOne);
+      expect(button, findsOne);
+    });
   });
 }

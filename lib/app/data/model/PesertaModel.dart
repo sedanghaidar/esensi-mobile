@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/KegiatanModel.dart';
 
 class PesertaModel {
@@ -13,6 +14,9 @@ class PesertaModel {
     this.nip,
     this.jabatan,
     this.instansi,
+    this.instansiDetail,
+    this.wilayahId,
+    this.wilayahName,
     this.nohp,
     this.signature,
     this.qrCode,
@@ -21,6 +25,7 @@ class PesertaModel {
     this.scannedAt,
     this.kegiatan,
     this.id,
+    this.gender,
   });
 
   int? activityId;
@@ -28,9 +33,13 @@ class PesertaModel {
   String? nip;
   String? jabatan;
   String? instansi;
+  InstansiModel? instansiDetail;
+  int? wilayahId;
+  String? wilayahName;
   String? nohp;
   String? signature;
   String? qrCode;
+  String? gender;
   DateTime? updatedAt;
   DateTime? createdAt;
   DateTime? scannedAt;
@@ -43,9 +52,13 @@ class PesertaModel {
     String? nip,
     String? jabatan,
     String? instansi,
+    InstansiModel? instansiDetail,
+    int? wilayahId,
+    String? wilayahName,
     String? nohp,
     String? signature,
     String? qrCode,
+    String? gender,
     DateTime? updatedAt,
     DateTime? createdAt,
     DateTime? scannedAt,
@@ -58,9 +71,13 @@ class PesertaModel {
         nip: nip ?? this.nip,
         jabatan: jabatan ?? this.jabatan,
         instansi: instansi ?? this.instansi,
+        instansiDetail: instansiDetail ?? this.instansiDetail,
+        wilayahId: wilayahId ?? this.wilayahId,
+        wilayahName: wilayahName ?? this.wilayahName,
         nohp: nohp ?? this.nohp,
         signature: signature ?? this.signature,
         qrCode: qrCode ?? this.qrCode,
+        gender: gender ?? this.gender,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
         scannedAt: createdAt ?? this.scannedAt,
@@ -81,9 +98,17 @@ class PesertaModel {
         nip: json["nip"],
         jabatan: json["jabatan"] == null ? null : json["jabatan"],
         instansi: json["instansi"] == null ? null : json["instansi"],
+        instansiDetail: json["parent"] == null
+            ? null
+            : InstansiModel.fromJson(json["parent"]),
+        wilayahId: json["region_id"] == null
+            ? null
+            : int.parse(json["region_id"].toString()),
+        wilayahName: json["region_name"] == null ? null : json["region_name"],
         nohp: json["nohp"] == null ? null : json["nohp"],
         signature: json["signature"] == null ? null : json["signature"],
         qrCode: json["qr_code"] == null ? null : json["qr_code"],
+        gender: json["gender"] == null ? null : json["gender"],
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
@@ -108,6 +133,7 @@ class PesertaModel {
         "nohp": nohp == null ? null : nohp,
         "signature": signature == null ? null : signature,
         "qr_code": qrCode == null ? null : qrCode,
+        "gender": gender == null ? null : gender,
         "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
         "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
         "scanned_at": scannedAt == null ? null : scannedAt?.toIso8601String(),

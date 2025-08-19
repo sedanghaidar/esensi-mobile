@@ -19,7 +19,12 @@ class HiveUserAdapter extends TypeAdapter<UserModel> {
         email: fields[3] as String?,
         createdAt: fields[4] as DateTime?,
         updatedAt: fields[5] as DateTime?,
-        token: fields[6] as String?);
+        token: fields[6] as String?,
+        roleId: fields[7] as int?,
+        dinasId: fields[8] as int?,
+        bidangId: fields[9] as int?,
+        phone: fields[10] as String?,
+    );
   }
 
   @override
@@ -28,7 +33,7 @@ class HiveUserAdapter extends TypeAdapter<UserModel> {
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -42,6 +47,14 @@ class HiveUserAdapter extends TypeAdapter<UserModel> {
       ..writeByte(5)
       ..write(obj.updatedAt)
       ..writeByte(6)
-      ..write(obj.token);
+      ..write(obj.token)
+      ..writeByte(7)
+      ..write(obj.roleId)
+      ..writeByte(8)
+      ..write(obj.dinasId)
+      ..writeByte(9)
+      ..write(obj.bidangId)
+      ..writeByte(10)
+      ..write(obj.phone);
   }
 }

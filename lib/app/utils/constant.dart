@@ -1,3 +1,7 @@
+import 'package:absensi_kegiatan/app/utils/colors.dart';
+import 'package:magic_view/factory.dart';
+import 'package:magic_view/style/MagicTextFieldBorder.dart';
+
 ///ORIENTATION
 const WEB_LANDSCAPE =
     1; //Jika aplikasi dibuka di browser dan lebar platform > tinggi platform
@@ -14,3 +18,30 @@ const DESKTOP_PORTRAIT =
 const HIVE_USER_ID = 0; //Unique Hive ID untuk User Model
 
 const maxWidth = 720.0;
+
+MagicTextFieldBorder underlineBorder = MagicTextFieldBorder(
+    border: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: basicPrimary,
+    ),
+    enableBorder: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: basicPrimary,
+    ),
+    disableBorder: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: basicGrey2,
+    ),
+    focusedBorder: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: basicPrimary,
+    ),
+    errorBorder: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: MagicFactory.colorError,
+    ),
+    focusedErrorBorder: MagicTextFieldBorderProperty(
+        type: MagicTextFieldBorderType.UNDERLINE,
+        sideColor: MagicFactory.colorError,
+    ),
+);

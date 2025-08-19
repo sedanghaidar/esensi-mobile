@@ -1,32 +1,39 @@
-import 'dart:convert';
-
 import 'package:absensi_kegiatan/app/data/model/InstansiModel.dart';
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
-import 'package:absensi_kegiatan/app/data/model/PostParticipantModel.dart';
+import 'package:absensi_kegiatan/app/data/model/RegionModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequestModel.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiHelper.dart';
 import 'package:absensi_kegiatan/app/data/repository/ApiProvider.dart';
+import 'package:absensi_kegiatan/app/data/repository/LaporgubProvider.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/toast.dart';
+import 'package:absensi_kegiatan/app/utils/string.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
 
 class ManageParticipantController extends GetxController {
   ApiProvider repository = Get.find();
+  LaporgubProvider repositoryLaporgub = Get.find();
   String? id = "0";
 
   RxInt totalInstansi = 0.obs;
   RxInt totalPartisipan = 0.obs;
 
   GlobalKey<FormState> keyForm = GlobalKey<FormState>();
+
+  InstansiModel? selectedInstansi;
   TextEditingController controllerInstansi = TextEditingController();
+  List<RegionModel?> selectedRegions = [];
+  TextEditingController controllerRegion = TextEditingController();
   TextEditingController controllerMax = TextEditingController();
   final controllerSearch = TextEditingController();
   RxString filter = "".obs;
 
   final instansi = StatusRequestModel<List<InstansiModel>>().obs;
+  final regions = StatusRequestModel<List<RegionModel>>().obs;
   Rx<StatusRequestModel<List<InstansiPartipantModel>>> participants =
       StatusRequestModel<List<InstansiPartipantModel>>().obs;
 
@@ -35,6 +42,7 @@ class ManageParticipantController extends GetxController {
     id = Get.parameters["id"];
     getInstansiParticipant();
     getInstansiAll();
+    getRegion();
     super.onInit();
   }
 
@@ -70,32 +78,73 @@ class ManageParticipantController extends GetxController {
     });
   }
 
-  createOrUpdateParticipant(int action) {
-    showLoading();
+  getRegion() {
+    repositoryLaporgub.getRegion().then((value) {
+      if (value.data?.isEmpty == true) {
+        regions.value = StatusRequestModel.empty();
+      } else {
+        regions.value = value;
+      }
+    }, onError: (e) {
+      final err = repository.handleError<RegionModel>(e);
+      debugPrint("${err.failure?.msgShow}");
+    });
+  }
+
+  postParticipant(
+      RegionModel? regionModel, InstansiModel? instansi, int action) {
     repository.createOrUpdatePartisipanInstansi({
       "activity_id": id,
-      "organization_name": controllerInstansi.text,
-      "max_participant": controllerMax.text
+      "organization_name": instansi?.name,
+      "max_participant": controllerMax.text,
+      "region_id": regionModel?.id,
+      "region_name": regionModel?.name
     }).then((value) {
-      hideLoading();
-      showToast("Berhasil menambah/mengubah data");
       if (value.data != null) {
         if (action == 1) {
-          addParticipantToList(value.data!.copyWith(organization: InstansiModel(
-            id: value.data?.organizationId,
-            name: controllerInstansi.text
-          )));
+          InstansiPartipantModel newData =
+              value.data!.copyWith(organization: selectedInstansi);
+          addParticipantToList(newData);
         } else {
+          hideLoading();
+          showToast(
+              "Berhasil menambah/mengubah data ${selectedInstansi?.name}");
           updateParticipantToList(value.data!);
         }
       }
     }, onError: (e) {
-      hideLoading();
       showToast("Gagal menambah/mengubah data. ${failure2(e).msgShow}");
     });
   }
 
+  createOrUpdateParticipant(int action,
+      {InstansiPartipantModel? instansiPartipantModel}) {
+    showLoading();
+    if (action == 1) {
+      for (int i = 0; i < (selectedRegions.length); i++) {
+        postParticipant(
+            RegionModel(
+                id: "${selectedRegions[i]?.id}",
+                name: "${selectedRegions[i]?.name}"),
+            selectedInstansi,
+            action);
+      }
+      hideLoading();
+    } else {
+      debugPrint("${instansiPartipantModel?.toJson()}");
+      postParticipant(
+          RegionModel(
+              id: "${instansiPartipantModel?.wilayahId}",
+              name: instansiPartipantModel?.wilayahName),
+          InstansiModel(
+              name: instansiPartipantModel?.organization?.name,
+              id: instansiPartipantModel?.organization?.id),
+          action);
+    }
+  }
+
   addParticipantToList(InstansiPartipantModel data) {
+    debugPrint(data.toJson().toString());
     List<InstansiPartipantModel> list =
         List.from(participants.value.data ?? List.empty())..add(data);
     participants.value = StatusRequestModel.success((list));
@@ -105,7 +154,8 @@ class ManageParticipantController extends GetxController {
     List<InstansiPartipantModel> list =
         List.from(participants.value.data ?? List.empty())
           ..map((e) {
-            if (e.organization?.id == data.organizationId) {
+            if (e.organization?.id == data.organizationId &&
+                e.wilayahId == data.wilayahId) {
               e.maxParticipant = data.maxParticipant;
             }
           }).toList();
@@ -135,7 +185,7 @@ class ManageParticipantController extends GetxController {
     }
   }
 
-  countTotalInstansi(){
+  countTotalInstansi() {
     totalInstansi.value = 0;
     for (InstansiPartipantModel i in participants.value.data ?? []) {
       if (i.organization?.name?.toLowerCase().contains(filter) == true) {
@@ -144,12 +194,29 @@ class ManageParticipantController extends GetxController {
     }
   }
 
-  countTotalPartisipan(){
+  countTotalPartisipan() {
     totalPartisipan.value = 0;
     for (InstansiPartipantModel i in participants.value.data ?? []) {
       if (i.organization?.name?.toLowerCase().contains(filter) == true) {
         totalPartisipan.value = totalPartisipan.value + (i.maxParticipant ?? 0);
       }
     }
+  }
+
+  String getNameInstansiPartisipan(InstansiPartipantModel? model) {
+    String name = getOptionString(model?.organization);
+    String? wilayah = model?.wilayahName ?? "";
+    return "$name $wilayah";
+  }
+
+  List<AutoCompleteData<RegionModel>>? convertListRegionToAutoCompleteData() {
+    return regions.value.data?.map((e) {
+      final check = (participants.value.data ?? []).where((element) {
+        return element.organization?.id == selectedInstansi?.id &&
+            "${element.wilayahId}" == "${e.id}";
+      });
+      return AutoCompleteData<RegionModel>("${e.name}", e,
+          enable: check.isEmpty);
+    }).toList();
   }
 }

@@ -3,7 +3,7 @@
     "short_name": "absensi_kegiatan",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
+    "background_color": "#0b53471",
     "theme_color": "#0175C2",
     "description": "Multiplatform Apps for Absensi Kegiatan",
     "orientation": "portrait-primary",

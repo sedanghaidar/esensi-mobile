@@ -10,6 +10,8 @@ import '../modules/detail_peserta/bindings/detail_peserta_binding.dart';
 import '../modules/detail_peserta/views/detail_peserta_view.dart';
 import '../modules/form/bindings/form_binding.dart';
 import '../modules/form/views/form_view.dart';
+import '../modules/form_notulen/bindings/form_notulen_binding.dart';
+import '../modules/form_notulen/views/form_notulen_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -18,8 +20,14 @@ import '../modules/manage_instansi/bindings/manage_instansi_binding.dart';
 import '../modules/manage_instansi/views/manage_instansi_view.dart';
 import '../modules/manage_participant/bindings/manage_participant_binding.dart';
 import '../modules/manage_participant/views/manage_participant_view.dart';
+import '../modules/preview_notulen/bindings/preview_notulen_binding.dart';
+import '../modules/preview_notulen/views/preview_notulen_view.dart';
+import '../modules/privacy-policy/bindings/privacy_policy_binding.dart';
+import '../modules/privacy-policy/views/privacy_policy_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/qr_form_absen/bindings/qr_form_absen_binding.dart';
+import '../modules/qr_form_absen/views/qr_form_absen_view.dart';
 import '../modules/qr_scanner/bindings/qr_scanner_binding.dart';
 import '../modules/qr_scanner/views/qr_scanner_view.dart';
 import '../modules/update_agenda/bindings/update_agenda_binding.dart';
@@ -54,7 +62,7 @@ class AppPages {
       binding: CreateAgendaBinding(),
     ),
     GetPage(
-      name: _Paths.FORM + "/:code",
+      name: _Paths.FORM + "/:code/",
       page: () => FormView(),
       binding: FormBinding(),
     ),
@@ -92,6 +100,26 @@ class AppPages {
       name: _Paths.MANAGE_INSTANSI,
       page: () => const ManageInstansiView(),
       binding: ManageInstansiBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRIVACY_POLICY,
+      page: () => PrivacyPolicyView(),
+      binding: PrivacyPolicyBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORM_NOTULEN,
+      page: () => const FormNotulenView(),
+      binding: FormNotulenBinding(),
+    ),
+    GetPage(
+      name: _Paths.QR_FORM_ABSEN + "/:id",
+      page: () => const QrFormAbsenView(),
+      binding: QrFormAbsenBinding(),
+    ),
+    GetPage(
+      name: _Paths.PREVIEW_NOTULEN + "/:id",
+      page: () => const PreviewNotulenView(),
+      binding: PreviewNotulenBinding(),
     ),
   ];
 }

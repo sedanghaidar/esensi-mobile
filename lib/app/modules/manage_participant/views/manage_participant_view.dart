@@ -1,17 +1,27 @@
 import 'package:absensi_kegiatan/app/data/model/InstansiParticipantModel.dart';
+import 'package:absensi_kegiatan/app/data/model/RegionModel.dart';
 import 'package:absensi_kegiatan/app/data/model/repository/StatusRequest.dart';
 import 'package:absensi_kegiatan/app/global_widgets/button/CButton.dart';
+import 'package:absensi_kegiatan/app/global_widgets/dialog/CDialog.dart';
 import 'package:absensi_kegiatan/app/global_widgets/dialog/CLoading.dart';
 import 'package:absensi_kegiatan/app/global_widgets/other/error.dart';
-import 'package:absensi_kegiatan/app/global_widgets/responsive_layout/ResponsiveLayout.dart';
 import 'package:absensi_kegiatan/app/global_widgets/sized_box/CSizedBox.dart';
 import 'package:absensi_kegiatan/app/global_widgets/text/CText.dart';
-import 'package:absensi_kegiatan/app/global_widgets/text_field/CTextField.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:magic_view/factory.dart';
+import 'package:magic_view/style/AutoCompleteData.dart';
+import 'package:magic_view/style/MagicTextFieldStyle.dart';
+import 'package:magic_view/style/MagicTextStyle.dart';
+import 'package:magic_view/widget/button/MagicButton.dart';
+import 'package:magic_view/widget/text/MagicText.dart';
+import 'package:magic_view/widget/textfield/MagicAutoComplete.dart';
+import 'package:magic_view/widget/textfield/MagicTextField.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../data/model/InstansiModel.dart';
+import '../../../global_widgets/other/responsive_layout.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/string.dart';
@@ -28,160 +38,46 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
         return dialogOnBackPressed();
       },
       child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: basicPrimary,
-            centerTitle: true,
-            leading: InkWell(
-              onTap: () {
-                dialogOnBackPressed();
-              },
-              child: Icon(
-                Icons.home,
-                color: basicWhite,
-              ),
-            ),
-            actions: [
-              Center(
-                child: InkWell(
-                  onTap: () {
-                    openDialog(context, 1);
-                  },
-                  child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          Image.network(
-                            "https://cdn-icons-png.flaticon.com/512/2861/2861698.png",
-                            width: 32,
-                            height: 32,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          CText(
-                            "Tambah\nPartisipan",
-                            style:
-                                CText.textStyleHint.copyWith(color: basicWhite),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              Center(
-                child: InkWell(
-                  onTap: () {
-                    Get.toNamed(Routes.MANAGE_INSTANSI);
-                  },
-                  child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          Image.network(
-                            "https://cdn-icons-png.flaticon.com/512/993/993928.png",
-                            width: 32,
-                            height: 32,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          CText(
-                            "Tambah\nInstansi",
-                            style:
-                                CText.textStyleHint.copyWith(color: basicWhite),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      )),
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              )
-            ],
+        backgroundColor: basicPrimary,
+        appBar: widgetAppBar(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            openDialog(Get.context!, 1);
+          },
+          backgroundColor: basicPrimaryDark,
+          child: const Icon(
+            Icons.add,
+            color: basicWhite,
           ),
-          body: ResponsiveLayout(
-            largeScreen(),
-            smallScreen: smallScreen(),
-          )),
-    );
-  }
-
-  Widget smallScreen() {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        width: context.width,
-        child: Stack(
-          children: [
-            Container(
-              height: 220,
-              decoration: BoxDecoration(
-                  color: basicPrimary.withOpacity(0.25),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(120),
-                      bottomRight: Radius.circular(120))),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CText(
-                      "Manajemen Partisipan",
-                      style: CText.textStyleSubhead,
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
-                ),
-                textFieldSearch(),
-                rowInformation(),
-                listView()
-              ],
-            ),
-          ],
         ),
+        body: ResponsiveLayout(Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
+              ),
+              color: basicWhite),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [textFieldSearch(), rowInformation(), listView()],
+          ),
+        )),
       ),
     );
   }
 
-  Widget largeScreen() {
-    return Center(
-      child: Container(
-        width: context.width / 1.5,
-        child: Stack(
-          children: [
-            Container(
-              height: 220,
-              decoration: BoxDecoration(
-                  color: basicPrimary.withOpacity(0.25),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(120),
-                      bottomRight: Radius.circular(120))),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: CText(
-                        "Manajemen Partisipan",
-                        style: CText.textStyleSubhead,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
-                  ),
-                  textFieldSearch(),
-                  rowInformation(),
-                  listView()
-                ],
-              ),
-            )
-          ],
+  AppBar widgetAppBar() {
+    return AppBar(
+      backgroundColor: basicPrimary,
+      centerTitle: true,
+      elevation: 0,
+      leading: InkWell(
+        onTap: () {
+          dialogOnBackPressed();
+        },
+        child: const Icon(
+          Icons.home,
+          color: basicWhite,
         ),
       ),
     );
@@ -225,10 +121,9 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: basicWhite, border: Border.all(
-          color: basicPrimary,
-          width: 2.0
-        )),
+            borderRadius: BorderRadius.circular(10),
+            color: basicWhite,
+            border: Border.all(color: basicPrimary, width: 2.0)),
         child: Column(
           children: [
             CText(
@@ -250,9 +145,9 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
   Widget textFieldSearch() {
     return Container(
       margin: EdgeInsets.all(10),
-      child: CTextField(
-        controller: controller.controllerSearch,
-        hintText: "Cari Nama Instansi",
+      child: MagicTextField.border(
+        controller.controllerSearch,
+        hint: "Cari Nama Instansi",
         onChange: (value) {
           controller.filter.value = value;
         },
@@ -274,20 +169,24 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
             String filter = controller.filter.value
                 .toLowerCase(); // jangan dihapus buat trigger search!
             return ListView.builder(
+              shrinkWrap: true,
+              primary: true,
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.only(bottom: 56),
               itemBuilder: (context, index) {
-                List<InstansiPartipantModel> instansi =
-                    controller.participants.value.data ?? [];
-                if (instansi[index]
-                        .organization
-                        ?.name
-                        ?.toLowerCase()
+                InstansiPartipantModel? instansi =
+                    controller.participants.value.data?[index];
+                if (controller
+                        .getNameInstansiPartisipan(instansi)
+                        .toLowerCase()
                         .contains(filter) ==
                     false) {
                   return Container();
                 }
                 return Card(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
                     child: Row(
                       children: [
                         Expanded(
@@ -295,14 +194,10 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CText(
-                                controller.participants.value.data?[index]
-                                        .organization?.name ??
-                                    "",
-                                style: CText.textStyleBodyBold,
-                              ),
-                              CText(
-                                  "Jumlah maksimal : ${controller.participants.value.data?[index].maxParticipant}")
+                              MagicText.subhead(controller
+                                  .getNameInstansiPartisipan(instansi)),
+                              MagicText(
+                                  "Jumlah maksimal : ${instansi?.maxParticipant}")
                             ],
                           ),
                         ),
@@ -316,7 +211,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                               },
                               child: const Icon(Icons.edit),
                             )),
-                        Expanded(flex: 0, child: CSizedBox.w10()),
+                        const Expanded(flex: 0, child: CSizedBox.w10()),
                         Expanded(
                             flex: 0,
                             child: InkWell(
@@ -344,7 +239,7 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
               controller.getInstansiParticipant();
             });
           default:
-            return SizedBox();
+            return const SizedBox();
         }
       }),
     );
@@ -357,39 +252,65 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
 
   openDialog(BuildContext context, int action,
       {InstansiPartipantModel? initial}) {
+    /// Reset data
+    controller.selectedInstansi = null;
     controller.controllerInstansi = TextEditingController();
+    controller.selectedRegions = [];
+    controller.controllerRegion = TextEditingController();
     controller.controllerMax.text =
         initial == null ? "0" : "${initial.maxParticipant}";
 
-    showDialog(
-        context: context,
-        useSafeArea: true,
-        builder: (context) {
-          return AlertDialog(
-              content: Form(
+    Get.dialog(cardDialog2(
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Form(
             key: controller.keyForm,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CText("Nama Instansi"),
-                CSizedBox.h5(),
+                /// INSTANSI
+                MagicText("Nama Instansi"),
+                const CSizedBox.h5(),
                 widgetInstansi(context, action, initial: initial),
+                const CSizedBox.h5(),
+                RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                      text: "Instansi tidak ditemukan? ",
+                      style: MagicFactory.magicTextStyle.toGoogleTextStyle()),
+                  TextSpan(
+                      text: "Tambah Instansi",
+                      style: MagicFactory.magicTextStyle
+                          .copyWith(
+                              color: basicPrimary, fontWeight: FontWeight.bold)
+                          .toGoogleTextStyle(),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.back();
+                          Get.toNamed(Routes.MANAGE_INSTANSI)?.then((value) {
+                            controller.getInstansiAll();
+                          });
+                        }),
+                ])),
+
+                /// WILAYAH
+                widgetRegion(context, action, initial: initial),
                 CSizedBox.h10(),
                 CText("Maksimal Partisipan"),
                 CSizedBox.h5(),
-                CTextField(
-                  controller: controller.controllerMax,
-                  hintText: "Masukkan jumlah maksimal partisipan",
+                MagicTextField.border(
+                  controller.controllerMax,
+                  hint: "Masukkan jumlah maksimal partisipan",
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (GetUtils.isNullOrBlank(value) == true) {
                       return msgBlank;
                     }
-                    if (!GetUtils.isNumericOnly(value)) {
+                    if (!GetUtils.isNumericOnly(value ?? "")) {
                       return "Hanya boleh berupa angka";
                     }
-                    if (int.parse(value) == 0) {
+                    if (int.parse(value ?? "") == 0) {
                       return "Minimal 1";
                     }
                     return null;
@@ -400,107 +321,140 @@ class ManageParticipantView extends GetView<ManageParticipantController> {
                   FocusManager.instance.primaryFocus?.unfocus();
                   if (!controller.keyForm.currentState!.validate()) return;
                   Get.back();
-                  controller.createOrUpdateParticipant(action);
+                  controller.createOrUpdateParticipant(action,
+                      instansiPartipantModel: initial);
                 }, action == 1 ? "Tambah" : "Ubah")
               ],
             ),
-          ));
-        });
+          ),
+        ),
+        ResponsiveLayout.getWidth(Get.context!)));
   }
 
   Widget widgetInstansi(BuildContext context, int action,
       {InstansiPartipantModel? initial}) {
     if (action == 1) {
-      return Autocomplete<InstansiModel>(
-        onSelected: (data) {
-          controller.controllerInstansi.text = data.name ?? "";
-          controller.controllerInstansi.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.controllerInstansi.text.length));
-        },
-        optionsBuilder: (text) {
-          if (text.text.isEmpty) {
-            return controller.instansi.value.data ?? List.empty();
-          } else {
-            return (controller.instansi.value.data ?? List.empty()).where(
-                (element) => (element.name ?? "")
-                    .toLowerCase()
-                    .contains(text.text.toLowerCase()));
-          }
-        },
-        displayStringForOption: (value) {
-          return value.name ?? "";
-        },
-        optionsViewBuilder: (context, onSelected, options) {
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Material(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 200, maxWidth: 275),
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      try {
-                        final data = options.elementAt(index);
-                        bool isEnabled = true;
-                        Iterable<InstansiPartipantModel>? checkData = controller
-                            .participants.value.data
-                            ?.where((element) =>
-                                element.organization?.name == data.name);
-                        if (checkData?.isNotEmpty == true) isEnabled = false;
-                        return ListTile(
-                          title: SubstringHighlight(
-                            text: data.name ?? "",
-                            textStyle: CText.textStyleBody.copyWith(
-                                color: isEnabled ? basicBlack : basicGrey2),
-                            term: controller.controllerInstansi.text,
-                            textStyleHighlight:
-                                TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                          enabled: isEnabled,
-                          hoverColor:
-                              isEnabled ? basicGrey2 : Colors.transparent,
-                          onTap: () {
-                            onSelected(data);
-                          },
-                        );
-                      } catch (e) {
-                        return SizedBox();
-                      }
-                    },
-                    separatorBuilder: (context, index) => Divider(),
-                    itemCount: options.length),
-              ),
-            ),
-          );
-        },
-        fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
-          this.controller.controllerInstansi = controller;
-          return CTextField(
-            controller: controller,
-            focusNode: focusNode,
-            hintText: "Pilih salah satu dari pilihan yang ada",
-            onEditingComplete: onEditingComplete,
+      final list = controller.instansi.value.data?.map((e) {
+        return getOption(e);
+      }).toList();
+      return MagicAutoComplete<InstansiModel>(
+          controller: controller.controllerInstansi,
+          list: list ?? [],
+          maxWidthOption: ResponsiveLayout.getWidth(Get.context!) - 40,
+          textFieldStyle: MagicTextFieldStyle(
+            hint: "Pilih Instansi",
             validator: (value) {
               if (GetUtils.isBlank(value) == true) {
                 return msgBlank;
               }
-              Iterable<InstansiModel> data =
-                  (this.controller.instansi.value.data ?? List.empty())
-                      .where((element) => element.name == value);
-              if (data.isEmpty) {
+              if (value != getOptionString(controller.selectedInstansi)) {
                 return "Silahkan pilih salah satu dari pilihan yang ada";
               }
               return null;
             },
-          );
-        },
-      );
+          ),
+          onSelected: (value) {
+            controller.controllerInstansi.text = value.data?.name ?? "";
+            controller.controllerInstansi.selection =
+                TextSelection.fromPosition(TextPosition(
+                    offset: controller.controllerInstansi.text.length));
+            controller.selectedInstansi = value.data;
+            controller.update(['region']);
+          });
     } else {
       controller.controllerInstansi.text = initial?.organization?.name ?? "";
-      return CTextField(
-        controller: controller.controllerInstansi,
-        hintText: "Nama Instansi",
+      return MagicTextField.border(
+        controller.controllerInstansi,
+        hint: "Nama Instansi",
         enabled: false,
       );
     }
+  }
+
+  Widget widgetRegion(BuildContext context, int action,
+      {InstansiPartipantModel? initial}) {
+    return GetBuilder<ManageParticipantController>(
+        id: 'region',
+        builder: (controller) {
+          if (action == 1) {
+            if (controller.selectedInstansi == null) {
+              return Container();
+            } else {
+              final list = controller.convertListRegionToAutoCompleteData();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CSizedBox.h10(),
+                  MagicText("Nama Wilayah"),
+                  MagicButton(
+                    () {
+                      for (int i = 0; i < (list?.length ?? 0); i++) {
+                        if (list?[i].enable == true) {
+                          controller.selectedRegions.add(list?[i].data);
+                        }
+                      }
+                      controller.update(['regions']);
+                    },
+                    text: "Pilih Semua",
+                  ),
+                  CSizedBox.h5(),
+                  widgetCheckboxRegion(list, (item, value) {
+                    if (value == false) {
+                      controller.selectedRegions.remove(item);
+                    } else {
+                      controller.selectedRegions.add(item);
+                    }
+                    controller.update(['regions']);
+                  })
+                ],
+              );
+            }
+          } else {
+            controller.controllerRegion.text = initial?.wilayahName ?? "";
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CSizedBox.h10(),
+                MagicText("Nama Wilayah"),
+                const CSizedBox.h5(),
+                MagicTextField.border(
+                  controller.controllerRegion,
+                  hint: "Nama Wilayah",
+                  enabled: false,
+                )
+              ],
+            );
+          }
+        });
+  }
+
+  Widget widgetCheckboxRegion(List<AutoCompleteData<RegionModel>>? list,
+      Function(RegionModel?, bool?) onChange) {
+    return GetBuilder<ManageParticipantController>(
+      id: 'regions',
+      builder: (controller) {
+        return ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return CheckboxListTile(
+              value: (list?[index].enable == true
+                  ? controller.selectedRegions.contains(list?[index].data)
+                  : true),
+              onChanged: (value) {
+                onChange(list?[index].data, value);
+              },
+              title: MagicText(
+                list?[index].option ?? "",
+                color: list?[index].enable == true
+                    ? null
+                    : MagicFactory.colorDisable,
+              ),
+              enabled: list?[index].enable,
+            );
+          },
+          itemCount: controller.regions.value.data?.length ?? 0,
+        );
+      },
+    );
   }
 }

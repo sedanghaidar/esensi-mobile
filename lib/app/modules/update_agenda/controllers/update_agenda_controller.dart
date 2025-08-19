@@ -22,17 +22,31 @@ class UpdateAgendaController extends GetxController {
   final TextEditingController controllerTime = TextEditingController();
   final TextEditingController controllerLocation = TextEditingController();
   final TextEditingController controllerInformation = TextEditingController();
+  final TextEditingController controllerMessage = TextEditingController();
   final TextEditingController controllerDateEnd = TextEditingController();
   final TextEditingController controllerTimeEnd = TextEditingController();
   final TextEditingController controllerType = TextEditingController();
 
   String? id = null;
+  String? year; //digunakan untuk menjebol batasan tahun pada formulir
   RxBool isParticiationLimit = false.obs;
   final kegiatan = StatusRequestModel<KegiatanModel>().obs;
+
+  List<String> tagging = [
+    "#nama_peserta",
+    "#jabatan_peserta",
+    "#instansi_peserta",
+    "#nama_agenda",
+    "#tanggal_agenda",
+    "#waktu_agenda",
+    "#lokasi_agenda",
+    "#informasi_tambahan",
+  ];
 
   @override
   void onInit() {
     id = Get.parameters["id"];
+    year = Get.parameters['tahun'].toString();
     getKegiatan();
     super.onInit();
   }
@@ -49,6 +63,7 @@ class UpdateAgendaController extends GetxController {
         controllerTime.text = value.data?.time ?? "";
         controllerLocation.text = value.data?.location ?? "";
         controllerInformation.text = value.data?.information ?? "";
+        controllerMessage.text = value.data?.messageVerifivation ?? "";
         controllerDateEnd.text = value.data?.dateEnd == null
             ? ""
             : dateToString(value.data?.dateEnd, format: "yyyy-MM-dd");
@@ -72,6 +87,7 @@ class UpdateAgendaController extends GetxController {
       "time": controllerTime.text,
       "location": controllerLocation.text,
       "information": controllerInformation.text,
+      "verification_message": controllerMessage.text,
       "max_date": "${controllerDateEnd.text} ${controllerTimeEnd.text}",
       "limit_participant": isParticiationLimit.value,
       "type": controllerType.text == TYPE_ABSENSI

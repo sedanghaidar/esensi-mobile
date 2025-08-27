@@ -19,7 +19,8 @@ dependencies:
   path_provider: ^2.0.11
   pretty_qr_code: ^2.0.2
   url_launcher: ^6.1.7
-  qr_code_scanner: ^1.0.1
+  qr_code_scanner_plus: ^2.0.5
+  # qr_code_scanner: ^1.0.1
   #  google_fonts: ^3.0.1
   flutter_markdown: ^0.6.14
   flutter_launcher_icons: ^0.12.0
@@ -27,10 +28,10 @@ dependencies:
   quill_html_editor: ^2.1.9
   vsc_quill_delta_to_html: ^1.0.3
   magic_view:
-    path: ../magic_view
-#    git:
-#      url: https://github.com/hanifabdullah21/MagicView
-#      ref: main
+    #    path: ../magic_view
+    git:
+      url: https://github.com/hanifabdullah21/MagicView
+      ref: main
   #  pdf: ^3.10.4
   printing: ^5.13.4
   file_saver: ^0.2.8
@@ -49,22 +50,22 @@ dev_dependencies:
   hive_test: ^1.0.1
 
 flutter_icons:
-  android: 'launcher_icon'
+  android: "launcher_icon"
   ios: true
-  image_path: 'assets/esensi/logo.png'
+  image_path: "assets/esensi/logo.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: 'assets/esensi/logo.png'
-    background_color: '#0b53471'
+    image_path: "assets/esensi/logo.png"
+    background_color: "#0b53471"
     # theme_color: '#hexcode'
   windows:
     generate: true
-    image_path: 'assets/esensi/logo.png'
+    image_path: "assets/esensi/logo.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: 'assets/esensi/logo.png'
+    image_path: "assets/esensi/logo.png"
 
 flutter:
   uses-material-design: true

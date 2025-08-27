@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 import '../../../global_widgets/other/error.dart';
 

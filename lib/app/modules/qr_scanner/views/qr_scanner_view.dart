@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:magic_view/widget/button/MagicButton.dart';
 import 'package:magic_view/widget/text/MagicText.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 import '../controllers/qr_scanner_controller.dart';
 

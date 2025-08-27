@@ -44,7 +44,7 @@ PODS:
     - FlutterMacOS
   - printing (1.0.0):
     - Flutter
-  - qr_code_scanner (0.2.0):
+  - qr_code_scanner_plus (2.0.5) :
     - Flutter
     - MTBBarcodeScanner
   - SDWebImage (5.15.5):
@@ -63,7 +63,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - printing (from `.symlinks/plugins/printing/ios`)
-  - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
+  - qr_code_scanner_plus (from `.symlinks/plugins/qr_code_scanner_plus/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
@@ -88,8 +88,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   printing:
     :path: ".symlinks/plugins/printing/ios"
-  qr_code_scanner:
-    :path: ".symlinks/plugins/qr_code_scanner/ios"
+  qr_code_scanner_plus:
+    :path: ".symlinks/plugins/qr_code_scanner_plus/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
@@ -105,7 +105,7 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   path_provider_foundation: 37748e03f12783f9de2cb2c4eadfaa25fe6d4852
   printing: 233e1b73bd1f4a05615548e9b5a324c98588640b
-  qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
+  qr_code_scanner_plus: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   SDWebImage: fd7e1a22f00303e058058278639bf6196ee431fe
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   url_launcher_ios: fb12c43172927bb5cf75aeebd073f883801f1993
